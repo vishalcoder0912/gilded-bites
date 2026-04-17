@@ -18,6 +18,7 @@ const Checkout = () => {
   const [file, setFile] = useState<File | null>(null);
   const [copied, setCopied] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
 
   const total = subtotal();
@@ -25,10 +26,10 @@ const Checkout = () => {
   const grand = total + shipping;
 
   useEffect(() => {
-    if (items.length === 0) {
+    if (items.length === 0 && !submitted) {
       navigate("/shop");
     }
-  }, [items.length, navigate]);
+  }, [items.length, navigate, submitted]);
 
   const copyUpi = async () => {
     await navigator.clipboard.writeText(UPI_ID);
