@@ -14,6 +14,9 @@ import ProductDetail from "./pages/ProductDetail";
 import Checkout from "./pages/Checkout";
 import OrderConfirmation from "./pages/OrderConfirmation";
 import NotFound from "./pages/NotFound";
+import AdminLayout from "@/components/admin/AdminLayout";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import AdminOrders from "./pages/admin/AdminOrders";
 
 const queryClient = new QueryClient();
 
@@ -27,10 +30,34 @@ const AnimatedRoutes = () => {
         <Route path="/product/:id" element={<PageTransition><ProductDetail /></PageTransition>} />
         <Route path="/checkout" element={<PageTransition><Checkout /></PageTransition>} />
         <Route path="/order-confirmed" element={<PageTransition><OrderConfirmation /></PageTransition>} />
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route index element={<AdminDashboard />} />
+          <Route path="orders" element={<AdminOrders />} />
+        </Route>
         {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
         <Route path="*" element={<NotFound />} />
       </Routes>
     </AnimatePresence>
+  );
+};
+
+const Shell = () => {
+  const location = useLocation();
+  const isAdmin = location.pathname.startsWith("/admin");
+
+  if (isAdmin) {
+    return <AnimatedRoutes />;
+  }
+
+  return (
+    <>
+      <Navbar />
+      <CartDrawer />
+      <main>
+        <AnimatedRoutes />
+      </main>
+      <Footer />
+    </>
   );
 };
 
@@ -40,12 +67,7 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <Navbar />
-        <CartDrawer />
-        <main>
-          <AnimatedRoutes />
-        </main>
-        <Footer />
+        <Shell />
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
