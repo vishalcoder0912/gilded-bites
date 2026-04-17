@@ -45,6 +45,7 @@ const Checkout = () => {
       return;
     }
     setSubmitting(true);
+    setSubmitted(true);
     setTimeout(() => {
       const order = {
         id: generateOrderId(),
