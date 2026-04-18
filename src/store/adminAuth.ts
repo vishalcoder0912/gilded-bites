@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
 export const MOCK_ADMIN = {
-  email: "admin@cocoasane.com",
+  email: "admin@noirsane.com",
   password: "atelier1899",
   name: "Anaïs",
   initials: "AN",
