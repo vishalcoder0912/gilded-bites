@@ -65,7 +65,7 @@ const AdminLogin = () => {
             </div>
             <p className="eyebrow mb-2">Atelier Admin</p>
             <h1 className="font-serif text-3xl md:text-4xl">
-              Welcome to <span className="gold-text italic">Cocoa Sane</span>
+              Welcome to <span className="gold-text italic">Noir Sane</span>
             </h1>
             <p className="text-sm text-muted-foreground mt-2">
               Sign in to manage orders and verifications.
@@ -89,7 +89,7 @@ const AdminLogin = () => {
                   autoComplete="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="admin@cocoasane.com"
+                  placeholder="admin@noirsane.com"
                   className="w-full bg-input border border-border rounded-sm pl-10 pr-3 py-3 text-sm outline-none focus:border-primary transition-colors"
                 />
               </div>
