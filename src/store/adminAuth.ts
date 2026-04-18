@@ -32,6 +32,6 @@ export const useAdminAuth = create<AdminAuthState>()(
       },
       signOut: () => set({ isAuthenticated: false, email: null }),
     }),
-    { name: "cocoa-sane-admin-auth" },
+    { name: "noir-sane-admin-auth" },
   ),
 );

@@ -89,7 +89,7 @@ const AdminLogin = () => {
                   autoComplete="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="admin@cocoasane.com"
+                  placeholder="admin@noirsane.com"
                   className="w-full bg-input border border-border rounded-sm pl-10 pr-3 py-3 text-sm outline-none focus:border-primary transition-colors"
                 />
               </div>
