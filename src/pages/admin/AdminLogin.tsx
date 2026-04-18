@@ -30,7 +30,7 @@ const AdminLogin = () => {
     await new Promise((r) => setTimeout(r, 500));
     const result = signIn(email, password);
     setSubmitting(false);
-    if (result.ok) {
+    if (result.ok === true) {
       toast({ title: "Bienvenue", description: "Signed in to the atelier." });
       navigate(from, { replace: true });
       return;
