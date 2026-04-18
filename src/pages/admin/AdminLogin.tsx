@@ -65,7 +65,7 @@ const AdminLogin = () => {
             </div>
             <p className="eyebrow mb-2">Atelier Admin</p>
             <h1 className="font-serif text-3xl md:text-4xl">
-              Welcome to <span className="gold-text italic">Cocoa Sane</span>
+              Welcome to <span className="gold-text italic">Noir Sane</span>
             </h1>
             <p className="text-sm text-muted-foreground mt-2">
               Sign in to manage orders and verifications.

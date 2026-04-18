@@ -52,7 +52,7 @@ export function AdminSidebar() {
           </div>
           {!collapsed && (
             <div className="min-w-0">
-              <div className="font-serif text-base leading-tight truncate">Cocoa Sane</div>
+              <div className="font-serif text-base leading-tight truncate">Noir Sane</div>
               <div className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground">
                 Atelier Admin
               </div>
