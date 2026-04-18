@@ -1,4 +1,7 @@
 import { LayoutDashboard, Package, Users, Settings, LogOut, Cookie } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { useAdminAuth } from "@/store/adminAuth";
+import { toast } from "@/hooks/use-toast";
 import { NavLink } from "@/components/NavLink";
 import {
   Sidebar,
@@ -25,9 +28,17 @@ const navItems = [
 export function AdminSidebar() {
   const { state } = useSidebar();
   const collapsed = state === "collapsed";
+  const navigate = useNavigate();
+  const signOut = useAdminAuth((s) => s.signOut);
   const pendingCount = useAdminOrders((s) =>
     s.orders.filter((o) => o.status === "pending").length,
   );
+
+  const handleSignOut = () => {
+    signOut();
+    toast({ title: "Signed out", description: "À bientôt." });
+    navigate("/admin/login", { replace: true });
+  };
 
   return (
     <Sidebar collapsible="icon" className="border-r border-border">
@@ -85,7 +96,7 @@ export function AdminSidebar() {
       <SidebarFooter className="border-t border-border">
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton tooltip="Sign out">
+            <SidebarMenuButton tooltip="Sign out" onClick={handleSignOut}>
               <LogOut className="h-4 w-4" />
               {!collapsed && <span>Sign out</span>}
             </SidebarMenuButton>
