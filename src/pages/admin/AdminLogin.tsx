@@ -33,9 +33,9 @@ const AdminLogin = () => {
     if (result.ok) {
       toast({ title: "Bienvenue", description: "Signed in to the atelier." });
       navigate(from, { replace: true });
-    } else {
-      setError(result.error);
+      return;
     }
+    setError(result.error);
   };
 
   const fillDemo = () => {
