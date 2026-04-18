@@ -4,7 +4,7 @@ const Footer = () => (
   <footer className="border-t border-border mt-32 pt-20 pb-10">
     <div className="container grid md:grid-cols-4 gap-12">
       <div>
-        <div className="font-serif text-2xl mb-3">Cocoa Noir</div>
+        <div className="font-serif text-2xl mb-3">Cocoa Sane</div>
         <p className="text-sm text-muted-foreground max-w-xs">
           Hand-crafted chocolate, atelier-finished, delivered with care.
         </p>
@@ -36,7 +36,7 @@ const Footer = () => (
     </div>
     <div className="hairline mt-16 mb-6" />
     <div className="container flex flex-wrap items-center justify-between gap-4 text-xs text-muted-foreground">
-      <span>© {new Date().getFullYear()} Cocoa Noir. All rights reserved.</span>
+      <span>© {new Date().getFullYear()} Cocoa Sane. All rights reserved.</span>
       <span className="uppercase tracking-[0.3em]">Crafted in India</span>
     </div>
   </footer>

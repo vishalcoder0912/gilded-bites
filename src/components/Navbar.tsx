@@ -24,7 +24,7 @@ const Navbar = () => {
             <span className="font-serif text-lg text-abyss font-semibold">C</span>
           </div>
           <div className="leading-tight">
-            <div className="font-serif text-xl tracking-wide">Cocoa Noir</div>
+            <div className="font-serif text-xl tracking-wide">Cocoa Sane</div>
             <div className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground">Maison · 1899</div>
           </div>
         </Link>
