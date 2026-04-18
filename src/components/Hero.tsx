@@ -14,8 +14,8 @@ const Hero = () => {
   const navigate = useNavigate();
   return (
     <section className="relative min-h-[100svh] overflow-hidden bg-gradient-hero">
-      {/* 3D scene */}
-      <div className="absolute inset-0">
+      {/* 3D scene — anchored to bottom on mobile so it doesn't sit on top of the copy */}
+      <div className="absolute inset-x-0 bottom-0 top-[55%] md:inset-0 md:top-0">
         <Suspense fallback={<HeroFallback />}>
           <ChocolateGlobe onClick={() => navigate("/shop")} />
         </Suspense>
@@ -23,8 +23,8 @@ const Hero = () => {
         <div className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-melt" />
       </div>
 
-      {/* copy overlay */}
-      <div className="relative z-10 container min-h-[100svh] flex flex-col justify-center pointer-events-none">
+      {/* copy overlay — top-aligned on mobile, centered on desktop */}
+      <div className="relative z-10 container min-h-[100svh] flex flex-col justify-start pt-32 md:justify-center md:pt-0 pointer-events-none">
         <motion.p
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -37,7 +37,7 @@ const Hero = () => {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.4 }}
-          className="font-serif text-5xl md:text-7xl lg:text-8xl leading-[1.05] max-w-3xl"
+          className="font-serif text-4xl sm:text-5xl md:text-7xl lg:text-8xl leading-[1.05] max-w-3xl"
         >
           A world cast in <span className="gold-text italic">cocoa</span> & gold.
         </motion.h1>
