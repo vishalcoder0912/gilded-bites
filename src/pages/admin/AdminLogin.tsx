@@ -1,14 +1,14 @@
-import { FormEvent, useState } from "react";
+import { FormEvent, useState, useEffect } from "react";
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Cookie, Lock, Mail, Eye, EyeOff, Loader2 } from "lucide-react";
-import { useAdminAuth, MOCK_ADMIN } from "@/store/adminAuth";
+import { useAdminAuth } from "@/store/adminAuth";
 import { toast } from "@/hooks/use-toast";
 
 const AdminLogin = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { isAuthenticated, signIn } = useAdminAuth();
+  const { isAuthenticated, login, loadUser, isLoading, error, clearError } = useAdminAuth();
 
   const from = (location.state as { from?: string } | null)?.from ?? "/admin";
 
@@ -16,7 +16,17 @@ const AdminLogin = () => {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [submitting, setSubmitting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [fieldError, setFieldError] = useState<string | null>(null);
+
+  useEffect(() => {
+    loadUser();
+  }, [loadUser]);
+
+  useEffect(() => {
+    if (error) {
+      setFieldError(error);
+    }
+  }, [error]);
 
   if (isAuthenticated) {
     return <Navigate to={from} replace />;
@@ -24,29 +34,21 @@ const AdminLogin = () => {
 
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    setError(null);
+    setFieldError(null);
     setSubmitting(true);
-    // small delay for UX
-    await new Promise((r) => setTimeout(r, 500));
-    const result = signIn(email, password);
+    clearError();
+    const result = await login(email, password);
     setSubmitting(false);
     if (result.ok === true) {
       toast({ title: "Bienvenue", description: "Signed in to the atelier." });
       navigate(from, { replace: true });
       return;
     }
-    setError(result.error);
-  };
-
-  const fillDemo = () => {
-    setEmail(MOCK_ADMIN.email);
-    setPassword(MOCK_ADMIN.password);
-    setError(null);
+    setFieldError(result.error);
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4 py-12 relative overflow-hidden">
-      {/* ambient glow */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute -top-32 -left-32 w-[420px] h-[420px] rounded-full bg-primary/10 blur-3xl" />
         <div className="absolute -bottom-32 -right-32 w-[420px] h-[420px] rounded-full bg-secondary/40 blur-3xl" />
@@ -111,7 +113,7 @@ const AdminLogin = () => {
                   autoComplete="current-password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
+                  placeholder="Enter password"
                   className="w-full bg-input border border-border rounded-sm pl-10 pr-10 py-3 text-sm outline-none focus:border-primary transition-colors"
                 />
                 <button
@@ -125,13 +127,13 @@ const AdminLogin = () => {
               </div>
             </div>
 
-            {error && (
+            {fieldError && (
               <motion.div
                 initial={{ opacity: 0, y: -4 }}
                 animate={{ opacity: 1, y: 0 }}
                 className="text-xs text-destructive border border-destructive/40 bg-destructive/10 rounded-sm px-3 py-2"
               >
-                {error}
+                {fieldError}
               </motion.div>
             )}
 
@@ -146,25 +148,10 @@ const AdminLogin = () => {
                   Signing in
                 </>
               ) : (
-                "Enter the atelier"
+                "Sign in"
               )}
             </button>
           </form>
-
-          <div className="hairline my-6" />
-
-          <div className="text-center">
-            <p className="text-[11px] uppercase tracking-[0.25em] text-muted-foreground mb-2">
-              Demo credentials
-            </p>
-            <button
-              type="button"
-              onClick={fillDemo}
-              className="text-xs font-mono text-primary hover:text-gold-bright transition-colors"
-            >
-              {MOCK_ADMIN.email} · {MOCK_ADMIN.password}
-            </button>
-          </div>
         </div>
       </motion.div>
     </div>

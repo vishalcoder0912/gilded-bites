@@ -1,4 +1,4 @@
-import { LayoutDashboard, Package, Users, Settings, LogOut, Cookie } from "lucide-react";
+import { LayoutDashboard, Package, Settings, LogOut, Cookie, Boxes, Layers } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAdminAuth } from "@/store/adminAuth";
 import { toast } from "@/hooks/use-toast";
@@ -16,12 +16,15 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { useAdminOrders } from "@/store/adminOrders";
+import { useQuery } from "@tanstack/react-query";
+import { adminApi } from "@/lib/api";
 
 const navItems = [
   { title: "Overview", url: "/admin", icon: LayoutDashboard, end: true },
   { title: "Orders", url: "/admin/orders", icon: Package, end: false },
-  { title: "Customers", url: "/admin/customers", icon: Users, end: false },
+  { title: "Products", url: "/admin/products", icon: Boxes, end: false },
+  { title: "Categories", url: "/admin/categories", icon: Layers, end: false },
+  { title: "Stock", url: "/admin/stock", icon: Layers, end: false },
   { title: "Settings", url: "/admin/settings", icon: Settings, end: false },
 ];
 
@@ -29,13 +32,17 @@ export function AdminSidebar() {
   const { state } = useSidebar();
   const collapsed = state === "collapsed";
   const navigate = useNavigate();
-  const signOut = useAdminAuth((s) => s.signOut);
-  const pendingCount = useAdminOrders((s) =>
-    s.orders.filter((o) => o.status === "pending").length,
-  );
+  const logout = useAdminAuth((s) => s.logout);
+
+  const { data: dashboard } = useQuery({
+    queryKey: ["admin-dashboard"],
+    queryFn: () => adminApi.getDashboard(),
+    staleTime: 30 * 1000,
+  });
+  const pendingCount = dashboard?.pendingOrders ?? 0;
 
   const handleSignOut = () => {
-    signOut();
+    logout();
     toast({ title: "Signed out", description: "À bientôt." });
     navigate("/admin/login", { replace: true });
   };

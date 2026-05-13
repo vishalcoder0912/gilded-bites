@@ -1,17 +1,13 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 /* =========================================================
-   NOIR SANE — Luxury chocolate design system
-   All colors HSL. Brand palette:
-   #1A120B  cocoa-abyss     -> 28 36% 8%
-   #3B1F0D  cocoa-rich      -> 25 64% 14%
-   #A67C52  cocoa-gold      -> 28 33% 49%
-   #F4E2D8  cocoa-cream     -> 21 56% 90%
+   NOIR SANE — Luxury dark chocolate design system
+   Dark luxury theme: deep blacks, espresso browns, gold accents
    ========================================================= */
-
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap');
 
 @layer base {
   :root {
@@ -43,24 +39,24 @@
     --input: 28 25% 18%;
     --ring: 28 33% 49%;
 
-    --radius: 0.25rem;
+    --radius: 0.125rem;
 
-    /* brand semantic tokens */
     --abyss: 28 36% 8%;
     --rich: 25 64% 14%;
     --gold: 28 33% 49%;
     --gold-bright: 35 55% 65%;
     --cream: 21 56% 90%;
+    --muted-bg: 25 30% 16%;
 
-    /* gradients */
     --gradient-hero: radial-gradient(ellipse at 30% 20%, hsl(25 64% 14% / 0.9), hsl(28 36% 8%) 65%);
     --gradient-gold: linear-gradient(135deg, hsl(35 55% 65%), hsl(28 33% 49%));
     --gradient-melt: linear-gradient(180deg, hsl(28 36% 8% / 0), hsl(28 36% 8%) 90%);
+    --gradient-dark-card: linear-gradient(180deg, hsl(25 40% 12%), hsl(28 36% 8%));
 
-    /* shadows / glow */
     --glow-gold: 0 0 40px hsl(28 33% 49% / 0.35), 0 0 80px hsl(35 55% 65% / 0.15);
     --shadow-soft: 0 30px 60px -20px hsl(0 0% 0% / 0.6);
     --shadow-card: 0 10px 30px -10px hsl(0 0% 0% / 0.5);
+    --shadow-gold: 0 8px 32px -8px hsl(28 33% 49% / 0.4);
 
     --transition-smooth: cubic-bezier(0.22, 1, 0.36, 1);
 
@@ -72,12 +68,38 @@
     --sidebar-accent-foreground: 21 56% 90%;
     --sidebar-border: 28 25% 20%;
     --sidebar-ring: 28 33% 49%;
+
+    color-scheme: dark;
   }
 
   .dark {
-    /* same — site is dark-only */
     --background: 28 36% 8%;
     --foreground: 21 56% 90%;
+    --card: 25 40% 11%;
+    --card-foreground: 21 56% 90%;
+    --popover: 25 40% 11%;
+    --popover-foreground: 21 56% 90%;
+    --primary: 28 33% 49%;
+    --primary-foreground: 28 36% 8%;
+    --secondary: 25 64% 14%;
+    --secondary-foreground: 21 56% 90%;
+    --muted: 25 30% 16%;
+    --muted-foreground: 28 20% 65%;
+    --accent: 28 33% 49%;
+    --accent-foreground: 28 36% 8%;
+    --destructive: 0 70% 45%;
+    --destructive-foreground: 21 56% 90%;
+    --border: 28 25% 20%;
+    --input: 28 25% 18%;
+    --ring: 28 33% 49%;
+    --sidebar-background: 28 36% 8%;
+    --sidebar-foreground: 21 56% 90%;
+    --sidebar-primary: 28 33% 49%;
+    --sidebar-primary-foreground: 28 36% 8%;
+    --sidebar-accent: 25 40% 14%;
+    --sidebar-accent-foreground: 21 56% 90%;
+    --sidebar-border: 28 25% 20%;
+    --sidebar-ring: 28 33% 49%;
   }
 }
 
@@ -91,25 +113,44 @@
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground antialiased;
     font-family: 'Inter', system-ui, sans-serif;
     font-weight: 300;
     letter-spacing: 0.01em;
     background-image:
-      radial-gradient(ellipse at top, hsl(25 64% 14% / 0.6), transparent 60%),
-      radial-gradient(ellipse at bottom right, hsl(28 33% 49% / 0.08), transparent 50%);
+      radial-gradient(ellipse at 30% 0%, hsl(25 64% 14% / 0.5), transparent 60%),
+      radial-gradient(ellipse at 80% 80%, hsl(28 33% 49% / 0.06), transparent 50%),
+      radial-gradient(ellipse at 10% 90%, hsl(28 36% 8% / 0.8), transparent 40%);
     background-attachment: fixed;
   }
 
-  h1, h2, h3, h4, .serif {
-    font-family: 'Cormorant Garamond', serif;
+  h1, h2, h3, h4, h5, h6, .serif, .font-serif {
+    font-family: 'Cormorant Garamond', Georgia, serif;
     font-weight: 500;
     letter-spacing: -0.01em;
   }
 
   ::selection {
-    background: hsl(var(--gold) / 0.4);
-    color: hsl(var(--cream));
+    background: hsl(28 33% 49% / 0.4);
+    color: hsl(21 56% 90%);
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: hsl(28 36% 8%);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: hsl(28 33% 49% / 0.4);
+    border-radius: 3px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: hsl(28 33% 49% / 0.6);
   }
 }
 
@@ -127,45 +168,76 @@
 
   .hairline {
     height: 1px;
-    background: linear-gradient(90deg, transparent, hsl(var(--gold) / 0.5), transparent);
+    background: linear-gradient(90deg, transparent, hsl(var(--gold) / 0.4), transparent);
+  }
+
+  .hairline-vertical {
+    width: 1px;
+    background: linear-gradient(180deg, transparent, hsl(var(--gold) / 0.4), transparent);
   }
 
   .btn-gold {
-    @apply inline-flex items-center justify-center gap-2 px-7 py-3 text-sm uppercase tracking-[0.2em] font-medium rounded-sm;
+    @apply inline-flex items-center justify-center gap-2 px-7 py-3 text-sm font-semibold tracking-[0.2em] transition-all duration-500;
     background: var(--gradient-gold);
     color: hsl(var(--abyss));
-    transition: all 0.4s var(--transition-smooth);
-    box-shadow: 0 8px 24px -8px hsl(var(--gold) / 0.5);
+    box-shadow: var(--shadow-gold);
+    border-radius: 0.125rem;
   }
   .btn-gold:hover {
     transform: translateY(-2px);
-    box-shadow: 0 14px 36px -10px hsl(var(--gold) / 0.7), var(--glow-gold);
+    box-shadow: 0 14px 40px -10px hsl(var(--gold) / 0.5), var(--glow-gold);
+  }
+  .btn-gold:active {
+    transform: translateY(0);
   }
 
   .btn-ghost-gold {
-    @apply inline-flex items-center justify-center gap-2 px-7 py-3 text-sm uppercase tracking-[0.2em] font-medium rounded-sm;
+    @apply inline-flex items-center justify-center gap-2 px-7 py-3 text-sm font-semibold tracking-[0.2em] transition-all duration-500;
     border: 1px solid hsl(var(--gold) / 0.5);
-    color: hsl(var(--cream));
-    transition: all 0.4s var(--transition-smooth);
+    color: hsl(var(--gold-bright));
+    border-radius: 0.125rem;
   }
   .btn-ghost-gold:hover {
     border-color: hsl(var(--gold));
-    background: hsl(var(--gold) / 0.08);
-    color: hsl(var(--gold-bright));
+    background: hsl(var(--gold) / 0.1);
+    box-shadow: 0 0 20px hsl(var(--gold) / 0.15);
   }
 
   .luxe-card {
-    background: linear-gradient(180deg, hsl(25 40% 12%), hsl(28 36% 8%));
-    border: 1px solid hsl(var(--border));
+    background: var(--gradient-dark-card);
+    border: 1px solid hsl(var(--gold) / 0.18);
     transition: all 0.5s var(--transition-smooth);
   }
   .luxe-card:hover {
-    border-color: hsl(var(--gold) / 0.6);
-    transform: translateY(-6px);
-    box-shadow: var(--shadow-soft);
+    border-color: hsl(var(--gold) / 0.45);
+    box-shadow: var(--shadow-soft), 0 0 30px hsl(var(--gold) / 0.08);
   }
 
   .eyebrow {
-    @apply text-xs uppercase tracking-[0.35em] text-primary;
+    @apply text-xs uppercase tracking-[0.35em] text-primary font-medium;
+  }
+
+  .input-luxury {
+    @apply w-full bg-input border border-border rounded px-4 py-3 text-sm outline-none transition-colors;
+    border-color: hsl(var(--gold) / 0.2);
+  }
+  .input-luxury:focus {
+    border-color: hsl(var(--gold) / 0.6);
+    box-shadow: 0 0 0 3px hsl(var(--gold) / 0.1);
+  }
+  .input-luxury::placeholder {
+    color: hsl(var(--muted-foreground) / 0.6);
+  }
+
+  .glass-card {
+    @apply backdrop-blur-xl bg-abyss/70 border border-[#d7a85f]/15;
+  }
+
+  .section-heading {
+    @apply font-serif text-4xl md:text-5xl lg:text-6xl text-cream leading-tight;
+  }
+
+  .text-gradient-gold {
+    @apply bg-gradient-gold bg-clip-text text-transparent;
   }
 }

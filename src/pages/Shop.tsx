@@ -1,60 +1,205 @@
-import { useState, useMemo } from "react";
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import { Search, SlidersHorizontal, X } from "lucide-react";
+import { useProducts, useCategories } from "@/store/catalog";
 import ProductCard from "@/components/ProductCard";
-import { categories, products } from "@/services/products";
-import { motion } from "framer-motion";
+import { EmptyState, LoadingState, PageShell } from "@/components/luxury/LuxuryPrimitives";
 
 const Shop = () => {
-  const [active, setActive] = useState<typeof categories[number]>("All");
-  const filtered = useMemo(
-    () => (active === "All" ? products : products.filter((p) => p.category === active)),
-    [active],
+  const [page, setPage] = useState(1);
+  const [categoryFilter, setCategoryFilter] = useState("");
+  const [sort, setSort] = useState("");
+  const [q, setQ] = useState("");
+  const [maxPrice, setMaxPrice] = useState("5000");
+  const [showMobileFilters, setShowMobileFilters] = useState(false);
+
+  const { data: productsData, isLoading, error } = useProducts({
+    page,
+    limit: 12,
+    categoryId: categoryFilter || undefined,
+    sort: sort || undefined,
+    q: q || undefined,
+  });
+  const { data: categories } = useCategories();
+
+  const clearFilters = () => {
+    setQ("");
+    setCategoryFilter("");
+    setSort("");
+    setPage(1);
+  };
+
+  const filterPanel = (
+    <aside className="rounded-sm border border-[#d9a35b]/18 bg-[#140904]/78 p-5 shadow-[0_20px_70px_rgba(0,0,0,0.25)]">
+      <div className="mb-6 flex items-center justify-between">
+        <div>
+          <p className="eyebrow mb-1">Categories</p>
+          <h2 className="font-serif text-2xl text-[#f8eadc]">Refine</h2>
+        </div>
+        <button className="lg:hidden" onClick={() => setShowMobileFilters(false)} aria-label="Close filters">
+          <X className="h-4 w-4 text-[#c8b5a4]" />
+        </button>
+      </div>
+
+      <div className="space-y-2">
+        <button
+          onClick={() => {
+            setCategoryFilter("");
+            setPage(1);
+          }}
+          className={`w-full rounded-sm px-3 py-2 text-left text-sm transition ${!categoryFilter ? "bg-[#d9a35b]/15 text-[#f0c27a]" : "text-[#c8b5a4] hover:bg-[#d9a35b]/8 hover:text-[#f8eadc]"}`}
+        >
+          All Chocolates
+        </button>
+        {categories?.map((cat) => (
+          <button
+            key={cat.id}
+            onClick={() => {
+              setCategoryFilter(cat.id);
+              setPage(1);
+            }}
+            className={`w-full rounded-sm px-3 py-2 text-left text-sm transition ${categoryFilter === cat.id ? "bg-[#d9a35b]/15 text-[#f0c27a]" : "text-[#c8b5a4] hover:bg-[#d9a35b]/8 hover:text-[#f8eadc]"}`}
+          >
+            {cat.name}
+          </button>
+        ))}
+      </div>
+
+      <div className="my-6 h-px bg-gradient-to-r from-transparent via-[#d9a35b]/30 to-transparent" />
+
+      <label className="block text-xs uppercase tracking-[0.25em] text-[#d9a35b]">Price Range</label>
+      <input
+        type="range"
+        min="500"
+        max="10000"
+        step="500"
+        value={maxPrice}
+        onChange={(event) => setMaxPrice(event.target.value)}
+        className="mt-5 w-full accent-[#d9a35b]"
+      />
+      <div className="mt-2 flex justify-between text-xs text-[#c8b5a4]">
+        <span>₹500</span>
+        <span>Up to ₹{maxPrice}</span>
+      </div>
+      <button onClick={clearFilters} className="btn-ghost-gold mt-6 w-full px-4 py-3 text-xs">
+        Reset Filters
+      </button>
+    </aside>
   );
 
   return (
-    <div className="pt-32 pb-24">
-      <div className="container">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7 }}
-          className="text-center mb-16"
-        >
-          <p className="eyebrow mb-4">The Collection</p>
-          <h1 className="font-serif text-5xl md:text-7xl mb-4">
-            Every <span className="gold-text italic">piece</span>, a story.
-          </h1>
-          <p className="text-muted-foreground max-w-xl mx-auto">
-            Browse the full atelier: truffles, bars, pralines and single-origin rarities.
+    <PageShell>
+      <section className="relative pt-28 pb-10 sm:pt-36 sm:pb-14">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(217,163,91,0.12),transparent_36%)]" />
+        <div className="container relative text-center">
+          <p className="eyebrow mb-3">Shop</p>
+          <h1 className="font-serif text-5xl text-[#f8eadc] sm:text-7xl">Shop</h1>
+          <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-[#c8b5a4] sm:text-base">
+            Curated selection of luxury chocolates.
           </p>
-        </motion.div>
+        </div>
+      </section>
 
-        {/* Filters */}
-        <div className="flex flex-wrap justify-center gap-3 mb-14">
-          {categories.map((cat) => (
-            <button
-              key={cat}
-              onClick={() => setActive(cat)}
-              className={`px-5 py-2 text-xs uppercase tracking-[0.25em] rounded-full border transition-all ${
-                active === cat
-                  ? "bg-gradient-gold text-abyss border-transparent"
-                  : "border-border text-muted-foreground hover:border-primary hover:text-primary"
-              }`}
+      <section className="container pb-24">
+        <div className="mb-6 grid gap-3 lg:grid-cols-[270px_1fr]">
+          <button
+            onClick={() => setShowMobileFilters(true)}
+            className="inline-flex items-center justify-center gap-2 rounded-sm border border-[#d9a35b]/20 bg-[#140904]/80 px-4 py-3 text-sm uppercase tracking-[0.18em] text-[#f0c27a] lg:hidden"
+          >
+            <SlidersHorizontal className="h-4 w-4" /> Filters
+          </button>
+          <div className="hidden lg:block" />
+          <div className="grid gap-3 md:grid-cols-[1fr_210px_190px]">
+            <div className="flex items-center gap-3 rounded-sm border border-[#d9a35b]/18 bg-[#140904]/80 px-4 py-3">
+              <Search className="h-4 w-4 text-[#9d6a36]" />
+              <input
+                value={q}
+                onChange={(event) => {
+                  setQ(event.target.value);
+                  setPage(1);
+                }}
+                placeholder="Search chocolates..."
+                className="w-full bg-transparent text-sm text-[#f8eadc] outline-none placeholder:text-[#c8b5a4]/55"
+              />
+              {q && <button onClick={() => setQ("")}><X className="h-4 w-4 text-[#c8b5a4]" /></button>}
+            </div>
+            <select
+              value={categoryFilter}
+              onChange={(event) => {
+                setCategoryFilter(event.target.value);
+                setPage(1);
+              }}
+              className="rounded-sm border border-[#d9a35b]/18 bg-[#140904]/80 px-4 py-3 text-sm text-[#f8eadc] outline-none"
             >
-              {cat}
-            </button>
-          ))}
+              <option value="">All Categories</option>
+              {categories?.map((cat) => <option key={cat.id} value={cat.id}>{cat.name}</option>)}
+            </select>
+            <select
+              value={sort}
+              onChange={(event) => {
+                setSort(event.target.value);
+                setPage(1);
+              }}
+              className="rounded-sm border border-[#d9a35b]/18 bg-[#140904]/80 px-4 py-3 text-sm text-[#f8eadc] outline-none"
+            >
+              <option value="">Sort By Featured</option>
+              <option value="name">Name</option>
+              <option value="price_asc">Price: Low to High</option>
+              <option value="price_desc">Price: High to Low</option>
+            </select>
+          </div>
         </div>
 
-        <motion.div
-          layout
-          className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8"
-        >
-          {filtered.map((p, i) => (
-            <ProductCard key={p.id} product={p} index={i} />
-          ))}
-        </motion.div>
-      </div>
-    </div>
+        {showMobileFilters && (
+          <div className="fixed inset-0 z-[80] bg-black/60 p-4 backdrop-blur-sm lg:hidden" onClick={() => setShowMobileFilters(false)}>
+            <div className="max-w-sm" onClick={(event) => event.stopPropagation()}>{filterPanel}</div>
+          </div>
+        )}
+
+        <div className="grid gap-6 lg:grid-cols-[270px_1fr]">
+          <div className="hidden lg:block">{filterPanel}</div>
+
+          <div>
+            {(q || categoryFilter || sort) && (
+              <div className="mb-5 flex flex-wrap items-center gap-2 text-xs uppercase tracking-[0.2em] text-[#c8b5a4]">
+                Active filters
+                <button onClick={clearFilters} className="rounded-full border border-[#d9a35b]/25 px-3 py-1 text-[#f0c27a]">Clear all</button>
+              </div>
+            )}
+
+            {isLoading ? (
+              <LoadingState />
+            ) : error ? (
+              <EmptyState title="Unable to load shop" description="The product API did not respond. Please refresh and try again." />
+            ) : productsData?.data.length === 0 ? (
+              <EmptyState title="No pieces found" description="Try adjusting your filters or search terms." actionLabel="View All" actionTo="/shop" />
+            ) : (
+              <>
+                <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+                  {productsData?.data.map((product, index) => (
+                    <ProductCard key={product.id} product={product} index={index} />
+                  ))}
+                </div>
+
+                {productsData && productsData.totalPages > 1 && (
+                  <div className="mt-12 flex justify-center gap-2">
+                    {Array.from({ length: productsData.totalPages }, (_, index) => (
+                      <button
+                        key={index}
+                        onClick={() => setPage(index + 1)}
+                        className={`grid h-10 w-10 place-items-center rounded-sm border text-sm transition ${page === index + 1 ? "border-[#d9a35b] bg-[#d9a35b] text-[#090403]" : "border-[#d9a35b]/22 text-[#c8b5a4] hover:border-[#d9a35b] hover:text-[#f8eadc]"}`}
+                      >
+                        {index + 1}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </>
+            )}
+          </div>
+        </div>
+      </section>
+    </PageShell>
   );
 };
 

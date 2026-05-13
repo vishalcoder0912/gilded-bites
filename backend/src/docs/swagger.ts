@@ -1,0 +1,37 @@
+export const swaggerDocument = {
+  openapi: "3.0.0",
+  info: {
+    title: "Noir Sane Shopping Backend API",
+    version: "1.0.0",
+    description: "Production-ready ecommerce backend for auth, catalog, stock, cart, orders, UPI, admin, and delivery tracking.",
+  },
+  servers: [{ url: "http://localhost:4000/api" }],
+  components: {
+    securitySchemes: {
+      bearerAuth: { type: "http", scheme: "bearer", bearerFormat: "JWT" },
+    },
+  },
+  security: [{ bearerAuth: [] }],
+  paths: {
+    "/auth/register": { post: { tags: ["Auth"], summary: "Register user" } },
+    "/auth/login": { post: { tags: ["Auth"], summary: "Login user" } },
+    "/auth/refresh": { post: { tags: ["Auth"], summary: "Refresh token" } },
+    "/auth/me": { get: { tags: ["Auth"], summary: "Current user" } },
+    "/products": { get: { tags: ["Products"], summary: "List active products" } },
+    "/products/{slug}": { get: { tags: ["Products"], summary: "Get product by slug" } },
+    "/categories": { get: { tags: ["Categories"], summary: "List active categories" } },
+    "/payment/upi/active": { get: { tags: ["Payments"], summary: "Get active UPI settings" } },
+    "/cart": { get: { tags: ["Cart"], summary: "Get current cart" } },
+    "/cart/items": { post: { tags: ["Cart"], summary: "Add product to cart" } },
+    "/orders": { get: { tags: ["Orders"], summary: "List my orders" }, post: { tags: ["Orders"], summary: "Place order" } },
+    "/orders/{id}/payment-submit": { post: { tags: ["Orders"], summary: "Submit UPI payment reference" } },
+    "/orders/{id}/tracking": { get: { tags: ["Tracking"], summary: "Track my order" } },
+    "/admin/products": { get: { tags: ["Admin Products"], summary: "List products" }, post: { tags: ["Admin Products"], summary: "Create product" } },
+    "/admin/categories": { get: { tags: ["Admin Categories"], summary: "List categories" }, post: { tags: ["Admin Categories"], summary: "Create category" } },
+    "/admin/stock": { get: { tags: ["Admin Stock"], summary: "List stock" } },
+    "/admin/upi": { get: { tags: ["Admin UPI"], summary: "List UPI settings" }, post: { tags: ["Admin UPI"], summary: "Create UPI setting" } },
+    "/admin/orders": { get: { tags: ["Admin Orders"], summary: "List all orders" } },
+    "/admin/dashboard": { get: { tags: ["Admin Dashboard"], summary: "Dashboard analytics" } },
+    "/delivery/orders": { get: { tags: ["Delivery"], summary: "Assigned delivery orders" } },
+  },
+};

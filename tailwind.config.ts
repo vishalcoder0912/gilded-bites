@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import tailwindcssAnimate from "tailwindcss-animate";
 
 export default {
   darkMode: ["class"],
@@ -69,11 +70,14 @@ export default {
         "gradient-hero": "var(--gradient-hero)",
         "gradient-gold": "var(--gradient-gold)",
         "gradient-melt": "var(--gradient-melt)",
+        "gradient-dark": "linear-gradient(180deg, hsl(25 40% 12%), hsl(28 36% 8%))",
+        "gradient-dark-card": "linear-gradient(180deg, hsl(25 40% 12%), hsl(28 36% 8%))",
       },
       boxShadow: {
         soft: "var(--shadow-soft)",
         card: "var(--shadow-card)",
         glow: "var(--glow-gold)",
+        gold: "var(--shadow-gold)",
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -98,5 +102,5 @@ export default {
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [tailwindcssAnimate],
 } satisfies Config;

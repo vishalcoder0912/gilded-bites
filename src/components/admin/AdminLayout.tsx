@@ -1,43 +1,124 @@
-import { Outlet } from "react-router-dom";
-import { Bell, Search } from "lucide-react";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { AdminSidebar } from "./AdminSidebar";
+import { Outlet, useNavigate, useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
+import {
+  LayoutDashboard, ShoppingBag, Package, Tags, Boxes,
+  CreditCard, BarChart3, Settings, LogOut, Headphones, Plus
+} from "lucide-react";
+import { ThemeSelector } from "@/components/ThemeSelector";
+import { useAdminAuth } from "@/store/adminAuth";
 
-const AdminLayout = () => {
+function cx(...classes: Array<string | false | undefined | null>) {
+  return classes.filter(Boolean).join(" ");
+}
+
+function AdminSidebar() {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const menu = [
+    { label: "Dashboard", icon: LayoutDashboard, path: "/admin" },
+    { label: "Orders", icon: ShoppingBag, path: "/admin/orders" },
+    { label: "Products", icon: Package, path: "/admin/products" },
+    { label: "Inventory", icon: Boxes, path: "/admin/stock" },
+    { label: "Payments", icon: CreditCard, path: "/admin/orders?paymentStatus=SUBMITTED" },
+    { label: "Settings", icon: Settings, path: "/admin/settings" },
+  ];
+
+  const { logout } = useAdminAuth();
+
+  function handleLogout() {
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+    localStorage.removeItem("adminAccessToken");
+    localStorage.removeItem("user");
+    logout();
+    navigate("/admin/login");
+  }
+
   return (
-    <SidebarProvider>
-      <div className="min-h-screen flex w-full bg-background">
-        <AdminSidebar />
+    <aside className="hidden min-h-screen w-[270px] shrink-0 lg:block">
+      <div className="flex h-full flex-col rounded-lg border border-gold/20">
+        <div className="border-b border-gold/20 px-8 py-10 text-center">
+          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-gradient-gold">
+            <span className="font-serif text-2xl text-abyss">N</span>
+          </div>
+          <h2 className="mt-4 font-serif text-3xl text-cream">Noir Sane</h2>
+          <p className="mt-1 tracking-[.45em] text-primary text-xs">MAISON · 1899</p>
+        </div>
 
-        <div className="flex-1 flex flex-col min-w-0">
-          <header className="h-14 flex items-center gap-3 border-b border-border bg-card/40 backdrop-blur-sm px-4 sticky top-0 z-30">
-            <SidebarTrigger className="text-muted-foreground hover:text-foreground" />
-            <div className="hairline-vertical hidden md:block h-6 w-px bg-border mx-1" />
-            <div className="hidden md:flex items-center gap-2 text-sm text-muted-foreground">
-              <Search className="w-4 h-4" />
-              <span>Search orders, customers…</span>
-            </div>
-            <div className="ml-auto flex items-center gap-3">
+        <nav className="mt-3 flex-1 space-y-1 px-2">
+          {menu.map((item) => {
+            const Icon = item.icon;
+            const isActive = location.pathname === item.path;
+
+            return (
               <button
-                className="relative p-2 text-muted-foreground hover:text-foreground transition-colors"
-                aria-label="Notifications"
+                key={item.label}
+                onClick={() => navigate(item.path)}
+                className={cx(
+                  "flex w-full items-center gap-4 rounded-md px-6 py-4 text-left text-sm transition",
+                  isActive
+                    ? "bg-gradient-gold/10 text-primary border-r-2 border-primary"
+                    : "text-muted-foreground hover:bg-rich/60 hover:text-cream"
+                )}
               >
-                <Bell className="w-4 h-4" />
-                <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-primary" />
+                <Icon size={19} />
+                {item.label}
               </button>
-              <div className="w-8 h-8 rounded-full bg-gradient-gold grid place-items-center text-abyss text-xs font-medium">
-                AN
+            );
+          })}
+        </nav>
+
+        <div className="p-4">
+          <div className="rounded-xl border border-gold/20 bg-gradient-dark-card p-5">
+            <Headphones className="text-primary" size={28} />
+            <p className="mt-3 text-sm font-medium text-cream">Need Support?</p>
+            <p className="mt-1 text-xs text-muted-foreground">Our team is here to help.</p>
+            <button className="mt-4 w-full rounded-md border border-gold/30 py-2 text-xs text-primary hover:bg-gold/10 transition-colors">
+              Contact Support
+            </button>
+          </div>
+
+          <button
+            onClick={handleLogout}
+            className="mt-4 flex w-full items-center justify-center gap-2 rounded-md border border-gold/20 py-3 text-sm text-muted-foreground hover:border-gold/40 hover:text-cream transition-colors"
+          >
+            <LogOut size={16} />
+            Logout
+          </button>
+
+          <p className="mt-8 text-xs text-muted-foreground">© 2026 Noir Sane</p>
+          <p className="mt-1 text-xs text-primary">All rights reserved.</p>
+        </div>
+      </div>
+    </aside>
+  );
+}
+
+export function AdminLayout({ children }: { children?: React.ReactNode }) {
+  return (
+    <div className="min-h-screen bg-gradient-dark">
+      <div className="flex">
+        <AdminSidebar />
+        <div className="flex-1 min-w-0">
+          <header className="sticky top-0 z-50 flex h-16 items-center gap-4 border-b border-gold/20 bg-abyss/80 px-6 backdrop-blur-sm">
+            <div className="flex items-center gap-3">
+              <h1 className="text-lg font-serif text-cream">Admin Panel</h1>
+            </div>
+            <div className="ml-auto flex items-center gap-4">
+              <ThemeSelector />
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-gold text-abyss font-medium">
+                NS
               </div>
             </div>
           </header>
-
-          <main className="flex-1 p-6 md:p-8 overflow-x-hidden">
-            <Outlet />
+          <main className="p-6">
+            {children ?? <Outlet />}
           </main>
         </div>
       </div>
-    </SidebarProvider>
+    </div>
   );
-};
+}
 
 export default AdminLayout;
