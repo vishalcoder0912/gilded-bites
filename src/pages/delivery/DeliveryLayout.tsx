@@ -18,12 +18,12 @@ const DeliveryLayout = () => {
   };
 
   return (
-    <div className="min-h-screen bg-abyss flex">
+    <div className="min-h-screen bg-transparent flex">
       <motion.aside
         initial={{ x: -20, opacity: 0 }}
         animate={{ x: 0, opacity: 1 }}
         transition={{ duration: 0.4 }}
-        className="w-64 border-r border-border flex flex-col"
+        className="glass-noir-panel m-3 w-64 rounded-lg flex flex-col"
       >
         <div className="p-6 border-b border-border">
           <Link to="/delivery" className="flex items-center gap-3">

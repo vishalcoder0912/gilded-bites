@@ -32,18 +32,18 @@ function AdminSidebar() {
     localStorage.removeItem("adminAccessToken");
     localStorage.removeItem("user");
     logout();
-    navigate("/admin/login");
+    navigate("/login");
   }
 
   return (
-    <aside className="hidden min-h-screen w-[270px] shrink-0 lg:block">
-      <div className="flex h-full flex-col rounded-lg border border-gold/20">
+    <aside className="hidden min-h-screen w-[270px] shrink-0 p-3 lg:block">
+      <div className="glass-noir-panel flex h-full flex-col rounded-lg">
         <div className="border-b border-gold/20 px-8 py-10 text-center">
           <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-gradient-gold">
             <span className="font-serif text-2xl text-abyss">N</span>
           </div>
           <h2 className="mt-4 font-serif text-3xl text-cream">Noir Sane</h2>
-          <p className="mt-1 tracking-[.45em] text-primary text-xs">MAISON · 1899</p>
+          <p className="mt-1 tracking-[.45em] text-primary text-xs">DARK CHOCOLATE</p>
         </div>
 
         <nav className="mt-3 flex-1 space-y-1 px-2">
@@ -70,7 +70,7 @@ function AdminSidebar() {
         </nav>
 
         <div className="p-4">
-          <div className="rounded-xl border border-gold/20 bg-gradient-dark-card p-5">
+          <div className="rounded-xl border border-gold/20 bg-[#080302]/60 p-5 backdrop-blur-xl">
             <Headphones className="text-primary" size={28} />
             <p className="mt-3 text-sm font-medium text-cream">Need Support?</p>
             <p className="mt-1 text-xs text-muted-foreground">Our team is here to help.</p>
@@ -97,11 +97,11 @@ function AdminSidebar() {
 
 export function AdminLayout({ children }: { children?: React.ReactNode }) {
   return (
-    <div className="min-h-screen bg-gradient-dark">
+    <div className="min-h-screen bg-transparent">
       <div className="flex">
         <AdminSidebar />
         <div className="flex-1 min-w-0">
-          <header className="sticky top-0 z-50 flex h-16 items-center gap-4 border-b border-gold/20 bg-abyss/80 px-6 backdrop-blur-sm">
+          <header className="sticky top-0 z-50 flex h-16 items-center gap-4 border-b border-gold/20 bg-[#050201]/58 px-6 backdrop-blur-2xl">
             <div className="flex items-center gap-3">
               <h1 className="text-lg font-serif text-cream">Admin Panel</h1>
             </div>

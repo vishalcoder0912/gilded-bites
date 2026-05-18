@@ -9,6 +9,9 @@ import { idParam } from "../schemas/common";
 import { createOrderNumber, createTransactionId } from "../utils/ids";
 import { ok, paginated, safeUserSelect, toPagination } from "../utils/api";
 import { AppError, asyncHandler } from "../utils/errors";
+import { stripe } from "../lib/stripe";
+import { env } from "../config/env";
+import QRCode from "qrcode";
 
 export const commerceRouter = Router();
 export const adminCommerceRouter = Router();
@@ -187,6 +190,176 @@ commerceRouter.post("/orders/:id/payment-submit", validate(idParam.merge(payment
   });
   ok(res, updated, "Payment submitted");
 }));
+commerceRouter.post(
+  "/orders/:id/stripe-checkout",
+  requireAuth,
+  asyncHandler(async (req, res) => {
+    const order = await prisma.order.findFirst({
+      where: {
+        id: req.params.id,
+        userId: req.user!.id,
+      },
+      include: {
+        items: {
+          include: {
+            product: true,
+          },
+        },
+      },
+    });
+
+    if (!order) throw new AppError("Order not found", 404);
+
+    const session = await stripe.checkout.sessions.create({
+      mode: "payment",
+      payment_method_types: ["card"],
+      customer_email: req.user!.email,
+      line_items: order.items.map((item) => ({
+        quantity: item.quantity,
+        price_data: {
+          currency: "inr",
+          unit_amount: item.productPriceSnapshot,
+          product_data: {
+            name: item.productNameSnapshot || item.product?.name || "Noir Sane item",
+          },
+        },
+      })),
+      metadata: {
+        orderId: order.id,
+        userId: req.user!.id,
+      },
+      success_url: `${env.FRONTEND_URL}/order-confirmed?id=${order.id}&payment=stripe_success`,
+      cancel_url: `${env.FRONTEND_URL}/checkout?payment=stripe_cancelled`,
+    });
+
+    await prisma.payment.upsert({
+      where: { orderId: order.id },
+      update: {
+        method: "STRIPE",
+        provider: "stripe",
+        status: "PENDING",
+        amount: order.totalAmount,
+        currency: "INR",
+        stripeSessionId: session.id,
+      },
+      create: {
+        orderId: order.id,
+        method: "STRIPE",
+        provider: "stripe",
+        status: "PENDING",
+        amount: order.totalAmount,
+        currency: "INR",
+        stripeSessionId: session.id,
+      },
+    });
+
+    ok(res, { url: session.url }, "Stripe checkout created");
+  }),
+);
+
+commerceRouter.post(
+  "/orders/:id/upi-session",
+  requireAuth,
+  asyncHandler(async (req, res) => {
+    const order = await prisma.order.findFirst({
+      where: {
+        id: req.params.id,
+        userId: req.user!.id,
+      },
+    });
+
+    if (!order) throw new AppError("Order not found", 404);
+
+    const activeUpi = await prisma.upiPaymentSetting.findFirst({
+      where: { isActive: true },
+      orderBy: { updatedAt: "desc" },
+    });
+
+    if (!activeUpi) {
+      throw new AppError("No active UPI ID configured by admin", 400);
+    }
+
+    const transactionRef = `NS-${Date.now()}-${Math.random()
+      .toString(36)
+      .slice(2, 8)
+      .toUpperCase()}`;
+
+    const amountRupees = (order.totalAmount / 100).toFixed(2);
+
+    const upiUri =
+      `upi://pay?pa=${encodeURIComponent(activeUpi.upiId)}` +
+      `&pn=${encodeURIComponent(activeUpi.displayName || "Noir Sane")}` +
+      `&am=${amountRupees}` +
+      `&cu=INR` +
+      `&tr=${encodeURIComponent(transactionRef)}` +
+      `&tn=${encodeURIComponent(`Noir Sane Order ${order.orderNumber}`)}`;
+
+    const qrDataUrl = await QRCode.toDataURL(upiUri, {
+      width: 260,
+      margin: 1,
+    });
+
+    const session = await prisma.upiPaymentSession.create({
+      data: {
+        orderId: order.id,
+        upiSettingId: activeUpi.id,
+        upiIdSnapshot: activeUpi.upiId,
+        payeeName: activeUpi.displayName || "Noir Sane",
+        amount: order.totalAmount,
+        currency: "INR",
+        transactionRef,
+        upiUri,
+        qrDataUrl,
+      },
+    });
+
+    ok(res, session, "UPI payment session created");
+  })
+);
+
+commerceRouter.post(
+  "/upi-sessions/:id/submit",
+  requireAuth,
+  asyncHandler(async (req, res) => {
+    const { utr, proofImageUrl } = req.body;
+
+    if (!/^\d{12}$/.test(utr)) {
+      throw new AppError("UTR must be 12 digits", 400);
+    }
+
+    const session = await prisma.upiPaymentSession.findFirst({
+      where: {
+        id: req.params.id,
+        order: {
+          userId: req.user!.id,
+        },
+      },
+    });
+
+    if (!session) throw new AppError("UPI session not found", 404);
+
+    const updated = await prisma.upiPaymentSession.update({
+      where: { id: session.id },
+      data: {
+        utr,
+        proofImageUrl,
+        status: "SUBMITTED",
+      },
+    });
+
+    await prisma.order.update({
+      where: { id: session.orderId },
+      data: {
+        paymentStatus: "SUBMITTED",
+        status: OrderStatus.PAYMENT_SUBMITTED,
+        paymentReferenceNumber: utr,
+      },
+    });
+
+    ok(res, updated, "Payment submitted for admin verification");
+  })
+);
+
 commerceRouter.post("/orders/:id/cancel", validate(idParam), asyncHandler(async (req, res) => {
   const order = await prisma.order.findFirst({ where: { id: req.params.id, userId: req.user!.id }, include: { items: true } });
   if (!order) throw new AppError("Order not found", 404);
@@ -247,6 +420,32 @@ adminCommerceRouter.patch("/orders/:id/assign-delivery-partner", validate(idPara
 adminCommerceRouter.patch("/orders/:id/estimated-delivery-time", validate(idParam.merge(etaSchema)), asyncHandler(async (req, res) => ok(res, await prisma.order.update({ where: { id: req.params.id }, data: req.body, include: includeOrder }), "Estimated delivery updated")));
 adminCommerceRouter.post("/orders/:id/tracking", validate(idParam.merge(trackingCreateSchema)), asyncHandler(async (req, res) => ok(res, await prisma.deliveryTracking.create({ data: { ...req.body, orderId: req.params.id, updatedById: req.user!.id } }), "Tracking added", 201)));
 adminCommerceRouter.get("/orders/:id/tracking", validate(idParam), asyncHandler(async (req, res) => ok(res, await prisma.deliveryTracking.findMany({ where: { orderId: req.params.id }, orderBy: { createdAt: "asc" } }))));
+
+adminCommerceRouter.patch(
+  "/upi-sessions/:id/status",
+  asyncHandler(async (req, res) => {
+    const { status } = req.body;
+
+    if (!["VERIFIED", "REJECTED"].includes(status)) {
+      throw new AppError("Invalid payment status", 400);
+    }
+
+    const session = await prisma.upiPaymentSession.update({
+      where: { id: req.params.id },
+      data: { status },
+    });
+
+    await prisma.order.update({
+      where: { id: session.orderId },
+      data: {
+        paymentStatus: status,
+        status: status === "VERIFIED" ? OrderStatus.CONFIRMED : OrderStatus.PAYMENT_SUBMITTED,
+      },
+    });
+
+    ok(res, session, "UPI payment status updated");
+  })
+);
 
 deliveryRouter.use(requireAuth, requireRole(Role.DELIVERY_PARTNER));
 deliveryRouter.get("/orders", asyncHandler(async (req, res) => ok(res, await prisma.order.findMany({ where: { deliveryPartnerId: req.user!.id }, include: includeOrder, orderBy: { createdAt: "desc" } }))));

@@ -23,8 +23,8 @@ export function PageShell({
   className?: string;
 }) {
   return (
-    <main className={`min-h-screen overflow-x-hidden bg-[#090403] text-[#f8eadc] ${className}`}>
-      <div className="pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(circle_at_20%_0%,rgba(157,106,54,0.18),transparent_34%),radial-gradient(circle_at_80%_18%,rgba(217,163,91,0.08),transparent_30%),linear-gradient(180deg,#090403_0%,#120804_48%,#090403_100%)]" />
+    <main className={`min-h-screen overflow-x-hidden bg-transparent text-[#f8eadc] ${className}`}>
+      <div className="pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(circle_at_20%_0%,rgba(157,106,54,0.10),transparent_34%),radial-gradient(circle_at_80%_18%,rgba(217,163,91,0.06),transparent_30%)]" />
       {children}
     </main>
   );
@@ -95,4 +95,3 @@ export function EmptyState({
     </div>
   );
 }
-

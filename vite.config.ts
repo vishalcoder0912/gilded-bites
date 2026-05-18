@@ -19,4 +19,26 @@ export default defineConfig(({ mode }) => ({
     },
     dedupe: ["react", "react-dom", "react/jsx-runtime", "react/jsx-dev-runtime", "@tanstack/react-query", "@tanstack/query-core"],
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (!id.includes("node_modules")) return undefined;
+          if (id.includes("@react-three") || id.includes("/three/")) return "three";
+          if (id.includes("framer-motion")) return "motion";
+          if (id.includes("firebase") || id.includes("@react-firebase")) return "firebase";
+          if (id.includes("@tanstack")) return "query";
+          if (id.includes("@radix-ui")) return "radix";
+          if (
+            id.includes("/react/") ||
+            id.includes("/react-dom/") ||
+            id.includes("react-router-dom")
+          ) {
+            return "react";
+          }
+          return undefined;
+        },
+      },
+    },
+  },
 }));

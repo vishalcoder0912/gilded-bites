@@ -53,7 +53,7 @@ const CartDrawer = () => {
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
             transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-className="fixed top-0 right-0 z-[70] h-full w-full max-w-md bg-gradient-dark-card border-l border-gold/20 flex flex-col shadow-soft"
+            className="fixed right-0 top-0 z-[70] flex h-full w-full max-w-md flex-col border-l border-gold/20 bg-gradient-dark-card shadow-soft"
           >
             <div className="flex items-center justify-between p-6 border-b border-gold/15">
               <div>
@@ -65,7 +65,7 @@ className="fixed top-0 right-0 z-[70] h-full w-full max-w-md bg-gradient-dark-ca
               </button>
             </div>
 
-            <div className="flex-1 overflow-y-auto p-6 space-y-5">
+            <div className="flex-1 space-y-5 overflow-y-auto p-4 sm:p-6">
               {isLoading ? (
                 <div className="flex items-center justify-center py-20">
                   <Loader2 className="w-6 h-6 animate-spin text-primary" />
@@ -84,7 +84,7 @@ className="fixed top-0 right-0 z-[70] h-full w-full max-w-md bg-gradient-dark-ca
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: 20 }}
-                  className="flex gap-4 pb-5 border-b border-gold/10"
+                  className="grid grid-cols-[80px_minmax(0,1fr)] gap-4 border-b border-gold/10 pb-5 sm:flex"
                 >
                   <img
                     src={getProductImage(item.product)}
@@ -122,7 +122,7 @@ className="fixed top-0 right-0 z-[70] h-full w-full max-w-md bg-gradient-dark-ca
                       </button>
                     </div>
                   </div>
-                  <div className="text-right">
+                  <div className="col-start-2 text-left sm:text-right">
                     <div className="font-serif text-lg gold-text">
                       {formatINR(item.priceSnapshot * item.quantity)}
                     </div>

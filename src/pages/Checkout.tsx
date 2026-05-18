@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Check, Copy, CreditCard, QrCode, Loader2, PackageCheck, Truck } from "lucide-react";
@@ -28,15 +28,77 @@ const Checkout = () => {
   const [selectedAddressId, setSelectedAddressId] = useState<string>("");
   const [utr, setUtr] = useState("");
   const [qrDataUrl, setQrDataUrl] = useState("");
+  const [qrError, setQrError] = useState("");
   const [copied, setCopied] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
-  const [paymentMethod, setPaymentMethod] = useState<"UPI" | "CARD">("UPI");
+  const [paymentMethod, setPaymentMethod] = useState<"UPI" | "STRIPE">("UPI");
+  const [upiSession, setUpiSession] = useState<{
+    id: string;
+    upiIdSnapshot: string;
+    transactionRef: string;
+    qrDataUrl: string;
+    amount: number;
+  } | null>(null);
 
   const subtotal = getSubtotal();
   const shipping = subtotal > 2500 ? 0 : 500;
   const grand = subtotal + shipping;
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const generateQr = async () => {
+      if (paymentMethod !== "UPI") {
+        setQrDataUrl("");
+        setQrError("");
+        return;
+      }
+
+      if (activeUpi?.qrCodeUrl) {
+        setQrDataUrl(activeUpi.qrCodeUrl);
+        setQrError("");
+        return;
+      }
+
+      if (!upiId) {
+        setQrDataUrl("");
+        setQrError("No active UPI ID is configured.");
+        return;
+      }
+
+      try {
+        const upiUri =
+          `upi://pay?pa=${encodeURIComponent(upiId)}` +
+          `&pn=${encodeURIComponent(activeUpi?.displayName || "Noir Sane")}` +
+          `&cu=INR` +
+          `&tn=${encodeURIComponent("Noir Sane Checkout")}`;
+
+        const dataUrl = await QRCode.toDataURL(upiUri, {
+          width: 260,
+          margin: 1,
+        });
+
+        if (!cancelled) {
+          setQrDataUrl(dataUrl);
+          setQrError("");
+        }
+      } catch (err) {
+        console.error("Failed to generate UPI QR:", err);
+        if (!cancelled) {
+          setQrDataUrl("");
+          setQrError("Unable to generate UPI QR. Please use the UPI ID manually.");
+        }
+      }
+    };
+
+    generateQr();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [activeUpi?.displayName, activeUpi?.qrCodeUrl, paymentMethod, upiId]);
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -68,20 +130,8 @@ const Checkout = () => {
     }
   }, [items.length, navigate, submitted]);
 
-  const upiUri = useMemo(() => {
-    const amount = grand.toFixed(2);
-    const payee = encodeURIComponent("Noir Sane");
-    const note = encodeURIComponent("Noir Sane order");
-    return `upi://pay?pa=${encodeURIComponent(upiId)}&pn=${payee}&am=${amount}&cu=INR&tn=${note}`;
-  }, [grand, upiId]);
-
-  useEffect(() => {
-    QRCode.toDataURL(upiUri, { width: 220, margin: 1 })
-      .then(setQrDataUrl)
-      .catch(() => setQrDataUrl(""));
-  }, [upiUri]);
-
   const copyUpi = async () => {
+    if (!upiId) return;
     await navigator.clipboard.writeText(upiId);
     setCopied(true);
     setTimeout(() => setCopied(false), 1800);
@@ -96,6 +146,14 @@ const Checkout = () => {
       setError("Please enter UTR/Transaction ID.");
       return;
     }
+    if (paymentMethod === "UPI" && !upiId) {
+      setError("No active UPI ID is configured. Please contact support.");
+      return;
+    }
+    if (paymentMethod === "UPI" && !/^\d{12}$/.test(utr.trim())) {
+      setError("UTR must be 12 digits.");
+      return;
+    }
 
     setSubmitting(true);
     setError("");
@@ -103,12 +161,30 @@ const Checkout = () => {
     try {
       const order = await orderApi.createOrder({
         addressId: selectedAddressId,
-        paymentMethod: paymentMethod === "UPI" ? "UPI" : "CARD",
+        paymentMethod,
         deliveryCharge: shipping || undefined,
       });
 
-      if (paymentMethod === "UPI" && utr.trim()) {
-        await orderApi.submitPayment(order.id, utr.trim(), upiId);
+      if (paymentMethod === "STRIPE") {
+        const stripeSession = await orderApi.createStripeCheckout(order.id);
+        window.location.href = stripeSession.url;
+        return;
+      }
+
+      if (paymentMethod === "UPI") {
+        const session = await orderApi.createUpiSession(order.id);
+        setUpiSession(session);
+        
+        if (utr.trim()) {
+          await orderApi.submitUpiSession(session.id, { utr: utr.trim() });
+          await clearCart();
+          setSubmitted(true);
+          navigate(`/order-confirmed?id=${order.id}`);
+          return;
+        }
+        
+        setSubmitting(false);
+        return;
       }
 
       await clearCart();
@@ -136,8 +212,8 @@ const Checkout = () => {
           <h1 className="font-serif text-5xl text-[#f8eadc] md:text-6xl">Checkout</h1>
         </motion.div>
 
-        <div className="mb-10 grid gap-3 sm:grid-cols-4">
-          {["Address", "Delivery", "Payment", "Review"].map((step, index) => (
+        <div className="mb-10 grid gap-3 sm:grid-cols-3">
+          {["Address", "Delivery", "Review"].map((step, index) => (
             <div key={step} className="rounded-sm border border-[#d9a35b]/18 bg-[#140904]/70 p-4">
               <div className="flex items-center gap-3">
                 <span className="grid h-8 w-8 place-items-center rounded-full bg-[#d9a35b] text-sm font-semibold text-[#090403]">{index + 1}</span>
@@ -241,42 +317,25 @@ const Checkout = () => {
             >
               <div className="mb-8">
                 <div className="eyebrow mb-3">Payment</div>
-                <h2 className="font-serif text-3xl text-[#f8eadc] mb-2">Choose payment method</h2>
+                <h2 className="font-serif text-3xl text-[#f8eadc] mb-2">Scan to Pay</h2>
               </div>
 
-              <div className="grid sm:grid-cols-2 gap-3 mb-8">
-                <button
-                  type="button"
-                  onClick={() => setPaymentMethod("CARD")}
-                  className={`border rounded-sm p-4 text-left transition-colors ${
-                    paymentMethod === "CARD" ? "border-primary bg-primary/10" : "border-border bg-rich/30 hover:border-primary/60"
-                  }`}
-                >
-                  <CreditCard className="w-5 h-5 text-primary mb-3" />
-                  <div className="font-serif text-xl">Card</div>
-                  <div className="text-xs text-muted-foreground mt-1">Pay with debit/credit card.</div>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setPaymentMethod("UPI")}
-                  className={`border rounded-sm p-4 text-left transition-colors ${
-                    paymentMethod === "UPI" ? "border-primary bg-primary/10" : "border-border bg-rich/30 hover:border-primary/60"
-                  }`}
-                >
-                  <QrCode className="w-5 h-5 text-primary mb-3" />
-                  <div className="font-serif text-xl">UPI</div>
-                  <div className="text-xs text-muted-foreground mt-1">Pay via UPI app.</div>
-                </button>
-              </div>
-
-              {paymentMethod === "UPI" && (
+              {(
                 <>
                   <div className="flex justify-center mb-6">
                     <div className="relative p-4 bg-cream rounded-sm shadow-glow">
-                      {qrDataUrl ? (
-                        <img src={qrDataUrl} alt="UPI QR code" width={220} height={220} className="w-[220px] h-[220px] object-cover" />
+                      {(qrDataUrl || upiSession?.qrDataUrl) ? (
+                        <img 
+                          src={upiSession?.qrDataUrl || qrDataUrl} 
+                          alt="UPI QR code" 
+                          width={220} 
+                          height={220} 
+                          className="w-[220px] h-[220px] object-cover" 
+                        />
                       ) : (
-                        <div className="w-[220px] h-[220px] grid place-items-center text-abyss text-sm">QR unavailable</div>
+                        <div className="w-[220px] h-[220px] grid place-items-center px-4 text-center text-abyss text-sm">
+                          {qrError || "Generating QR..."}
+                        </div>
                       )}
                       <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-gradient-gold text-abyss text-[10px] uppercase tracking-[0.25em] rounded-full">
                         Scan now
@@ -285,20 +344,38 @@ const Checkout = () => {
                   </div>
 
                   <div className="space-y-3 mb-8">
+                    <div className="rounded-sm border border-border bg-rich/40 p-4 text-center">
+                      <div className="text-xs uppercase tracking-[0.25em] text-muted-foreground">
+                        Pay using this QR code
+                      </div>
+                      <p className="mt-2 text-xs leading-5 text-muted-foreground">
+                        Scan the QR in any UPI app and enter the payable amount manually.
+                      </p>
+                    </div>
+
                     <div className="flex items-center justify-between p-4 bg-rich/40 rounded-sm border border-border">
                       <div>
                         <div className="text-xs uppercase tracking-[0.25em] text-muted-foreground">UPI ID</div>
-                        <div className="font-mono text-base mt-1">{upiId}</div>
+                        <div className="font-mono text-base mt-1">{upiSession?.upiIdSnapshot || upiId}</div>
                       </div>
-                      <button onClick={copyUpi} className="text-xs uppercase tracking-[0.25em] text-primary hover:text-gold-bright flex items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={copyUpi}
+                        className="text-xs uppercase tracking-[0.25em] text-primary hover:text-gold-bright flex items-center gap-2"
+                      >
                         {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
                         {copied ? "Copied" : "Copy"}
                       </button>
                     </div>
-                    <div className="flex items-center justify-between p-4 bg-rich/40 rounded-sm border border-border">
-                      <div className="text-xs uppercase tracking-[0.25em] text-muted-foreground">Amount due</div>
-                      <div className="font-serif text-2xl gold-text">{formatINR(grand)}</div>
-                    </div>
+
+                    {upiSession?.transactionRef && (
+                      <div className="flex items-center justify-between p-4 bg-rich/40 rounded-sm border border-border">
+                        <div>
+                          <div className="text-xs uppercase tracking-[0.25em] text-muted-foreground">Transaction Ref</div>
+                          <div className="font-mono text-sm mt-1 text-primary">{upiSession.transactionRef}</div>
+                        </div>
+                      </div>
+                    )}
                   </div>
 
                   <div className="hairline mb-8" />
@@ -325,10 +402,10 @@ const Checkout = () => {
 
               <button 
                 onClick={handlePlaceOrder} 
-                disabled={!selectedAddressId || (paymentMethod === "UPI" && !utr) || submitting}
+                disabled={!selectedAddressId || (paymentMethod === "UPI" && (!upiId || !utr.trim())) || submitting}
                 className="btn-gold w-full mt-6 disabled:opacity-60 disabled:cursor-not-allowed"
               >
-                {submitting ? <><Loader2 className="w-4 h-4 animate-spin" /> Processing...</> : "Place Order"}
+                {submitting ? <><Loader2 className="w-4 h-4 animate-spin" /> Processing...</> : upiSession && !utr ? "Order Created - Submit UTR to Confirm" : "Place Order"}
               </button>
             </motion.div>
           </div>

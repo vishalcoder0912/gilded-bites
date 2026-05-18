@@ -34,7 +34,7 @@ const Shop = () => {
       <div className="mb-6 flex items-center justify-between">
         <div>
           <p className="eyebrow mb-1">Categories</p>
-          <h2 className="font-serif text-2xl text-[#f8eadc]">Refine</h2>
+          <h2 className="font-serif text-2xl text-[#f8eadc]">Collection</h2>
         </div>
         <button className="lg:hidden" onClick={() => setShowMobileFilters(false)} aria-label="Close filters">
           <X className="h-4 w-4 text-[#c8b5a4]" />
@@ -49,7 +49,7 @@ const Shop = () => {
           }}
           className={`w-full rounded-sm px-3 py-2 text-left text-sm transition ${!categoryFilter ? "bg-[#d9a35b]/15 text-[#f0c27a]" : "text-[#c8b5a4] hover:bg-[#d9a35b]/8 hover:text-[#f8eadc]"}`}
         >
-          All Chocolates
+          All Collections
         </button>
         {categories?.map((cat) => (
           <button
@@ -67,7 +67,7 @@ const Shop = () => {
 
       <div className="my-6 h-px bg-gradient-to-r from-transparent via-[#d9a35b]/30 to-transparent" />
 
-      <label className="block text-xs uppercase tracking-[0.25em] text-[#d9a35b]">Price Range</label>
+      <label className="block text-xs uppercase tracking-[0.25em] text-[#d9a35b]">Gift Budget</label>
       <input
         type="range"
         min="500"
@@ -92,15 +92,16 @@ const Shop = () => {
       <section className="relative pt-28 pb-10 sm:pt-36 sm:pb-14">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(217,163,91,0.12),transparent_36%)]" />
         <div className="container relative text-center">
-          <p className="eyebrow mb-3">Shop</p>
-          <h1 className="font-serif text-5xl text-[#f8eadc] sm:text-7xl">Shop</h1>
+          <p className="eyebrow mb-3">Noir Sane Collection</p>
+          <h1 className="font-serif text-4xl leading-tight text-[#f8eadc] sm:text-7xl">Shop Dark Chocolate</h1>
           <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-[#c8b5a4] sm:text-base">
-            Curated selection of luxury chocolates.
+            Fruit Chocolates, Truffles, Bars, Pralines, Bonbons, and Single Origin pieces
+            crafted for gifting, celebration, and slow indulgence.
           </p>
         </div>
       </section>
 
-      <section className="container pb-24">
+      <section className="container pb-16 sm:pb-24">
         <div className="mb-6 grid gap-3 lg:grid-cols-[270px_1fr]">
           <button
             onClick={() => setShowMobileFilters(true)}
@@ -109,8 +110,8 @@ const Shop = () => {
             <SlidersHorizontal className="h-4 w-4" /> Filters
           </button>
           <div className="hidden lg:block" />
-          <div className="grid gap-3 md:grid-cols-[1fr_210px_190px]">
-            <div className="flex items-center gap-3 rounded-sm border border-[#d9a35b]/18 bg-[#140904]/80 px-4 py-3">
+          <div className="grid min-w-0 gap-3 md:grid-cols-[minmax(0,1fr)_210px_190px]">
+            <div className="flex min-w-0 items-center gap-3 rounded-sm border border-[#d9a35b]/18 bg-[#140904]/80 px-4 py-3">
               <Search className="h-4 w-4 text-[#9d6a36]" />
               <input
                 value={q}
@@ -118,7 +119,7 @@ const Shop = () => {
                   setQ(event.target.value);
                   setPage(1);
                 }}
-                placeholder="Search chocolates..."
+                placeholder="Search fruit chocolate, truffles, bars..."
                 className="w-full bg-transparent text-sm text-[#f8eadc] outline-none placeholder:text-[#c8b5a4]/55"
               />
               {q && <button onClick={() => setQ("")}><X className="h-4 w-4 text-[#c8b5a4]" /></button>}
@@ -131,7 +132,7 @@ const Shop = () => {
               }}
               className="rounded-sm border border-[#d9a35b]/18 bg-[#140904]/80 px-4 py-3 text-sm text-[#f8eadc] outline-none"
             >
-              <option value="">All Categories</option>
+              <option value="">All Collections</option>
               {categories?.map((cat) => <option key={cat.id} value={cat.id}>{cat.name}</option>)}
             </select>
             <select
@@ -142,7 +143,7 @@ const Shop = () => {
               }}
               className="rounded-sm border border-[#d9a35b]/18 bg-[#140904]/80 px-4 py-3 text-sm text-[#f8eadc] outline-none"
             >
-              <option value="">Sort By Featured</option>
+              <option value="">Featured First</option>
               <option value="name">Name</option>
               <option value="price_asc">Price: Low to High</option>
               <option value="price_desc">Price: High to Low</option>
@@ -151,8 +152,8 @@ const Shop = () => {
         </div>
 
         {showMobileFilters && (
-          <div className="fixed inset-0 z-[80] bg-black/60 p-4 backdrop-blur-sm lg:hidden" onClick={() => setShowMobileFilters(false)}>
-            <div className="max-w-sm" onClick={(event) => event.stopPropagation()}>{filterPanel}</div>
+          <div className="fixed inset-0 z-[80] overflow-y-auto bg-black/60 p-4 backdrop-blur-sm lg:hidden" onClick={() => setShowMobileFilters(false)}>
+            <div className="w-full max-w-sm" onClick={(event) => event.stopPropagation()}>{filterPanel}</div>
           </div>
         )}
 
@@ -170,9 +171,9 @@ const Shop = () => {
             {isLoading ? (
               <LoadingState />
             ) : error ? (
-              <EmptyState title="Unable to load shop" description="The product API did not respond. Please refresh and try again." />
+              <EmptyState title="The collection is resting" description="We could not load Noir Sane products right now. Please refresh to view Fruit Chocolates, Truffles, Bars, Pralines, Bonbons, and Single Origin pieces." />
             ) : productsData?.data.length === 0 ? (
-              <EmptyState title="No pieces found" description="Try adjusting your filters or search terms." actionLabel="View All" actionTo="/shop" />
+              <EmptyState title="Curating your selection" description="No matching chocolates are visible for these filters. Try another collection or return to all Noir Sane products." actionLabel="View All" actionTo="/shop" />
             ) : (
               <>
                 <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
@@ -182,7 +183,7 @@ const Shop = () => {
                 </div>
 
                 {productsData && productsData.totalPages > 1 && (
-                  <div className="mt-12 flex justify-center gap-2">
+                  <div className="mt-12 flex flex-wrap justify-center gap-2">
                     {Array.from({ length: productsData.totalPages }, (_, index) => (
                       <button
                         key={index}

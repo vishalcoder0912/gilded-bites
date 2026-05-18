@@ -28,7 +28,7 @@ const Hero = () => {
           transition={{ duration: 0.9, delay: 0.2 }}
           className="eyebrow mb-4 md:mb-6"
         >
-          Maison de Chocolat — Est. 1899
+          Wholesome Bites, Delightful Nights.
         </motion.p>
         <motion.h1
           initial={{ opacity: 0, y: 30 }}
@@ -36,7 +36,7 @@ const Hero = () => {
           transition={{ duration: 1, delay: 0.4 }}
           className="font-serif text-3xl sm:text-4xl md:text-6xl lg:text-8xl leading-[1.05] max-w-3xl"
         >
-          A world cast in <span className="gold-text italic">cocoa</span> & gold.
+          Noir Sane <span className="gold-text italic">dark chocolate</span>
         </motion.h1>
         <motion.p
           initial={{ opacity: 0, y: 20 }}
@@ -44,7 +44,7 @@ const Hero = () => {
           transition={{ duration: 0.9, delay: 0.7 }}
           className="mt-4 md:mt-8 max-w-sm md:max-w-md text-sm md:text-lg text-muted-foreground"
         >
-          Single-origin beans, atelier-finished by hand. Tap the sphere to enter the collection.
+          Premium dark chocolate with fruit-forward fillings, glossy jelly notes, and elegant gifting.
         </motion.p>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -56,7 +56,7 @@ const Hero = () => {
             Explore the Collection
           </button>
           <button onClick={() => navigate("/shop")} className="btn-ghost-gold text-sm md:text-base px-5 py-2.5 md:px-7 md:py-3">
-            Our Atelier
+            Explore Our Story
           </button>
         </motion.div>
       </div>

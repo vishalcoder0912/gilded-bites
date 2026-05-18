@@ -37,7 +37,9 @@ const OrderConfirmation = () => {
     return null;
   }
 
-  const paymentLabel = order.paymentMethod === "CARD" ? "Card" : "UPI";
+  const isStripePayment = order.paymentMethod === "STRIPE";
+  const paymentLabel = isStripePayment ? "Stripe" : "UPI";
+  const isPaid = order.paymentStatus === "PAID" || order.paymentStatus === "VERIFIED";
 
   return (
     <div className="pt-24 pb-24">
@@ -89,20 +91,21 @@ const OrderConfirmation = () => {
             <div>
               <div className="text-xs uppercase tracking-[0.25em] text-muted-foreground mb-1">Payment</div>
               <div className="inline-flex items-center gap-2 text-sm">
-                {order.paymentMethod === "CARD" ? <CreditCard className="w-4 h-4 text-primary" /> : <QrCode className="w-4 h-4 text-primary" />}
+                {isStripePayment ? <CreditCard className="w-4 h-4 text-primary" /> : <QrCode className="w-4 h-4 text-primary" />}
                 {paymentLabel}
               </div>
             </div>
             <div>
               <div className="text-xs uppercase tracking-[0.25em] text-muted-foreground mb-1">Payment Status</div>
               <div className={`inline-block px-2 py-0.5 text-xs rounded-full ${
-                order.paymentStatus === "VERIFIED"
+                isPaid
                   ? "bg-emerald-900/30 text-emerald-400"
                   : order.paymentStatus === "SUBMITTED"
                   ? "bg-amber-900/30 text-amber-100"
                   : "bg-amber-900/30 text-amber-100"
               }`}>
-                {order.paymentStatus === "VERIFIED" ? "Verified" : 
+                {order.paymentStatus === "PAID" ? "Paid" :
+                 order.paymentStatus === "VERIFIED" ? "Verified" : 
                  order.paymentStatus === "SUBMITTED" ? "Submitted" : 
                  order.paymentStatus === "PENDING" ? "Pending" : order.paymentStatus}
               </div>

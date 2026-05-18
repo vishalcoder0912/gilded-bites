@@ -32,49 +32,87 @@ const Login = () => {
   }, [error]);
 
   if (isAuthenticated) {
-    return <Navigate to={from} replace />;
+    const storedUser = localStorage.getItem("user");
+    const user = storedUser ? JSON.parse(storedUser) : null;
+
+    if (user?.role === "ADMIN") {
+      return <Navigate to="/admin" replace />;
+    }
+
+    if (user?.role === "DELIVERY_PARTNER") {
+      return <Navigate to="/delivery" replace />;
+    }
+
+    return <Navigate to={from || "/dashboard"} replace />;
   }
 
   const onSubmit = async (event: FormEvent) => {
     event.preventDefault();
+
     setFieldError(null);
     setSubmitting(true);
     clearError();
+
     const result = await login(email, password);
+
     setSubmitting(false);
-    if (result.ok) {
-      toast({ title: "Welcome back", description: "Your coffret is waiting." });
-      const pendingItem = takePendingCartItem();
-      if (pendingItem) {
-        await addToCart(pendingItem.productId, pendingItem.quantity);
-      }
-      const storedUser = localStorage.getItem("user");
-      const role = storedUser ? JSON.parse(storedUser)?.role : "USER";
-      const destination = role === "ADMIN" ? "/admin" : role === "DELIVERY_PARTNER" ? "/delivery" : from;
-      navigate(destination, { replace: true });
-      if (routeState?.openCart) {
-        window.setTimeout(open, 0);
-      }
+
+    if (!result.ok) {
+      setFieldError(result.error);
       return;
     }
-    setFieldError(result.error);
+
+    const storedUser = localStorage.getItem("user");
+    const user = storedUser ? JSON.parse(storedUser) : null;
+
+    if (user?.role === "ADMIN") {
+      toast({
+        title: "Admin login successful",
+        description: "Opening admin dashboard.",
+      });
+
+      navigate("/admin", { replace: true });
+      return;
+    }
+
+    if (user?.role === "DELIVERY_PARTNER") {
+      navigate("/delivery", { replace: true });
+      return;
+    }
+
+    toast({
+      title: "Welcome back",
+      description: "Your account is ready.",
+    });
+
+    const pendingItem = takePendingCartItem();
+
+    if (pendingItem) {
+      await addToCart(pendingItem.productId, pendingItem.quantity);
+    }
+
+    navigate(from || "/dashboard", { replace: true });
+
+    if (routeState?.openCart) {
+      window.setTimeout(open, 0);
+    }
   };
 
   return (
     <main className="min-h-screen flex">
-      <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden bg-[#120804]">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(25,12,4,0.8),transparent_70%),linear-gradient(135deg,#210e06_0%,#120804_50%,#090402_100%)]" />
+      <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden bg-[#120804]/35 backdrop-blur-sm">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(25,12,4,0.62),transparent_70%),linear-gradient(135deg,rgba(33,14,6,0.72)_0%,rgba(18,8,4,0.46)_50%,rgba(9,4,2,0.34)_100%)]" />
         <div className="relative z-10 flex flex-col justify-center px-16">
-          <p className="eyebrow mb-6">Maison de Chocolat</p>
+          <p className="eyebrow mb-6">Wholesome Bites, Delightful Nights.</p>
           <h1 className="font-serif text-5xl md:text-6xl text-cream leading-tight">
             Return to your <span className="gold-text italic">coffret</span>
           </h1>
           <p className="mt-6 text-muted-foreground max-w-md">
-            Sign in to continue your selection, review your orders, and experience the full luxury of Noir Sane.
+            Sign in to continue your selection, review orders, track delivery, and return to your Noir Sane cart.
           </p>
           <div className="mt-12">
             <div className="hairline mb-8 w-32" />
-            <p className="text-xs uppercase tracking-[0.3em] text-[#d4a35b]">Est. 1899 · Gwalior</p>
+            <p className="text-xs uppercase tracking-[0.3em] text-[#d4a35b]">Dark chocolate · Fruit-jelly centres</p>
           </div>
         </div>
       </div>

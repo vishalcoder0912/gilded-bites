@@ -1,134 +1,187 @@
+import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
-import { Flame, Gem, Gift, Leaf, Sparkles, Wand2 } from "lucide-react";
-import NoirSaneHero from "@/components/home/NoirSaneHero";
-import ProductCard from "@/components/ProductCard";
-import { EmptyState, LoadingState, SectionHeading } from "@/components/luxury/LuxuryPrimitives";
-import { useProducts } from "@/store/catalog";
-import productOrigin from "@/assets/product-origin.jpg";
-import productTruffle from "@/assets/product-truffle.jpg";
+import { ArrowRight, Heart, Leaf, ShieldCheck, Sparkles } from "lucide-react";
+import { motion } from "framer-motion";
 
-const process = [
-  { icon: Leaf, title: "Select", text: "Finest single-origin cacao beans." },
-  { icon: Flame, title: "Roast", text: "Slow roasted to unlock depth." },
-  { icon: Wand2, title: "Refine", text: "Conched until smooth and aromatic." },
-  { icon: Sparkles, title: "Craft", text: "Hand-finished with precision." },
-  { icon: Gift, title: "Create", text: "Chocolates that delight the soul." },
+const products = [
+  {
+    title: "Noir Fruit Chocolates",
+    desc: "Dark chocolate paired with natural fruit pulp jelly.",
+  },
+  {
+    title: "Mood Ritual Bites",
+    desc: "A mindful chocolate ritual for calm, joy, and balance.",
+  },
+  {
+    title: "Glow & Energy Collection",
+    desc: "Rich cacao crafted for daily indulgence and inner radiance.",
+  },
 ];
 
-const Home = () => {
-  const featured = useProducts({ limit: 4, sort: "featured" });
-  const bestSellers = useProducts({ limit: 4, sort: "price_desc" });
-
+export default function Home() {
   return (
-    <main className="overflow-x-hidden bg-[#090403]">
-      <NoirSaneHero />
+    <main className="relative min-h-screen overflow-hidden bg-[#050201] text-[#f8eadc]">
+      <section className="relative z-10 flex min-h-screen items-center px-6 pt-28 md:px-16">
+        <div className="max-w-4xl">
+          <motion.p
+            initial={{ opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-5 flex items-center gap-2 text-xs uppercase tracking-[0.45em] text-[#d7a85f]"
+          >
+            <Sparkles size={15} /> Wholesome Bites, Delightful Nights
+          </motion.p>
 
-      <section className="relative border-t border-[#d9a35b]/10 py-20 sm:py-24">
-        <div className="container">
-          <SectionHeading
-            eyebrow="Featured Creations"
-            title="Signature pieces for"
-            accent="slow tasting."
-            centered
-          />
+          <motion.h1
+            initial={{ opacity: 0, y: 28 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.12 }}
+            className="font-serif text-6xl leading-[0.9] tracking-tight md:text-8xl lg:text-9xl"
+          >
+            Dark Chocolate <br />
+            <span className="italic text-[#d7a85f]">for your mood.</span>
+          </motion.h1>
 
-          <div className="mt-12">
-            {featured.isLoading ? (
-              <LoadingState />
-            ) : featured.error ? (
-              <EmptyState title="The collection is resting" description="We could not load the featured creations. Please try again in a moment." />
-            ) : (
-              <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-                {featured.data?.data.slice(0, 4).map((product, index) => (
-                  <ProductCard key={product.id} product={product} index={index} />
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
-      </section>
+          <motion.p
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.22 }}
+            className="mt-8 max-w-2xl text-base leading-8 text-[#c8b5a4] md:text-lg"
+          >
+            NoirSane blends premium dark chocolate with fruit-forward indulgence,
+            designed as a daily ritual for calm, joy, emotional balance, and
+            mindful pleasure.
+          </motion.p>
 
-      <section id="about" className="relative py-16 sm:py-24">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_40%,rgba(217,163,91,0.12),transparent_34%)]" />
-        <div className="container relative grid gap-10 lg:grid-cols-[0.78fr_1.22fr] lg:items-center">
-          <div>
-            <SectionHeading
-              eyebrow="Our Maison"
-              title="Where passion meets"
-              accent="precision."
-              description="Since 1899, Noir Sane has been a celebration of fine cacao and French-inspired craftsmanship. Every chocolate is a piece of our heritage, curated with patience, perfected with passion."
-            />
-            <Link to="/about" className="btn-ghost-gold mt-8">
-              Discover Our Story
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.34 }}
+            className="mt-10 flex flex-wrap gap-4"
+          >
+            <Link
+              to="/shop"
+              className="group inline-flex items-center gap-3 rounded-full bg-[#d7a85f] px-7 py-4 text-xs font-bold uppercase tracking-[0.25em] text-[#090403] transition hover:scale-105"
+            >
+              Explore Chocolates
+              <ArrowRight size={16} className="transition group-hover:translate-x-1" />
             </Link>
-          </div>
 
-          <div className="relative overflow-hidden rounded-sm border border-[#d9a35b]/18 bg-[#180c06]/65">
-            <img src={productOrigin} alt="Noir Sane chocolate atelier" className="h-[360px] w-full object-cover opacity-90 sm:h-[460px]" loading="lazy" />
-            <div className="absolute inset-0 bg-gradient-to-r from-[#090403]/70 via-transparent to-[#090403]/20" />
-            <div className="absolute bottom-6 left-6 max-w-xs">
-              <p className="eyebrow mb-2">Atelier Finished</p>
-              <p className="font-serif text-3xl text-[#f8eadc]">Human hands, precise temperatures, patient craft.</p>
-            </div>
+            <Link
+              to="/about"
+              className="inline-flex items-center rounded-full border border-[#d7a85f]/30 px-7 py-4 text-xs font-semibold uppercase tracking-[0.25em] text-[#f8eadc] transition hover:bg-[#d7a85f]/10"
+            >
+              Our Story
+            </Link>
+          </motion.div>
+        </div>
+      </section>
+
+      <section className="relative z-10 px-6 py-24 md:px-16">
+        <div className="mx-auto max-w-6xl">
+          <p className="mb-4 text-xs uppercase tracking-[0.4em] text-[#d7a85f]">
+            The NoirSane Ritual
+          </p>
+
+          <h2 className="max-w-3xl font-serif text-4xl leading-tight md:text-6xl">
+            Chocolate that feels like calm, glow, and emotional reset.
+          </h2>
+
+          <div className="mt-14 grid gap-6 md:grid-cols-3">
+            <Feature
+              icon={<Heart />}
+              title="Mood Elevation"
+              desc="Dark chocolate supports feel-good rituals built around joy, balance, and emotional wellbeing."
+            />
+            <Feature
+              icon={<Leaf />}
+              title="Natural Indulgence"
+              desc="Fruit pulp jelly and cacao create a clean, rich, and memorable chocolate experience."
+            />
+            <Feature
+              icon={<ShieldCheck />}
+              title="Daily Resilience"
+              desc="A premium chocolate ritual for stress relief, inner glow, energy, and mindful living."
+            />
           </div>
         </div>
       </section>
 
-      <section id="story" className="py-16 sm:py-24">
-        <div className="container">
-          <SectionHeading eyebrow="The Craft" title="From bean to bar, a journey" accent="of artistry." centered />
-          <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-            {process.map((step) => (
-              <div key={step.title} className="rounded-sm border border-[#d9a35b]/18 bg-[#140904]/70 p-6 text-center transition hover:-translate-y-1 hover:border-[#d9a35b]/45">
-                <div className="mx-auto mb-5 grid h-12 w-12 place-items-center rounded-full border border-[#d9a35b]/30 text-[#d9a35b]">
-                  <step.icon className="h-5 w-5" />
-                </div>
-                <h3 className="text-xs font-semibold uppercase tracking-[0.28em] text-[#f0c27a]">{step.title}</h3>
-                <p className="mt-3 text-sm leading-relaxed text-[#c8b5a4]">{step.text}</p>
+      <section className="relative z-10 px-6 py-24 md:px-16">
+        <div className="mx-auto max-w-6xl rounded-[3rem] border border-[#d7a85f]/20 bg-[#100604]/70 p-8 backdrop-blur-xl md:p-12">
+          <div className="grid gap-10 md:grid-cols-[0.9fr_1.1fr] md:items-end">
+            <div>
+              <p className="mb-4 text-xs uppercase tracking-[0.4em] text-[#d7a85f]">
+                Signature Collection
+              </p>
+              <h2 className="font-serif text-4xl leading-tight md:text-6xl">
+                Fruit-filled dark chocolate, made for gifting.
+              </h2>
+            </div>
+
+            <p className="text-sm leading-8 text-[#c8b5a4] md:text-base">
+              From apple, orange, mango, grape, pineapple, and pomegranate
+              inspired notes, NoirSane turns chocolate into a sensory story -
+              rich, glossy, emotional, and premium.
+            </p>
+          </div>
+
+          <div className="mt-12 grid gap-5 md:grid-cols-3">
+            {products.map((item) => (
+              <div
+                key={item.title}
+                className="rounded-[2rem] border border-[#d7a85f]/15 bg-[#050201]/55 p-6 transition hover:-translate-y-2 hover:border-[#d7a85f]/45"
+              >
+                <h3 className="font-serif text-2xl text-[#f8eadc]">
+                  {item.title}
+                </h3>
+                <p className="mt-4 text-sm leading-7 text-[#c8b5a4]">
+                  {item.desc}
+                </p>
               </div>
             ))}
           </div>
+
+          <Link
+            to="/shop"
+            className="mt-10 inline-flex items-center gap-3 rounded-full bg-[#f8eadc] px-7 py-4 text-xs font-bold uppercase tracking-[0.25em] text-[#050201]"
+          >
+            Shop Collection <ArrowRight size={16} />
+          </Link>
         </div>
       </section>
 
-      <section className="py-16 sm:py-24">
-        <div className="container">
-          <SectionHeading eyebrow="Best Sellers" title="Beloved by the" accent="maison." centered />
-          <div className="mt-12">
-            {bestSellers.isLoading ? (
-              <LoadingState />
-            ) : bestSellers.error ? (
-              <EmptyState title="Best sellers are unavailable" description="The atelier could not load best sellers right now." />
-            ) : (
-              <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-                {bestSellers.data?.data.slice(0, 4).map((product, index) => (
-                  <ProductCard key={product.id} product={product} index={index} />
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
-      </section>
-
-      <section className="pb-20 sm:pb-28">
-        <div className="container">
-          <div className="relative overflow-hidden rounded-sm border border-[#d9a35b]/22 bg-[#1a0b05] p-8 sm:p-12">
-            <img src={productTruffle} alt="Noir Sane gifting collection" loading="lazy" className="absolute inset-0 h-full w-full object-cover opacity-45" />
-            <div className="absolute inset-0 bg-gradient-to-r from-[#090403] via-[#090403]/74 to-transparent" />
-            <div className="relative max-w-xl">
-              <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#d9a35b]/25 bg-[#d9a35b]/10 px-4 py-2 text-xs uppercase tracking-[0.24em] text-[#f0c27a]">
-                <Gem className="h-4 w-4" /> The Art of Gifting
-              </div>
-              <h2 className="font-serif text-4xl leading-tight text-[#f8eadc] sm:text-5xl">Make every moment unforgettable.</h2>
-              <Link to="/shop" className="btn-gold mt-8">
-                Explore Gift Collection
-              </Link>
-            </div>
-          </div>
-        </div>
+      <section className="relative z-10 px-6 py-28 text-center md:px-16">
+        <p className="mb-5 text-xs uppercase tracking-[0.4em] text-[#d7a85f]">
+          Calm in a Bite
+        </p>
+        <h2 className="mx-auto max-w-4xl font-serif text-5xl leading-tight md:text-7xl">
+          A chocolate experience for delightful nights.
+        </h2>
+        <p className="mx-auto mt-7 max-w-2xl text-base leading-8 text-[#c8b5a4]">
+          Discover NoirSane - premium dark chocolate crafted for taste,
+          emotion, gifting, and everyday mindful indulgence.
+        </p>
       </section>
     </main>
   );
-};
+}
 
-export default Home;
+function Feature({
+  icon,
+  title,
+  desc,
+}: {
+  icon: ReactNode;
+  title: string;
+  desc: string;
+}) {
+  return (
+    <div className="rounded-[2rem] border border-[#d7a85f]/15 bg-[#100604]/65 p-7 backdrop-blur-md">
+      <div className="mb-6 flex h-12 w-12 items-center justify-center rounded-full bg-[#d7a85f]/15 text-[#d7a85f]">
+        {icon}
+      </div>
+      <h3 className="font-serif text-2xl">{title}</h3>
+      <p className="mt-4 text-sm leading-7 text-[#c8b5a4]">{desc}</p>
+    </div>
+  );
+}

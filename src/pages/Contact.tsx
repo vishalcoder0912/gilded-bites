@@ -2,10 +2,10 @@ import { Clock, Mail, MapPin, Phone } from "lucide-react";
 import { PageShell, SectionHeading } from "@/components/luxury/LuxuryPrimitives";
 
 const contactItems = [
-  { icon: MapPin, title: "Store", text: "Noir Sane Atelier, Gwalior, India" },
+  { icon: MapPin, title: "Orders", text: "Noir Sane support, Gwalior, India" },
   { icon: Mail, title: "Email", text: "care@noirsane.com" },
   { icon: Phone, title: "Phone", text: "+91 98765 43210" },
-  { icon: Clock, title: "Hours", text: "Monday - Saturday, 10 AM - 8 PM" },
+  { icon: Clock, title: "Support Hours", text: "Monday - Saturday, 10 AM - 8 PM" },
 ];
 
 export default function Contact() {
@@ -16,9 +16,9 @@ export default function Contact() {
           <div>
             <SectionHeading
               eyebrow="Contact"
-              title="We'd love to hear"
-              accent="from you."
-              description="For gifting, custom orders, delivery questions, or atelier visits, write to us and our team will respond with care."
+              title="For orders, gifting, and"
+              accent="support."
+              description="For orders, gifting requests, collaborations, or support, contact Noir Sane. Our team can help with product selection, checkout questions, delivery tracking, and celebration gifting."
             />
             <div className="mt-10 grid gap-4">
               {contactItems.map((item) => (
@@ -37,10 +37,10 @@ export default function Contact() {
             <div className="grid gap-5 sm:grid-cols-2">
               <input className="input-luxury" placeholder="Your Name" />
               <input className="input-luxury" type="email" placeholder="Email Address" />
-              <input className="input-luxury sm:col-span-2" placeholder="Subject" />
-              <textarea className="input-luxury min-h-[180px] sm:col-span-2" placeholder="Your Message" />
+              <input className="input-luxury sm:col-span-2" placeholder="Order, gifting, collaboration, or support" />
+              <textarea className="input-luxury min-h-[180px] sm:col-span-2" placeholder="Tell us how we can help" />
             </div>
-            <button type="button" className="btn-gold mt-6 w-full">Send Message</button>
+            <button type="button" className="btn-gold mt-6 w-full">Contact Noir Sane</button>
           </form>
         </div>
       </section>

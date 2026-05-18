@@ -38,12 +38,16 @@ enum PaymentStatus {
   SUBMITTED
   VERIFIED
   REJECTED
+  PAID
+  FAILED
+  CANCELLED
   REFUNDED
 }
 
 enum PaymentMethod {
   UPI
   COD
+  STRIPE
 }
 
 model User {
@@ -211,6 +215,8 @@ model Order {
   upiSetting                 UpiPaymentSetting? @relation(fields: [upiSettingId], references: [id], onDelete: SetNull)
   items                      OrderItem[]
   tracking                   DeliveryTracking[]
+  payment                    Payment?
+  upiSessions                UpiPaymentSession[]
 
   @@index([userId, createdAt])
   @@index([deliveryPartnerId, status])
@@ -230,6 +236,59 @@ model OrderItem {
   product              Product @relation(fields: [productId], references: [id])
 
   @@index([orderId])
+}
+
+model Payment {
+  id                    String        @id @default(cuid())
+  orderId               String        @unique
+  order                 Order         @relation(fields: [orderId], references: [id])
+
+  method                PaymentMethod
+  provider              String?
+  status                PaymentStatus @default(PENDING)
+
+  amount                Int
+  currency              String        @default("INR")
+
+  stripeSessionId       String?
+  stripePaymentIntentId String?
+  stripePaymentStatus   String?
+
+  upiReferenceNumber    String?
+  proofImageUrl         String?
+
+  createdAt             DateTime      @default(now())
+  updatedAt             DateTime      @updatedAt
+
+  @@index([orderId])
+  @@index([status])
+}
+
+model UpiPaymentSession {
+  id             String        @id @default(cuid())
+  orderId        String
+  order          Order         @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  upiSettingId  String
+  upiIdSnapshot  String
+  payeeName      String        @default("Noir Sane")
+
+  amount         Int
+  currency       String        @default("INR")
+
+  transactionRef String       @unique
+  upiUri         String
+  qrDataUrl      String?
+
+  status         PaymentStatus @default(PENDING)
+  utr            String?
+  proofImageUrl  String?
+
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  @@index([orderId])
+  @@index([transactionRef])
 }
 
 model DeliveryTracking {

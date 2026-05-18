@@ -260,6 +260,31 @@ export const orderApi = {
     return api.post<Order>(`/orders/${orderId}/payment-submit`, { paymentReferenceNumber, upiId });
   },
 
+  async createStripeCheckout(orderId: string) {
+    return api.post<{ url: string }>(`/orders/${orderId}/stripe-checkout`);
+  },
+
+  async createUpiSession(orderId: string) {
+    return api.post<{
+      id: string;
+      orderId: string;
+      upiIdSnapshot: string;
+      payeeName: string;
+      amount: number;
+      transactionRef: string;
+      upiUri: string;
+      qrDataUrl: string;
+      status: string;
+    }>(`/orders/${orderId}/upi-session`);
+  },
+
+  async submitUpiSession(
+    sessionId: string,
+    data: { utr: string; proofImageUrl?: string }
+  ) {
+    return api.post(`/upi-sessions/${sessionId}/submit`, data);
+  },
+
   async cancelOrder(orderId: string) {
     return api.post(`/orders/${orderId}/cancel`);
   },

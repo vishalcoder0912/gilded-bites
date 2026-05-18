@@ -188,11 +188,11 @@ function GoldenOrbit() {
     const time = clock.getElapsedTime();
 
     if (ringOne.current) {
-      ringOne.current.rotation.z = time * 0.18;
+      ringOne.current.rotation.z = time * 0.08;
     }
 
     if (ringTwo.current) {
-      ringTwo.current.rotation.z = -time * 0.14;
+      ringTwo.current.rotation.z = -time * 0.06;
     }
   });
 
@@ -231,7 +231,7 @@ function ChocolateSphere({
     const time = clock.getElapsedTime();
 
     const targetX = mouse.current.y * 0.18;
-    const targetY = mouse.current.x * 0.35 + time * 0.08;
+    const targetY = mouse.current.x * 0.35 + time * 0.03;
 
     group.current.rotation.x = THREE.MathUtils.lerp(
       group.current.rotation.x,
@@ -263,7 +263,7 @@ function ChocolateSphere({
     );
 
     if (sphere.current) {
-      sphere.current.rotation.z = Math.sin(time * 0.35) * 0.015;
+      sphere.current.rotation.z = Math.sin(time * 0.15) * 0.015;
     }
   });
 

@@ -11,6 +11,8 @@ node_modules
 dist
 dist-ssr
 *.local
+PROJECT_AI_SAFE.md
+PROJECT_ARCHITECTURE.md
 
 # Editor directories and files
 .vscode/*

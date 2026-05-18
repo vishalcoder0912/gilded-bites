@@ -6,7 +6,6 @@ import {
   Heart,
   ArrowRight,
 } from "lucide-react";
-import ChocolateGlobe from "@/components/ChocolateGlobe";
 
 function FeatureItem({
   icon,
@@ -60,7 +59,7 @@ export default function NoirSaneHero() {
         <div className="grid flex-1 items-center gap-3 pb-5 pt-8 sm:gap-6 sm:pt-10 lg:grid-cols-[0.9fr_1.1fr] lg:gap-8 lg:pb-0 lg:pt-0">
           <div className="relative z-20 max-w-3xl text-center sm:text-left lg:pl-8">
             <p className="mb-4 text-[10px] font-medium uppercase tracking-[0.38em] text-[#c38a46] sm:mb-6 sm:text-sm sm:tracking-[0.48em]">
-              Maison de Chocolat
+              Wholesome Bites, Delightful Nights.
             </p>
 
             <h2 className="font-serif text-[clamp(3.35rem,18vw,5rem)] leading-[0.92] tracking-[-0.025em] text-[#fff1e4] sm:text-[6rem] lg:text-[6.35rem] xl:text-[7rem] 2xl:text-[7.5rem]">
@@ -87,7 +86,7 @@ export default function NoirSaneHero() {
               </button>
 
               <Link
-                to="/shop"
+                to="/atelier"
                 className="inline-flex h-14 items-center justify-center rounded-sm border border-[#d7a85f]/35 px-6 text-xs font-bold uppercase tracking-[0.2em] text-[#f7e8d8] transition hover:border-[#d7a85f] hover:bg-[#d7a85f]/10 sm:h-16 sm:px-9 sm:text-sm sm:tracking-[0.25em]"
               >
                 Our Atelier
@@ -95,12 +94,7 @@ export default function NoirSaneHero() {
             </div>
           </div>
 
-          <div className="relative z-10 -mx-2 -mt-2 sm:-mx-4 lg:absolute lg:right-[1vw] lg:top-[13vh] lg:mx-0 lg:mt-0 lg:w-[52vw] xl:right-[3vw] xl:w-[50vw] 2xl:w-[47vw]">
-            <ChocolateGlobe
-              onClick={openCollection}
-              className="lg:h-[min(58vw,720px)] xl:h-[min(54vw,740px)]"
-            />
-          </div>
+
         </div>
 
         <div className="relative z-20 -mx-4 flex gap-3 overflow-x-auto border-t border-[#d7a85f]/10 px-4 py-5 [scrollbar-width:none] sm:mx-0 sm:grid sm:grid-cols-2 sm:overflow-visible sm:px-0 sm:py-8 lg:grid-cols-4 lg:max-w-[1180px] lg:pl-8 [&::-webkit-scrollbar]:hidden">

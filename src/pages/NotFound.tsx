@@ -41,7 +41,7 @@ const NotFound = () => {
           <div className="mt-16">
             <div className="hairline mb-8 w-24 mx-auto" />
             <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground">
-              MAISON DE CHOCOLAT · Est. 1899
+              DARK CHOCOLATE · FRUIT-JELLY CENTRES
             </p>
           </div>
         </motion.div>

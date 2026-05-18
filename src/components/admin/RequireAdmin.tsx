@@ -40,11 +40,11 @@ const RequireAdmin = ({ children }: { children?: React.ReactNode }) => {
   }
 
   if (!isAuthenticated || !user) {
-    return <Navigate to="/admin/login" state={{ from: location.pathname }} replace />;
+    return <Navigate to="/login" state={{ from: location.pathname }} replace />;
   }
 
   if (user.role !== "ADMIN") {
-    return <Navigate to="/admin/login" state={{ from: location.pathname }} replace />;
+    return <Navigate to="/login" state={{ from: location.pathname }} replace />;
   }
 
   return children ? <>{children}</> : <Outlet />;

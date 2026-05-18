@@ -257,7 +257,7 @@ const AdminProducts = () => {
                 </tr>
               ))}
               {productsData?.data.length === 0 && (
-                <tr><td colSpan={6} className="px-5 py-12 text-center text-muted-foreground">No products found.</td></tr>
+                <tr><td colSpan={6} className="px-5 py-12 text-center text-muted-foreground">No Noir Sane products are visible yet.</td></tr>
               )}
             </tbody>
           </table>

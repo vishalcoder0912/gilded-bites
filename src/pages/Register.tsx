@@ -62,11 +62,11 @@ const Register = () => {
             Begin your <span className="gold-text italic">selection</span>
           </h1>
           <p className="mt-6 text-muted-foreground max-w-md">
-            Create an account to save your preferences, track orders, and receive exclusive access to new collections.
+            Create an account to save your cart, track orders, manage addresses, and discover new Noir Sane collections.
           </p>
           <div className="mt-12">
             <div className="hairline mb-8 w-32" />
-            <p className="text-xs uppercase tracking-[0.3em] text-[#d4a35b]">Est. 1899 · Gwalior</p>
+            <p className="text-xs uppercase tracking-[0.3em] text-[#d4a35b]">Dark chocolate · Fruit-jelly centres</p>
           </div>
         </div>
       </div>
@@ -89,7 +89,7 @@ const Register = () => {
                 <span className="font-serif text-2xl text-abyss">N</span>
               </div>
               <p className="eyebrow mb-2">Join Noir Sane</p>
-              <p className="text-sm text-muted-foreground">Register to start your journey</p>
+              <p className="text-sm text-muted-foreground">Register to begin your chocolate selection</p>
             </div>
 
             <form onSubmit={onSubmit} className="space-y-5">

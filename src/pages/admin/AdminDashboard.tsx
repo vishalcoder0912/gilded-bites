@@ -555,7 +555,7 @@ export default function AdminDashboard() {
         setError(message);
 
         if (message.toLowerCase().includes("unauthorized")) {
-          navigate("/admin/login");
+          navigate("/login");
         }
       } finally {
         setLoading(false);
@@ -981,7 +981,7 @@ function RecentOrdersTable({ orders }: { orders: OrderRow[] }) {
 
 function InventoryTable({ products }: { products: ProductRow[] }) {
   if (!products.length) {
-    return <div className="py-8 text-center text-sm text-muted-foreground">No products found.</div>;
+    return <div className="py-8 text-center text-sm text-muted-foreground">No Noir Sane products are visible yet.</div>;
   }
 
   return (

@@ -4,14 +4,18 @@ import helmet from "helmet";
 import rateLimit from "express-rate-limit";
 import pinoHttp from "pino-http";
 import swaggerUi from "swagger-ui-express";
-import { corsOrigins } from "./config/env";
+import Stripe from "stripe";
+import { corsOrigins, env } from "./config/env";
 import { logger } from "./lib/logger";
+import { prisma } from "./lib/prisma";
+import { stripe } from "./lib/stripe";
 import { authRouter } from "./routes/auth.routes";
 import { adminCatalogRouter, catalogRouter } from "./routes/catalog.routes";
 import { adminCommerceRouter, commerceRouter, deliveryRouter } from "./routes/commerce.routes";
 import { adminUsersRouter } from "./routes/users.routes";
 import { swaggerDocument } from "./docs/swagger";
 import { errorHandler, notFound } from "./utils/errors";
+import { OrderStatus } from "@prisma/client";
 
 const corsOptions: CorsOptions = {
   origin(origin, callback) {
@@ -37,6 +41,50 @@ export const createApp = () => {
   app.use(helmet());
   app.use(cors(corsOptions));
   app.options(/.*/, cors(corsOptions));
+
+  app.post(
+    "/api/webhooks/stripe",
+    express.raw({ type: "application/json" }),
+    async (req, res, next) => {
+      try {
+        const sig = req.headers["stripe-signature"] as string;
+
+        const event = stripe.webhooks.constructEvent(
+          req.body,
+          sig,
+          env.STRIPE_WEBHOOK_SECRET
+        );
+
+        if (event.type === "checkout.session.completed") {
+          const session = event.data.object as Stripe.Checkout.Session;
+          const orderId = session.metadata?.orderId;
+
+          if (orderId) {
+            await prisma.payment.update({
+              where: { orderId },
+              data: {
+                status: "PAID",
+                stripePaymentIntentId: String(session.payment_intent || ""),
+                stripePaymentStatus: session.payment_status || "paid",
+              },
+            });
+
+            await prisma.order.update({
+              where: { id: orderId },
+              data: {
+                status: OrderStatus.CONFIRMED,
+                paymentStatus: "PAID",
+              },
+            });
+          }
+        }
+
+        res.json({ received: true });
+      } catch (error) {
+        next(error);
+      }
+    }
+  );
 
   app.use(express.json({ limit: "1mb" }));
   app.use(express.urlencoded({ extended: true, limit: "1mb" }));

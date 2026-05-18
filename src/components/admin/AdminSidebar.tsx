@@ -44,7 +44,7 @@ export function AdminSidebar() {
   const handleSignOut = () => {
     logout();
     toast({ title: "Signed out", description: "À bientôt." });
-    navigate("/admin/login", { replace: true });
+    navigate("/login", { replace: true });
   };
 
   return (
@@ -70,7 +70,7 @@ export function AdminSidebar() {
 
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Maison</SidebarGroupLabel>
+          <SidebarGroupLabel>Commerce</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {navItems.map((item) => (
