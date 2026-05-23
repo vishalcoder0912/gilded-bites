@@ -230,7 +230,7 @@ export default function SiteFrameSequenceBackground() {
       aria-hidden="true"
       className="pointer-events-none fixed inset-0 z-0 overflow-hidden bg-[#050201]"
     >
-      <div ref={wrapRef} className="absolute inset-0 will-change-transform">
+      <div ref={wrapRef} className="absolute inset-0 will-change-transform" style={{ clipPath: "polygon(0 0, 100% 0, 100% 91.5%, 0 91.5%)", height: "109.3%" }}>
         <canvas
           ref={canvasRef}
           className="absolute inset-0 h-full w-full opacity-90"
