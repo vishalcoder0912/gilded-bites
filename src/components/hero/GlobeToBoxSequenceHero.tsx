@@ -7,6 +7,7 @@ import {
   useScroll,
   useSpring,
   useTransform,
+  type MotionValue,
 } from "framer-motion";
 import { ArrowRight, Gift, Sparkles } from "lucide-react";
 
@@ -270,7 +271,7 @@ function SceneText({
     body: string;
     align: string;
   };
-  progress: any;
+  progress: MotionValue<number>;
 }) {
   const middle = (scene.start + scene.end) / 2;
 

@@ -18,14 +18,25 @@ export const formatINR = (value: number) =>
 export function PageShell({
   children,
   className = "",
+  transparent = false,
 }: {
   children: React.ReactNode;
   className?: string;
+  transparent?: boolean;
 }) {
   return (
-    <main className={`min-h-screen overflow-x-hidden bg-transparent text-[#f8eadc] ${className}`}>
-      <div className="pointer-events-none fixed inset-0 -z-10 bg-[radial-gradient(circle_at_20%_0%,rgba(157,106,54,0.10),transparent_34%),radial-gradient(circle_at_80%_18%,rgba(217,163,91,0.06),transparent_30%)]" />
-      {children}
+    <main
+      className={`relative isolate min-h-screen overflow-x-hidden ${
+        transparent ? "page-shell-transparent bg-transparent text-[#f8eadc]" : "page-shell-solid bg-background text-foreground"
+      } ${className}`}
+    >
+      {!transparent && (
+        <>
+          <div className="page-shell-base pointer-events-none fixed inset-0 z-0" />
+          <div className="page-shell-ambient pointer-events-none fixed inset-0 z-0" />
+        </>
+      )}
+      <div className="relative z-10">{children}</div>
     </main>
   );
 }

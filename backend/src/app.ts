@@ -1,4 +1,5 @@
 import express from "express";
+import path from "node:path";
 import cors, { type CorsOptions } from "cors";
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
@@ -102,6 +103,7 @@ export const createApp = () => {
     });
   });
   app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+  app.use("/uploads", express.static(path.join(process.cwd(), "backend", "uploads")));
 
   app.use("/api/auth", authRouter);
   app.use("/api", catalogRouter);

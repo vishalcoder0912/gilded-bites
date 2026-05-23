@@ -52,7 +52,7 @@ const Addresses = lazy(() => import("./pages/Addresses"));
 const queryClient = new QueryClient();
 
 const RouteFallback = () => (
-  <div className="min-h-screen bg-[#080402]" aria-label="Loading Noir Sane page" />
+  <div className="min-h-screen bg-background" aria-label="Loading Noir Sane page" />
 );
 
 const AnimatedRoutes = () => {
@@ -108,13 +108,14 @@ const Shell = () => {
   const isAdmin = location.pathname.startsWith("/admin");
   const isDelivery = location.pathname.startsWith("/delivery");
   const isPublic = !isAdmin && !isDelivery;
+  const isHome = location.pathname === "/";
 
   return (
-    <div className="relative isolate min-h-screen overflow-hidden bg-[#050201] text-[#f8eadc]">
-      <SiteFrameSequenceBackground />
+    <div className="relative isolate min-h-screen overflow-hidden bg-background text-foreground">
+      {isHome ? <SiteFrameSequenceBackground /> : null}
       <RouteGsapEnhancer />
 
-      <div className={`relative z-20 ${isPublic ? "public-page-transparent" : ""}`}>
+      <div className="relative z-20">
         {isPublic ? (
           <ScrollNavbarWrapper>
             <Navbar />

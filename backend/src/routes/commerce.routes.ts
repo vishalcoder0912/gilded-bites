@@ -1,5 +1,9 @@
 // @ts-nocheck
-import { Router } from "express";
+import { Router, type Request } from "express";
+import multer from "multer";
+import path from "node:path";
+import { promises as fs } from "node:fs";
+import { randomUUID } from "node:crypto";
 import { OrderStatus, PaymentMethod, PaymentStatus, Role, StockMovementType } from "@prisma/client";
 import { prisma } from "../lib/prisma";
 import { requireAuth, requireRole } from "../middleware/auth";
@@ -17,6 +21,42 @@ export const commerceRouter = Router();
 export const adminCommerceRouter = Router();
 export const deliveryRouter = Router();
 
+const paymentProofUpload = multer({
+  storage: multer.memoryStorage(),
+  limits: {
+    fileSize: 5 * 1024 * 1024,
+  },
+  fileFilter: (_req, file, cb) => {
+    const allowed = ["image/png", "image/jpeg", "image/webp"];
+    if (!allowed.includes(file.mimetype)) {
+      return cb(new AppError("Only PNG, JPG, and WebP are allowed", 400));
+    }
+    cb(null, true);
+  },
+});
+
+const extensionByMime: Record<string, string> = {
+  "image/png": ".png",
+  "image/jpeg": ".jpg",
+  "image/webp": ".webp",
+};
+
+type PaymentProofUploadRequest = Request & {
+  file?: Express.Multer.File;
+  user?: { id: string };
+};
+
+async function uploadToImageStorage(req: PaymentProofUploadRequest) {
+  const file = req.file;
+  if (!file || !req.user) throw new AppError("Payment proof image required", 400);
+  const extension = extensionByMime[file.mimetype];
+  const uploadDir = path.join(process.cwd(), "backend", "uploads", "payment-proofs");
+  const fileName = `${req.user!.id}-${Date.now()}-${randomUUID()}${extension}`;
+  await fs.mkdir(uploadDir, { recursive: true });
+  await fs.writeFile(path.join(uploadDir, fileName), file.buffer);
+  return `${req.protocol}://${req.get("host")}/uploads/payment-proofs/${fileName}`;
+}
+
 const includeOrder = {
   items: { include: { product: true } },
   deliveryPartner: { select: safeUserSelect },
@@ -27,6 +67,19 @@ const ensureCart = async (userId: string) =>
   prisma.cart.upsert({ where: { userId }, update: {}, create: { userId }, include: { items: { include: { product: true } } } });
 
 commerceRouter.use(["/cart", "/addresses", "/orders"], requireAuth);
+
+commerceRouter.post(
+  "/uploads/payment-proof",
+  requireAuth,
+  paymentProofUpload.single("file"),
+  asyncHandler(async (req, res) => {
+    if (!req.file) throw new AppError("Payment proof image required", 400);
+
+    const url = await uploadToImageStorage(req);
+
+    ok(res, { url }, "Payment proof uploaded");
+  })
+);
 
 commerceRouter.get("/cart", asyncHandler(async (req, res) => ok(res, await ensureCart(req.user!.id))));
 
@@ -324,36 +377,95 @@ commerceRouter.post(
     const { utr, proofImageUrl } = req.body;
 
     if (!/^\d{12}$/.test(utr)) {
-      throw new AppError("UTR must be 12 digits", 400);
+      throw new AppError("Invalid UTR. It must be 12 digits.", 400);
+    }
+
+    if (!proofImageUrl || typeof proofImageUrl !== "string") {
+      throw new AppError("Payment proof image required", 400);
     }
 
     const session = await prisma.upiPaymentSession.findFirst({
       where: {
         id: req.params.id,
-        order: {
-          userId: req.user!.id,
-        },
       },
+      include: { order: true },
     });
 
     if (!session) throw new AppError("UPI session not found", 404);
 
-    const updated = await prisma.upiPaymentSession.update({
-      where: { id: session.id },
-      data: {
-        utr,
-        proofImageUrl,
-        status: "SUBMITTED",
-      },
-    });
+    const order = session.order;
 
-    await prisma.order.update({
-      where: { id: session.orderId },
-      data: {
-        paymentStatus: "SUBMITTED",
-        status: OrderStatus.PAYMENT_SUBMITTED,
-        paymentReferenceNumber: utr,
-      },
+    if (order.userId !== req.user!.id) {
+      throw new AppError("Forbidden", 403);
+    }
+
+    if (order.paymentStatus !== PaymentStatus.PENDING) {
+      throw new AppError("Payment already submitted or processed", 409);
+    }
+
+    if (session.orderId !== order.id) {
+      throw new AppError("Invalid payment session", 400);
+    }
+
+    if (session.amount !== order.totalAmount) {
+      throw new AppError("Payment amount mismatch", 400);
+    }
+
+    if (session.status !== PaymentStatus.PENDING) {
+      throw new AppError("Payment session already submitted or processed", 409);
+    }
+
+    const updated = await prisma.$transaction(async (tx) => {
+      const upiSession = await tx.upiPaymentSession.update({
+        where: { id: session.id },
+        data: {
+          utr,
+          proofImageUrl,
+          status: PaymentStatus.SUBMITTED,
+        },
+      });
+
+      await tx.payment.upsert({
+        where: { orderId: order.id },
+        update: {
+          method: PaymentMethod.UPI,
+          provider: "manual_upi",
+          status: PaymentStatus.SUBMITTED,
+          amount: order.totalAmount,
+          currency: "INR",
+          upiReferenceNumber: utr,
+          proofImageUrl,
+        },
+        create: {
+          orderId: order.id,
+          method: PaymentMethod.UPI,
+          provider: "manual_upi",
+          status: PaymentStatus.SUBMITTED,
+          amount: order.totalAmount,
+          currency: "INR",
+          upiReferenceNumber: utr,
+          proofImageUrl,
+        },
+      });
+
+      await tx.order.update({
+        where: { id: order.id },
+        data: {
+          paymentStatus: PaymentStatus.SUBMITTED,
+          status: OrderStatus.PAYMENT_SUBMITTED,
+          paymentReferenceNumber: utr,
+          tracking: {
+            create: {
+              status: OrderStatus.PAYMENT_SUBMITTED,
+              title: "Payment submitted",
+              message: "Your UPI payment proof has been submitted for admin verification.",
+              updatedById: req.user!.id,
+            },
+          },
+        },
+      });
+
+      return upiSession;
     });
 
     ok(res, updated, "Payment submitted for admin verification");

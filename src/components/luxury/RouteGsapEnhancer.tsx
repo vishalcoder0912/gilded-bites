@@ -57,13 +57,17 @@ export default function RouteGsapEnhancer() {
         };
       });
 
-      gsap.to(".noir-cursor-aurora", {
-        x: "var(--noir-cursor-x, 50vw)",
-        y: "var(--noir-cursor-y, 50vh)",
-        duration: 0.7,
-        ease: "power3.out",
-        repeatRefresh: true,
-      });
+      const aurora = document.querySelector(".noir-cursor-aurora");
+
+      if (aurora) {
+        gsap.to(aurora, {
+          x: "var(--noir-cursor-x, 50vw)",
+          y: "var(--noir-cursor-y, 50vh)",
+          duration: 0.7,
+          ease: "power3.out",
+          repeatRefresh: true,
+        });
+      }
     });
 
     const timer = window.setTimeout(() => ScrollTrigger.refresh(), 250);

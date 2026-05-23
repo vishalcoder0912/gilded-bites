@@ -132,7 +132,16 @@ export const api = {
     return request<T>(path, { ...options, method: "DELETE" });
   },
 
-  upload<T>(path: string, formData: FormData) {
+  upload<T>(path: string, fileOrFormData: File | FormData) {
+    const formData =
+      fileOrFormData instanceof FormData
+        ? fileOrFormData
+        : (() => {
+            const data = new FormData();
+            data.append("file", fileOrFormData);
+            return data;
+          })();
+
     return request<T>(path, {
       method: "POST",
       body: formData,

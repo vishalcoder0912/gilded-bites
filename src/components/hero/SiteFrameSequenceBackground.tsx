@@ -171,14 +171,16 @@ export default function SiteFrameSequenceBackground() {
     const render = () => {
       updateTarget();
 
-      currentFrame += (targetFrame - currentFrame) * 0.18;
+      // Decreased from 0.18 to 0.06 for a much smoother, fluid transition between frames
+      currentFrame += (targetFrame - currentFrame) * 0.06;
 
       if (targetFrame >= TOTAL_FRAMES - 1 - 0.01) {
         currentFrame = TOTAL_FRAMES - 1;
       }
 
-      smoothX += (pointerX - smoothX) * 0.06;
-      smoothY += (pointerY - smoothY) * 0.06;
+      // Decreased from 0.06 to 0.03 for smoother mouse parallax
+      smoothX += (pointerX - smoothX) * 0.03;
+      smoothY += (pointerY - smoothY) * 0.03;
 
       wrap.style.transform = `
         translate3d(${smoothX * 18}px, ${smoothY * 12}px, 0)

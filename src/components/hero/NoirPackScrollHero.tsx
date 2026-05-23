@@ -52,7 +52,11 @@ function preloadFrames() {
     }
   };
 
-  window.requestIdleCallback?.(loadRest, { timeout: 1600 }) ?? window.setTimeout(loadRest, 450);
+  if (window.requestIdleCallback) {
+    window.requestIdleCallback(loadRest, { timeout: 1600 });
+  } else {
+    window.setTimeout(loadRest, 450);
+  }
 }
 
 function nearestLoadedFrame(target: number) {

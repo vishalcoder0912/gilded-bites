@@ -5,10 +5,10 @@ import { Check, Copy, CreditCard, QrCode, Loader2, PackageCheck, Truck } from "l
 import QRCode from "qrcode";
 import { useCartStore } from "@/store/cartStore";
 import { useAuth } from "@/store/auth";
-import { addressApi, orderApi, Address } from "@/lib/api";
+import { api, addressApi, orderApi, Address } from "@/lib/api";
 import { useActiveUpi } from "@/store/catalog";
 import AddressForm from "@/components/AddressForm";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import { getProductImage } from "@/lib/api";
 import { PageShell } from "@/components/luxury/LuxuryPrimitives";
 
@@ -27,6 +27,7 @@ const Checkout = () => {
   const [addresses, setAddresses] = useState<Address[]>([]);
   const [selectedAddressId, setSelectedAddressId] = useState<string>("");
   const [utr, setUtr] = useState("");
+  const [proofFile, setProofFile] = useState<File | null>(null);
   const [qrDataUrl, setQrDataUrl] = useState("");
   const [qrError, setQrError] = useState("");
   const [copied, setCopied] = useState(false);
@@ -34,6 +35,7 @@ const Checkout = () => {
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
   const [paymentMethod, setPaymentMethod] = useState<"UPI" | "STRIPE">("UPI");
+  const [createdOrderId, setCreatedOrderId] = useState<string | null>(null);
   const [upiSession, setUpiSession] = useState<{
     id: string;
     upiIdSnapshot: string;
@@ -131,8 +133,9 @@ const Checkout = () => {
   }, [items.length, navigate, submitted]);
 
   const copyUpi = async () => {
-    if (!upiId) return;
-    await navigator.clipboard.writeText(upiId);
+    const value = upiSession?.upiIdSnapshot || upiId;
+    if (!value) return;
+    await navigator.clipboard.writeText(value);
     setCopied(true);
     setTimeout(() => setCopied(false), 1800);
   };
@@ -142,56 +145,70 @@ const Checkout = () => {
       setError("Please select a shipping address.");
       return;
     }
-    if (paymentMethod === "UPI" && !utr.trim()) {
-      setError("Please enter UTR/Transaction ID.");
-      return;
-    }
-    if (paymentMethod === "UPI" && !upiId) {
-      setError("No active UPI ID is configured. Please contact support.");
-      return;
-    }
-    if (paymentMethod === "UPI" && !/^\d{12}$/.test(utr.trim())) {
-      setError("UTR must be 12 digits.");
-      return;
-    }
 
     setSubmitting(true);
     setError("");
 
     try {
-      const order = await orderApi.createOrder({
-        addressId: selectedAddressId,
-        paymentMethod,
-        deliveryCharge: shipping || undefined,
-      });
-
       if (paymentMethod === "STRIPE") {
+        const order = await orderApi.createOrder({
+          addressId: selectedAddressId,
+          paymentMethod,
+          deliveryCharge: shipping || undefined,
+        });
         const stripeSession = await orderApi.createStripeCheckout(order.id);
         window.location.href = stripeSession.url;
         return;
       }
 
       if (paymentMethod === "UPI") {
-        const session = await orderApi.createUpiSession(order.id);
-        setUpiSession(session);
-        
-        if (utr.trim()) {
-          await orderApi.submitUpiSession(session.id, { utr: utr.trim() });
-          await clearCart();
-          setSubmitted(true);
-          navigate(`/order-confirmed?id=${order.id}`);
+        if (!upiSession || !createdOrderId) {
+          const order = await orderApi.createOrder({
+            addressId: selectedAddressId,
+            paymentMethod,
+            deliveryCharge: shipping || undefined,
+          });
+          const session = await orderApi.createUpiSession(order.id);
+
+          setCreatedOrderId(order.id);
+          setUpiSession(session);
+          toast.success("Secure UPI QR generated. Pay the exact amount, then submit UTR and screenshot.");
           return;
         }
-        
-        setSubmitting(false);
+
+        if (!utr.trim()) {
+          throw new Error("Please enter UTR / Transaction ID");
+        }
+
+        if (!/^\d{12}$/.test(utr.trim())) {
+          throw new Error("UTR must be 12 digits");
+        }
+
+        if (!proofFile) {
+          throw new Error("Please upload your payment screenshot");
+        }
+
+        if (proofFile.size > 5 * 1024 * 1024) {
+          throw new Error("Payment screenshot must be 5MB or smaller");
+        }
+
+        const upload = await api.upload<{ url: string }>("/uploads/payment-proof", proofFile);
+
+        await orderApi.submitUpiSession(upiSession.id, {
+          utr: utr.trim(),
+          proofImageUrl: upload.url,
+        });
+
+        toast.success("Payment submitted for verification");
+        await clearCart();
+        setSubmitted(true);
+        navigate(`/order-confirmed?id=${createdOrderId}`);
         return;
       }
-
-      await clearCart();
-      setSubmitted(true);
-      navigate(`/order-confirmed?id=${order.id}`);
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : "Failed to place order. Please try again.");
+      const message = err instanceof Error ? err.message : "Payment failed. Please try again.";
+      setError(message);
+      toast.error(message);
     } finally {
       setSubmitting(false);
     }
@@ -317,10 +334,42 @@ const Checkout = () => {
             >
               <div className="mb-8">
                 <div className="eyebrow mb-3">Payment</div>
-                <h2 className="font-serif text-3xl text-[#f8eadc] mb-2">Scan to Pay</h2>
+                <h2 className="font-serif text-3xl text-[#f8eadc] mb-2">Choose payment</h2>
               </div>
 
-              {(
+              <div className="mb-8 grid gap-3 sm:grid-cols-2">
+                <button
+                  type="button"
+                  onClick={() => setPaymentMethod("UPI")}
+                  disabled={Boolean(upiSession)}
+                  className={`rounded-sm border p-4 text-left transition ${
+                    paymentMethod === "UPI"
+                      ? "border-[#d9a35b]/45 bg-[#d9a35b]/10"
+                      : "border-border bg-rich/35 hover:border-primary/60"
+                  } disabled:cursor-not-allowed disabled:opacity-70`}
+                >
+                  <QrCode className="mb-3 h-5 w-5 text-[#d9a35b]" />
+                  <div className="font-serif text-xl text-[#f8eadc]">UPI QR</div>
+                  <p className="mt-1 text-xs text-muted-foreground">Manual verification with UTR and screenshot.</p>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setPaymentMethod("STRIPE")}
+                  disabled={Boolean(upiSession)}
+                  className={`rounded-sm border p-4 text-left transition ${
+                    paymentMethod === "STRIPE"
+                      ? "border-[#d9a35b]/45 bg-[#d9a35b]/10"
+                      : "border-border bg-rich/35 hover:border-primary/60"
+                  } disabled:cursor-not-allowed disabled:opacity-70`}
+                >
+                  <CreditCard className="mb-3 h-5 w-5 text-[#d9a35b]" />
+                  <div className="font-serif text-xl text-[#f8eadc]">Card / Stripe</div>
+                  <p className="mt-1 text-xs text-muted-foreground">Redirects to secure Stripe checkout.</p>
+                </button>
+              </div>
+
+              {paymentMethod === "UPI" ? (
                 <>
                   <div className="flex justify-center mb-6">
                     <div className="relative p-4 bg-cream rounded-sm shadow-glow">
@@ -346,10 +395,12 @@ const Checkout = () => {
                   <div className="space-y-3 mb-8">
                     <div className="rounded-sm border border-border bg-rich/40 p-4 text-center">
                       <div className="text-xs uppercase tracking-[0.25em] text-muted-foreground">
-                        Pay using this QR code
+                        {upiSession ? "Pay exact backend amount using this QR code" : "Generate secure QR before paying"}
                       </div>
                       <p className="mt-2 text-xs leading-5 text-muted-foreground">
-                        Scan the QR in any UPI app and enter the payable amount manually.
+                        {upiSession
+                          ? "Scan the QR in any UPI app, complete payment, then submit UTR and screenshot."
+                          : "Click Generate Secure UPI QR to create your order and lock the exact amount."}
                       </p>
                     </div>
 
@@ -380,7 +431,7 @@ const Checkout = () => {
 
                   <div className="hairline mb-8" />
 
-                  <div className="space-y-5">
+                  <div className={`space-y-5 ${upiSession ? "" : "pointer-events-none opacity-50"}`}>
                     <div>
                       <label htmlFor="utr" className="block text-xs uppercase tracking-[0.25em] text-muted-foreground mb-2">
                         UTR / Transaction ID *
@@ -394,18 +445,54 @@ const Checkout = () => {
                         className="w-full bg-rich/40 border border-border px-4 py-3 rounded-sm focus:border-primary focus:outline-none transition-colors font-mono"
                       />
                     </div>
+
+                    <div>
+                      <label htmlFor="payment-proof" className="block text-xs uppercase tracking-[0.25em] text-muted-foreground mb-2">
+                        Payment screenshot *
+                      </label>
+                      <input
+                        id="payment-proof"
+                        type="file"
+                        accept="image/png,image/jpeg,image/webp"
+                        onChange={(event) => setProofFile(event.target.files?.[0] ?? null)}
+                        className="w-full rounded-sm border border-border bg-rich/40 px-4 py-3 text-sm text-[#f8eadc] file:mr-4 file:rounded-sm file:border-0 file:bg-[#d9a35b] file:px-4 file:py-2 file:text-xs file:font-semibold file:uppercase file:tracking-[0.18em] file:text-[#090403]"
+                      />
+                      <p className="mt-2 text-xs text-muted-foreground">
+                        Upload payment proof. Max 5MB. PNG, JPG, or WebP only.
+                      </p>
+                    </div>
                   </div>
                 </>
+              ) : (
+                <div className="rounded-sm border border-border bg-rich/40 p-5">
+                  <div className="flex items-start gap-4">
+                    <CreditCard className="mt-1 h-5 w-5 text-[#d9a35b]" />
+                    <div>
+                      <h3 className="font-serif text-2xl text-[#f8eadc]">Secure Stripe checkout</h3>
+                      <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                        We will create your order with the backend total and redirect you to Stripe to complete payment securely.
+                      </p>
+                    </div>
+                  </div>
+                </div>
               )}
 
               {error && <p className="text-sm text-destructive mt-4">{error}</p>}
 
               <button 
                 onClick={handlePlaceOrder} 
-                disabled={!selectedAddressId || (paymentMethod === "UPI" && (!upiId || !utr.trim())) || submitting}
+                disabled={!selectedAddressId || (paymentMethod === "UPI" && Boolean(upiSession) && (!utr.trim() || !proofFile)) || submitting}
                 className="btn-gold w-full mt-6 disabled:opacity-60 disabled:cursor-not-allowed"
               >
-                {submitting ? <><Loader2 className="w-4 h-4 animate-spin" /> Processing...</> : upiSession && !utr ? "Order Created - Submit UTR to Confirm" : "Place Order"}
+                {submitting ? (
+                  <><Loader2 className="w-4 h-4 animate-spin" /> Processing...</>
+                ) : paymentMethod === "UPI" && !upiSession ? (
+                  "Generate Secure UPI QR"
+                ) : paymentMethod === "UPI" ? (
+                  "Submit Payment for Verification"
+                ) : (
+                  "Place Order"
+                )}
               </button>
             </motion.div>
           </div>
