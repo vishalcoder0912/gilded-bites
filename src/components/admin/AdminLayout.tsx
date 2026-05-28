@@ -19,6 +19,7 @@ function AdminSidebar() {
     { label: "Dashboard", icon: LayoutDashboard, path: "/admin" },
     { label: "Orders", icon: ShoppingBag, path: "/admin/orders" },
     { label: "Products", icon: Package, path: "/admin/products" },
+    { label: "Categories", icon: Tags, path: "/admin/categories" },
     { label: "Inventory", icon: Boxes, path: "/admin/stock" },
     { label: "Payments", icon: CreditCard, path: "/admin/orders?paymentStatus=SUBMITTED" },
     { label: "Settings", icon: Settings, path: "/admin/settings" },
@@ -49,7 +50,10 @@ function AdminSidebar() {
         <nav className="mt-3 flex-1 space-y-1 px-2">
           {menu.map((item) => {
             const Icon = item.icon;
-            const isActive = location.pathname === item.path;
+            const isActive =
+              item.path === "/admin"
+                ? location.pathname === "/admin"
+                : location.pathname.startsWith(item.path.split("?")[0]);
 
             return (
               <button

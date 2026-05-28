@@ -4,6 +4,7 @@ import { motion, AnimatePresence, useMotionValue, useTransform } from "framer-mo
 import { useEffect, useState, useRef } from "react";
 import { useCartStore } from "@/store/cartStore";
 import { useAuth } from "@/store/auth";
+import { ThemeToggle } from "./ThemeToggle";
 
 const navLinks = [
   { label: "Home", href: "/" },
@@ -155,6 +156,8 @@ const Navbar = () => {
                 </Link>
               )}
 
+              <ThemeToggle />
+
               <button
                 onClick={open}
                 aria-label="Open cart"
@@ -188,7 +191,7 @@ const Navbar = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-            className="glass-panel fixed inset-x-0 top-16 z-40 max-h-[calc(100svh-4rem)] overflow-y-auto border-b border-gold/15 p-5 lg:hidden"
+            className="glass-panel fixed inset-x-0 top-16 sm:top-20 z-40 max-h-[calc(100svh-5rem)] overflow-y-auto border-b border-gold/15 p-5 lg:hidden"
           >
             <nav className="grid gap-2">
               {navLinks.map((link) => {

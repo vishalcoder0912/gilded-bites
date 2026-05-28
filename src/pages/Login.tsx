@@ -22,14 +22,12 @@ const Login = () => {
   const [fieldError, setFieldError] = useState<string | null>(null);
 
   useEffect(() => {
+    // Clear any stale error from previous login attempts / session expiry
+    clearError();
+    setFieldError(null);
+    // Check if user is already logged in
     loadUser();
-  }, [loadUser]);
-
-  useEffect(() => {
-    if (error) {
-      setFieldError(error);
-    }
-  }, [error]);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (isAuthenticated) {
     const storedUser = localStorage.getItem("user");

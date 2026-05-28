@@ -25,9 +25,13 @@ async function parseResponse(response: Response) {
   }
 }
 
+type RequestOptions = RequestInit & {
+  skipJsonHeader?: boolean;
+};
+
 async function request<T>(
   path: string,
-  options: RequestInit = {},
+  options: RequestOptions = {},
   retry = true,
 ): Promise<T> {
   const token = getToken();
@@ -39,18 +43,19 @@ async function request<T>(
     headers.Authorization = `Bearer ${token}`;
   }
 
-  const hasBody = options.body !== undefined && options.body !== null;
+  const { skipJsonHeader, ...fetchOptions } = options;
+  const hasBody = fetchOptions.body !== undefined && fetchOptions.body !== null;
 
-  if (hasBody && !(options.body instanceof FormData)) {
+  if (!skipJsonHeader && hasBody && !(fetchOptions.body instanceof FormData)) {
     headers["Content-Type"] = "application/json";
   }
 
   const response = await fetch(`${BASE_URL}${path}`, {
-    ...options,
+    ...fetchOptions,
     headers,
   });
 
-  if (response.status === 401 && retry) {
+  if (response.status === 401 && retry && path !== "/auth/login" && path !== "/auth/register") {
     const refreshToken = getRefreshToken();
 
     if (refreshToken) {
@@ -82,6 +87,28 @@ async function request<T>(
     throw new ApiError(401, "Session expired");
   }
 
+  // 403 with a stale token (e.g. after DB reset, user no longer exists) → treat as session expired
+  if (
+    response.status === 403 &&
+    path !== "/auth/login" &&
+    path !== "/auth/register" &&
+    path !== "/auth/me"
+  ) {
+    const json403 = await parseResponse(response);
+    const message = json403?.message || "Forbidden";
+    // If the error says "User is inactive" the token is for a deleted user — clear auth
+    if (message === "User is inactive" || message === "Insufficient permissions") {
+      // Only clear on "User is inactive" (deleted user), not on role-based access denial
+      if (message === "User is inactive") {
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+        localStorage.removeItem("user");
+      }
+    }
+    throw new ApiError(403, message, json403);
+  }
+
+
   const json = await parseResponse(response);
 
   if (!response.ok) {
@@ -100,11 +127,11 @@ async function request<T>(
 }
 
 export const api = {
-  get<T>(path: string, options?: RequestInit) {
+  get<T>(path: string, options?: RequestOptions) {
     return request<T>(path, { ...options, method: "GET" });
   },
 
-  post<T>(path: string, body?: unknown, options?: RequestInit) {
+  post<T>(path: string, body?: unknown, options?: RequestOptions) {
     return request<T>(path, {
       ...options,
       method: "POST",
@@ -112,7 +139,7 @@ export const api = {
     });
   },
 
-  patch<T>(path: string, body?: unknown, options?: RequestInit) {
+  patch<T>(path: string, body?: unknown, options?: RequestOptions) {
     return request<T>(path, {
       ...options,
       method: "PATCH",
@@ -120,7 +147,7 @@ export const api = {
     });
   },
 
-  put<T>(path: string, body?: unknown, options?: RequestInit) {
+  put<T>(path: string, body?: unknown, options?: RequestOptions) {
     return request<T>(path, {
       ...options,
       method: "PUT",
@@ -128,7 +155,7 @@ export const api = {
     });
   },
 
-  delete<T>(path: string, options?: RequestInit) {
+  delete<T>(path: string, options?: RequestOptions) {
     return request<T>(path, { ...options, method: "DELETE" });
   },
 
@@ -145,6 +172,7 @@ export const api = {
     return request<T>(path, {
       method: "POST",
       body: formData,
+      skipJsonHeader: true,
     });
   },
 };
@@ -280,6 +308,7 @@ export const orderApi = {
       upiIdSnapshot: string;
       payeeName: string;
       amount: number;
+      currency: string;
       transactionRef: string;
       upiUri: string;
       qrDataUrl: string;
@@ -289,7 +318,7 @@ export const orderApi = {
 
   async submitUpiSession(
     sessionId: string,
-    data: { utr: string; proofImageUrl?: string }
+    data: { utr: string; proofImageUrl: string }
   ) {
     return api.post(`/upi-sessions/${sessionId}/submit`, data);
   },
@@ -300,6 +329,12 @@ export const orderApi = {
 
   async getTracking(orderId: string) {
     return api.get<TrackingResponse>(`/orders/${orderId}/tracking`);
+  },
+};
+
+export const couponApi = {
+  async validate(couponCode: string) {
+    return api.post<CouponValidation>("/coupons/validate", { couponCode });
   },
 };
 
@@ -535,6 +570,8 @@ export interface Order {
   subtotal: number;
   deliveryCharge: number;
   discountAmount: number;
+  couponId: string | null;
+  couponCodeSnapshot: string | null;
   totalAmount: number;
   customerName: string;
   customerPhone: string;
@@ -574,11 +611,20 @@ export interface DeliveryTracking {
 }
 
 export interface OrderData {
+  paymentMethod: "UPI" | "COD" | "STRIPE";
   addressId?: string;
   address?: AddressData;
-  paymentMethod: string;
-  deliveryCharge?: number;
-  discountAmount?: number;
+  couponCode?: string;
+}
+
+export interface CouponValidation {
+  code: string;
+  type: "PERCENTAGE" | "FIXED";
+  value: number;
+  subtotal: number;
+  deliveryCharge: number;
+  discountAmount: number;
+  totalAmount: number;
 }
 
 export interface TrackingResponse {
@@ -610,7 +656,10 @@ export interface UpiSetting {
   displayName: string | null;
   qrCodeUrl: string | null;
   isActive: boolean;
+  updatedAt?: string;
+  createdAt?: string;
 }
+
 
 export interface UpiSettingData {
   upiId: string;

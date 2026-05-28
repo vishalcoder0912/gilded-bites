@@ -105,7 +105,15 @@ export const createApp = () => {
   app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
   app.use("/uploads", express.static(path.join(process.cwd(), "backend", "uploads")));
 
-  app.use("/api/auth", authRouter);
+  const authRateLimit = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 30,
+    message: { success: false, message: "Too many authentication attempts, please try again after 15 minutes" },
+    standardHeaders: true,
+    legacyHeaders: false,
+  });
+
+  app.use("/api/auth", authRateLimit, authRouter);
   app.use("/api", catalogRouter);
   app.use("/api", commerceRouter);
   app.use("/api/admin", adminCatalogRouter);

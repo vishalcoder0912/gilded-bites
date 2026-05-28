@@ -60,6 +60,7 @@ export const useAdminAuth = create<AdminAuthState>()(
           return;
         }
 
+        // Optimistically use stored user for instant UI
         if (storedUser) {
           try {
             const user = JSON.parse(storedUser) as User;
@@ -71,27 +72,25 @@ export const useAdminAuth = create<AdminAuthState>()(
           }
         }
 
+        // Always verify with backend
         try {
           const user = await authApi.me();
           if (user.role === "ADMIN") {
             localStorage.setItem("user", JSON.stringify(user));
             set({ user, isAuthenticated: true });
           } else {
+            // Logged in but not admin
             localStorage.removeItem("accessToken");
             localStorage.removeItem("refreshToken");
             localStorage.removeItem("user");
             set({ user: null, isAuthenticated: false });
           }
         } catch {
-          const currentState = get();
-          if (currentState.user && currentState.user.role === "ADMIN") {
-            set({ isAuthenticated: true });
-          } else {
-            localStorage.removeItem("accessToken");
-            localStorage.removeItem("refreshToken");
-            localStorage.removeItem("user");
-            set({ user: null, isAuthenticated: false });
-          }
+          // Any error (401, 403, network) → clear stale auth state
+          localStorage.removeItem("accessToken");
+          localStorage.removeItem("refreshToken");
+          localStorage.removeItem("user");
+          set({ user: null, isAuthenticated: false });
         }
       },
 

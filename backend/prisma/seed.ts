@@ -312,14 +312,61 @@ async function main() {
     });
   }
 
-  await prisma.upiPaymentSetting.upsert({
-    where: { upiId: "cocoanoir@upi" },
-    update: { isActive: true },
-    create: {
-      upiId: "cocoanoir@upi",
-      displayName: "Noir Sane",
-      isActive: true,
-    },
+  await prisma.$transaction(async (tx) => {
+    await tx.coupon.upsert({
+      where: { code: "NOIR10" },
+      update: {
+        isActive: true,
+        type: "PERCENTAGE",
+        value: 10,
+        maxDiscount: 50000,
+        minSubtotal: 100000,
+        usageLimit: 100,
+      },
+      create: {
+        code: "NOIR10",
+        type: "PERCENTAGE",
+        value: 10,
+        maxDiscount: 50000,
+        minSubtotal: 100000,
+        usageLimit: 100,
+        isActive: true,
+      },
+    });
+
+    await tx.coupon.upsert({
+      where: { code: "WELCOME150" },
+      update: {
+        isActive: true,
+        type: "FIXED",
+        value: 15000,
+        minSubtotal: 100000,
+        usageLimit: 200,
+      },
+      create: {
+        code: "WELCOME150",
+        type: "FIXED",
+        value: 15000,
+        minSubtotal: 100000,
+        usageLimit: 200,
+        isActive: true,
+      },
+    });
+
+    await tx.upiPaymentSetting.updateMany({
+      where: { NOT: { upiId: "9319758795@omni" } },
+      data: { isActive: false },
+    });
+
+    await tx.upiPaymentSetting.upsert({
+      where: { upiId: "9319758795@omni" },
+      update: { displayName: "Noir Sane", isActive: true },
+      create: {
+        upiId: "9319758795@omni",
+        displayName: "Noir Sane",
+        isActive: true,
+      },
+    });
   });
 }
 

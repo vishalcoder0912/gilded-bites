@@ -11,7 +11,7 @@ const AdminCategories = () => {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [form, setForm] = useState({ name: "", slug: "", description: "", isActive: true });
 
-  const { data: categories, isLoading } = useQuery({
+  const { data: categories, isLoading, error } = useQuery({
     queryKey: ["admin-categories"],
     queryFn: () => adminApi.getCategories(),
   });
@@ -107,6 +107,12 @@ const AdminCategories = () => {
             </div>
           </form>
         </motion.div>
+      )}
+
+      {error && (
+        <div className="rounded-md border border-destructive/50 bg-destructive/10 p-4 text-sm text-destructive max-w-md">
+          Failed to load categories: {error instanceof Error ? error.message : String(error)}
+        </div>
       )}
 
       {isLoading ? (

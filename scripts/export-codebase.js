@@ -2,8 +2,8 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 
 const PROJECT_ROOT = process.cwd();
-const OUTPUT_AI_SAFE = path.join(PROJECT_ROOT, 'PROJECT_AI_SAFE.md');
-const OUTPUT_ARCHITECTURE = path.join(PROJECT_ROOT, 'PROJECT_ARCHITECTURE.md');
+const OUTPUT_FILE_NAME = 'PROJECT_CODEBASE_ARCHITECTURE.md';
+const OUTPUT_FILE = path.join(PROJECT_ROOT, OUTPUT_FILE_NAME);
 
 const INCLUDED_EXTENSIONS = new Set([
   '.js',
@@ -15,6 +15,12 @@ const INCLUDED_EXTENSIONS = new Set([
   '.scss',
   '.html',
   '.md',
+  '.mjs',
+  '.cjs',
+  '.prisma',
+  '.ps1',
+  '.yaml',
+  '.yml',
 ]);
 
 const IGNORED_DIRECTORIES = new Set([
@@ -31,6 +37,7 @@ const IGNORED_DIRECTORIES = new Set([
 const IGNORED_FILENAMES = new Set([
   'PROJECT_AI_SAFE.md',
   'PROJECT_ARCHITECTURE.md',
+  OUTPUT_FILE_NAME,
   'firebase-adminsdk.json',
   'package-lock.json',
   'serviceAccountKey.json',
@@ -77,7 +84,12 @@ const redactSecrets = (content) =>
     .replace(/sk_(?:live|test)_[0-9A-Za-z]+/g, '[REDACTED_STRIPE_SECRET_KEY]')
     .replace(/pk_(?:live|test)_[0-9A-Za-z]+/g, '[REDACTED_STRIPE_PUBLIC_KEY]')
     .replace(/gh[pousr]_[0-9A-Za-z_]{36,255}/g, '[REDACTED_GITHUB_TOKEN]')
+    .replace(/Bearer\s+[A-Za-z0-9._~+/=-]{20,}/gi, 'Bearer [REDACTED_TOKEN]')
+    .replace(/\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z]{2,}\b/gi, '[REDACTED_EMAIL]')
     .replace(/-----BEGIN [A-Z ]*PRIVATE KEY-----[\s\S]*?-----END [A-Z ]*PRIVATE KEY-----/g, '[REDACTED_PRIVATE_KEY]')
+    .replace(/\b(Admin@12345|Password123)\b/g, '[REDACTED_SAMPLE_PASSWORD]')
+    .replace(/\b(password\s*[:=]\s*)["']?[^"',\n}]+["']?/gi, '$1[REDACTED_PASSWORD]')
+    .replace(/\b(adminPassword\s*=\s*)["']?[^"',;\n]+["']?/gi, '$1[REDACTED_PASSWORD]')
     .replace(
       /\b((?:postgres|postgresql|mysql|mongodb(?:\+srv)?):\/\/[^:\s/@]+:)[^@\s]+(@[^\s"'`<>)]+)/gi,
       '$1[REDACTED_PASSWORD]$2',
@@ -131,8 +143,15 @@ const collectFiles = async (directory = PROJECT_ROOT, files = [], skipped = []) 
 };
 
 const buildArchitecture = (files, skipped) => {
-  let architecture = '# Project Architecture\n\n';
+  let architecture = '# Project Codebase And Architecture\n\n';
   architecture += `Generated: ${new Date().toISOString()}\n\n`;
+  architecture += 'This single-file export combines the project architecture and source code. It excludes common sensitive files and generated folders, then applies best-effort secret redaction to included text files. Review before sharing externally.\n\n';
+  architecture += '## Architecture\n\n';
+  architecture += '- Frontend: Vite + React + TypeScript application under `src/`.\n';
+  architecture += '- Backend: Express + TypeScript API under `backend/src/`.\n';
+  architecture += '- Database: Prisma schema and seed files under `backend/prisma/`.\n';
+  architecture += '- Tests: Vitest tests under `src/test/` and `backend/tests/`.\n';
+  architecture += '- Tooling/config: root TypeScript, Vite, Tailwind, ESLint, PostCSS, and package configuration files.\n\n';
   architecture += '## Included Files\n\n';
 
   for (const { file, size } of files) {
@@ -147,10 +166,10 @@ const buildArchitecture = (files, skipped) => {
     }
   }
 
-  architecture += '\n## Safety Rules\n\n';
+  architecture += '\n## Exclusion And Redaction Rules\n\n';
   architecture += '- Secret-bearing files such as `.env*`, Firebase admin SDK JSON, and service account keys are excluded.\n';
-  architecture += '- Build output, dependency folders, logs, lockfiles, and common media archives are excluded.\n';
-  architecture += '- Known API keys, tokens, private keys, and database URL passwords are redacted before export.\n';
+  architecture += '- Build output, dependency folders, logs, lockfiles, generated exports, and binary/media archives are excluded.\n';
+  architecture += '- Known API keys, tokens, private keys, bearer tokens, emails, and database URL passwords are redacted before export.\n';
 
   return architecture;
 };
@@ -159,9 +178,8 @@ const exportCodebase = async () => {
   const { files, skipped } = await collectFiles();
   const sortedFiles = files.sort((a, b) => a.file.localeCompare(b.file));
 
-  let output = '# AI Safe Codebase Export\n\n';
-  output += `Generated: ${new Date().toISOString()}\n\n`;
-  output += 'This export excludes common secret files and applies best-effort redaction. Review before uploading externally.\n\n';
+  let output = buildArchitecture(sortedFiles, skipped);
+  output += '\n## Source Code\n\n';
 
   for (const { absolutePath, file } of sortedFiles) {
     const rawContent = await fs.readFile(absolutePath, 'utf8');
@@ -175,14 +193,12 @@ const exportCodebase = async () => {
     output += '\n```\n\n';
   }
 
-  await fs.writeFile(OUTPUT_AI_SAFE, output, 'utf8');
-  await fs.writeFile(OUTPUT_ARCHITECTURE, buildArchitecture(sortedFiles, skipped), 'utf8');
+  await fs.writeFile(OUTPUT_FILE, output, 'utf8');
 
-  console.log('PROJECT_AI_SAFE.md generated');
-  console.log('PROJECT_ARCHITECTURE.md generated');
+  console.log(`${OUTPUT_FILE_NAME} generated`);
 
   if (skipped.length > 0) {
-    console.log(`${skipped.length} oversized file(s) skipped; see PROJECT_ARCHITECTURE.md.`);
+    console.log(`${skipped.length} oversized file(s) skipped; see ${OUTPUT_FILE_NAME}.`);
   }
 };
 

@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import App from "./App.tsx";
 import "./index.css";
 import { useAuth } from "./store/auth";
+import { ThemeProvider } from "./lib/ThemeProvider";
 
 const AppWrapper = () => {
   const loadUser = useAuth((s) => s.loadUser);
@@ -14,4 +15,8 @@ const AppWrapper = () => {
   return <App />;
 };
 
-createRoot(document.getElementById("root")!).render(<AppWrapper />);
+createRoot(document.getElementById("root")!).render(
+  <ThemeProvider>
+    <AppWrapper />
+  </ThemeProvider>
+);

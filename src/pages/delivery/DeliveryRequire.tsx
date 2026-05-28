@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Navigate, useLocation } from "react-router-dom";
+import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { useDeliveryAuth } from "@/store/deliveryAuth";
 import { Loader2 } from "lucide-react";
 
@@ -23,7 +23,7 @@ const DeliveryRequire = () => {
     return <Navigate to="/delivery/login" state={{ from: location.pathname }} replace />;
   }
 
-  return null;
+  return <Outlet />;
 };
 
 export default DeliveryRequire;

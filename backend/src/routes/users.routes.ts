@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { Router } from "express";
 import { Role } from "@prisma/client";
 import { z } from "zod";
@@ -12,12 +11,10 @@ import { asyncHandler } from "../utils/errors";
 export const adminUsersRouter = Router();
 
 const updateUserSchema = z.object({
-  body: z.object({
-    name: z.string().min(2).optional(),
-    phone: z.string().min(7).max(20).nullable().optional(),
-    role: z.nativeEnum(Role).optional(),
-    isActive: z.boolean().optional(),
-  }),
+  name: z.string().min(2).optional(),
+  phone: z.string().min(7).max(20).nullable().optional(),
+  role: z.nativeEnum(Role).optional(),
+  isActive: z.boolean().optional(),
 });
 
 adminUsersRouter.use(requireAuth, requireRole(Role.ADMIN));
@@ -25,7 +22,7 @@ adminUsersRouter.use(requireAuth, requireRole(Role.ADMIN));
 adminUsersRouter.get(
   "/users",
   asyncHandler(async (req, res) => {
-    const { page, limit, skip } = toPagination(req.query);
+    const { page, limit, skip } = toPagination(req.query as Record<string, unknown>);
     const [users, total] = await Promise.all([
       prisma.user.findMany({ select: safeUserSelect, skip, take: limit, orderBy: { createdAt: "desc" } }),
       prisma.user.count(),
@@ -35,14 +32,14 @@ adminUsersRouter.get(
 );
 
 adminUsersRouter.get("/users/delivery-partners", asyncHandler(async (_req, res) => {
-  const partners = await prisma.user.findMany({ where: { role: Role.DELIVERY_PARTNER, isActive: true }, select: safeUserSelect, orderBy: { name: "asc" } });
+  const partners = await prisma.user.findMany({ where: { role: Role.DELIVERY_PARTNER, isActive: true }, select: safeUserSelect, orderBy: { name: "asc" as const } });
   ok(res, partners);
 }));
 
-adminUsersRouter.get("/users/:id", validate(idParam), asyncHandler(async (req, res) => ok(res, await prisma.user.findUniqueOrThrow({ where: { id: req.params.id }, select: safeUserSelect }))));
-adminUsersRouter.patch("/users/:id", validate(idParam.merge(updateUserSchema)), asyncHandler(async (req, res) => ok(res, await prisma.user.update({ where: { id: req.params.id }, data: req.body, select: safeUserSelect }), "User updated")));
+adminUsersRouter.get("/users/:id", validate(idParam), asyncHandler(async (req, res) => ok(res, await prisma.user.findUniqueOrThrow({ where: { id: req.params.id as string }, select: safeUserSelect }))));
+adminUsersRouter.patch("/users/:id", validate(idParam.merge(updateUserSchema)), asyncHandler(async (req, res) => ok(res, await prisma.user.update({ where: { id: req.params.id as string }, data: req.body, select: safeUserSelect }), "User updated")));
 
 adminUsersRouter.get("/delivery-partners", asyncHandler(async (_req, res) => {
-  const partners = await prisma.user.findMany({ where: { role: Role.DELIVERY_PARTNER, isActive: true }, select: safeUserSelect, orderBy: { name: "asc" } });
+  const partners = await prisma.user.findMany({ where: { role: Role.DELIVERY_PARTNER, isActive: true }, select: safeUserSelect, orderBy: { name: "asc" as const } });
   ok(res, partners);
 }));

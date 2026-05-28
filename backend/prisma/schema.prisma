@@ -50,6 +50,11 @@ enum PaymentMethod {
   STRIPE
 }
 
+enum CouponType {
+  PERCENTAGE
+  FIXED
+}
+
 model User {
   id                 String             @id @default(uuid())
   name               String
@@ -181,6 +186,26 @@ model UpiPaymentSetting {
   orders      Order[]
 }
 
+model Coupon {
+  id          String     @id @default(uuid())
+  code        String     @unique
+  type        CouponType
+  value       Int
+  maxDiscount Int?
+  minSubtotal Int        @default(0)
+  usageLimit  Int?
+  usageCount  Int        @default(0)
+  isActive    Boolean    @default(true)
+  startsAt    DateTime?
+  expiresAt   DateTime?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  orders      Order[]
+
+  @@index([isActive])
+  @@index([expiresAt])
+}
+
 model Order {
   id                         String             @id @default(uuid())
   orderNumber                String             @unique
@@ -196,6 +221,8 @@ model Order {
   subtotal                   Int
   deliveryCharge             Int                @default(0)
   discountAmount             Int                @default(0)
+  couponId                   String?
+  couponCodeSnapshot         String?
   totalAmount                Int
   customerName               String
   customerPhone              String
@@ -213,6 +240,7 @@ model Order {
   user                       User               @relation("UserOrders", fields: [userId], references: [id])
   deliveryPartner            User?              @relation("DeliveryPartnerOrders", fields: [deliveryPartnerId], references: [id], onDelete: SetNull)
   upiSetting                 UpiPaymentSetting? @relation(fields: [upiSettingId], references: [id], onDelete: SetNull)
+  coupon                     Coupon?            @relation(fields: [couponId], references: [id], onDelete: SetNull)
   items                      OrderItem[]
   tracking                   DeliveryTracking[]
   payment                    Payment?
@@ -222,6 +250,7 @@ model Order {
   @@index([deliveryPartnerId, status])
   @@index([status, createdAt])
   @@index([paymentStatus])
+  @@index([couponId])
 }
 
 model OrderItem {

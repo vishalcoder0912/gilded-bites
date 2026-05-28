@@ -14,7 +14,7 @@
     "prisma:generate": "prisma generate --schema backend/prisma/schema.prisma",
     "prisma:migrate": "prisma migrate dev --schema backend/prisma/schema.prisma",
     "prisma:seed": "tsx backend/prisma/seed.ts",
-    "setup:db": "node setup-database.js",
+    "setup:db": "node setup-database.cjs",
     "build": "vite build",
     "build:dev": "vite build --mode development",
     "lint": "eslint .",

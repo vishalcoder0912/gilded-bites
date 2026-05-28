@@ -15,7 +15,7 @@ const AdminStock = () => {
   const [adjustQty, setAdjustQty] = useState("");
   const [adjustReason, setAdjustReason] = useState("");
 
-  const { data: stockData, isLoading } = useQuery({
+  const { data: stockData, isLoading, error } = useQuery({
     queryKey: ["admin-stock"],
     queryFn: () => adminApi.getStock(),
   });
@@ -57,6 +57,12 @@ const AdminStock = () => {
         <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search products…" className="bg-transparent flex-1 text-sm focus:outline-none" />
       </div>
 
+      {error && (
+        <div className="rounded-md border border-destructive/50 bg-destructive/10 p-4 text-sm text-destructive max-w-md">
+          Failed to load inventory: {error instanceof Error ? error.message : String(error)}
+        </div>
+      )}
+
       {isLoading ? (
         <div className="flex items-center justify-center py-20"><Loader2 className="w-5 h-5 animate-spin" /></div>
       ) : (
@@ -85,12 +91,12 @@ const AdminStock = () => {
                     <td className="py-4 text-sm text-muted-foreground">{s.lowStockThreshold}</td>
                     <td className="py-4 text-sm">{formatINR(s.product?.price ?? 0)}</td>
                     <td className="py-4">
-                      {isLow ? (
+                      {s.quantity === 0 ? (
+                        <span className="text-[10px] uppercase tracking-[0.2em] px-2 py-0.5 rounded-full bg-destructive/20 text-destructive">Out of Stock</span>
+                      ) : isLow ? (
                         <span className="inline-flex items-center gap-1 text-[10px] uppercase tracking-[0.2em] px-2 py-0.5 rounded-full bg-amber-900/30 text-amber-100">
                           <AlertTriangle className="w-3 h-3" /> Low
                         </span>
-                      ) : s.quantity === 0 ? (
-                        <span className="text-[10px] uppercase tracking-[0.2em] px-2 py-0.5 rounded-full bg-destructive/20 text-destructive">Out of Stock</span>
                       ) : (
                         <span className="text-[10px] uppercase tracking-[0.2em] px-2 py-0.5 rounded-full bg-emerald-900/30 text-emerald-400">In Stock</span>
                       )}

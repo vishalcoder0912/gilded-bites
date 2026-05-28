@@ -76,12 +76,14 @@ export const useAuth = create<AuthState>()(
           localStorage.setItem("user", JSON.stringify(user));
           set({ user, isAuthenticated: true });
         } catch {
+          // Token invalid (expired or user deleted from DB) — force logout
           localStorage.removeItem("accessToken");
           localStorage.removeItem("refreshToken");
           localStorage.removeItem("user");
-          set({ user: null, isAuthenticated: false });
+          set({ user: null, isAuthenticated: false, error: null });
         }
       },
+
 
       clearError: () => set({ error: null }),
     }),

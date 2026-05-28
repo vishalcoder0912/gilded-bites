@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { Router } from "express";
 import slugify from "slugify";
 import { Role, StockMovementType } from "@prisma/client";
@@ -40,7 +39,7 @@ catalogRouter.get("/products/search", catalogRouter.stack[0].handle);
 catalogRouter.get(
   "/products/:slug",
   asyncHandler(async (req, res) => {
-    const product = await prisma.product.findFirst({ where: { slug: req.params.slug, isActive: true }, include: { category: true, stock: true } });
+    const product = await prisma.product.findFirst({ where: { slug: req.params.slug as string, isActive: true }, include: { category: true, stock: true } });
     if (!product) throw new AppError("Product not found", 404);
     ok(res, product);
   }),
@@ -89,43 +88,43 @@ adminCatalogRouter.get(
   }),
 );
 
-adminCatalogRouter.get("/products/:id", validate(idParam), asyncHandler(async (req, res) => ok(res, await prisma.product.findUniqueOrThrow({ where: { id: req.params.id }, include: { category: true, stock: true } }))));
+adminCatalogRouter.get("/products/:id", validate(idParam), asyncHandler(async (req, res) => ok(res, await prisma.product.findUniqueOrThrow({ where: { id: req.params.id as string }, include: { category: true, stock: true } }))));
 
 adminCatalogRouter.patch(
   "/products/:id",
   validate(idParam.merge(productUpdateSchema)),
   asyncHandler(async (req, res) => {
     const data = { ...req.body, ...(req.body.slug ? { slug: makeSlug(req.body.slug) } : {}) };
-    ok(res, await prisma.product.update({ where: { id: req.params.id }, data, include: { category: true, stock: true } }), "Product updated");
+    ok(res, await prisma.product.update({ where: { id: req.params.id as string }, data, include: { category: true, stock: true } }), "Product updated");
   }),
 );
 
 adminCatalogRouter.delete(
   "/products/:id",
   validate(idParam),
-  asyncHandler(async (req, res) => ok(res, await prisma.product.update({ where: { id: req.params.id }, data: { isActive: false } }), "Product deleted")),
+  asyncHandler(async (req, res) => ok(res, await prisma.product.update({ where: { id: req.params.id as string }, data: { isActive: false } }), "Product deleted")),
 );
 
 adminCatalogRouter.post("/categories", validate(categoryCreateSchema), asyncHandler(async (req, res) => ok(res, await prisma.category.create({ data: { ...req.body, slug: req.body.slug ? makeSlug(req.body.slug) : makeSlug(req.body.name) } }), "Category created", 201)));
 adminCatalogRouter.get("/categories", asyncHandler(async (_req, res) => ok(res, await prisma.category.findMany({ orderBy: { createdAt: "desc" } }))));
-adminCatalogRouter.patch("/categories/:id", validate(idParam.merge(categoryUpdateSchema)), asyncHandler(async (req, res) => ok(res, await prisma.category.update({ where: { id: req.params.id }, data: { ...req.body, ...(req.body.slug ? { slug: makeSlug(req.body.slug) } : {}) } }), "Category updated")));
-adminCatalogRouter.delete("/categories/:id", validate(idParam), asyncHandler(async (req, res) => ok(res, await prisma.category.update({ where: { id: req.params.id }, data: { isActive: false } }), "Category deleted")));
+adminCatalogRouter.patch("/categories/:id", validate(idParam.merge(categoryUpdateSchema)), asyncHandler(async (req, res) => ok(res, await prisma.category.update({ where: { id: req.params.id as string }, data: { ...req.body, ...(req.body.slug ? { slug: makeSlug(req.body.slug) } : {}) } }), "Category updated")));
+adminCatalogRouter.delete("/categories/:id", validate(idParam), asyncHandler(async (req, res) => ok(res, await prisma.category.update({ where: { id: req.params.id as string }, data: { isActive: false } }), "Category deleted")));
 
 adminCatalogRouter.get("/stock", asyncHandler(async (_req, res) => ok(res, await prisma.stock.findMany({ include: { product: true }, orderBy: { updatedAt: "desc" } }))));
-adminCatalogRouter.get("/stock/:productId", validate(productIdParam), asyncHandler(async (req, res) => ok(res, await prisma.stock.findUniqueOrThrow({ where: { productId: req.params.productId }, include: { product: true } }))));
-adminCatalogRouter.patch("/stock/:productId", validate(productIdParam.merge(stockUpdateSchema)), asyncHandler(async (req, res) => ok(res, await prisma.stock.upsert({ where: { productId: req.params.productId }, update: req.body, create: { productId: req.params.productId, quantity: req.body.quantity ?? 0, lowStockThreshold: req.body.lowStockThreshold ?? 5 } }), "Stock updated")));
+adminCatalogRouter.get("/stock/:productId", validate(productIdParam), asyncHandler(async (req, res) => ok(res, await prisma.stock.findUniqueOrThrow({ where: { productId: req.params.productId as string }, include: { product: true } }))));
+adminCatalogRouter.patch("/stock/:productId", validate(productIdParam.merge(stockUpdateSchema)), asyncHandler(async (req, res) => ok(res, await prisma.stock.upsert({ where: { productId: req.params.productId as string }, update: req.body, create: { productId: req.params.productId as string, quantity: req.body.quantity ?? 0, lowStockThreshold: req.body.lowStockThreshold ?? 5 } }), "Stock updated")));
 adminCatalogRouter.post(
   "/stock/:productId/adjust",
   validate(productIdParam.merge(stockAdjustSchema)),
   asyncHandler(async (req, res) => {
     const result = await prisma.$transaction(async (tx) => {
       const stock = await tx.stock.upsert({
-        where: { productId: req.params.productId },
+        where: { productId: req.params.productId as string },
         update: { quantity: { increment: req.body.quantity } },
-        create: { productId: req.params.productId, quantity: Math.max(req.body.quantity, 0) },
+        create: { productId: req.params.productId as string, quantity: Math.max(req.body.quantity, 0) },
       });
       if (stock.quantity < 0) throw new AppError("Stock cannot be negative", 400);
-      await tx.stockMovement.create({ data: { productId: req.params.productId, quantity: req.body.quantity, type: StockMovementType.ADJUSTMENT, reason: req.body.reason, createdById: req.user!.id } });
+      await tx.stockMovement.create({ data: { productId: req.params.productId as string, quantity: req.body.quantity, type: StockMovementType.ADJUSTMENT, reason: req.body.reason, createdById: req.user!.id } });
       return stock;
     });
     ok(res, result, "Stock adjusted");
@@ -143,8 +142,8 @@ adminCatalogRouter.get("/upi", asyncHandler(async (_req, res) => ok(res, await p
 adminCatalogRouter.patch("/upi/:id", validate(idParam.merge(upiUpdateSchema)), asyncHandler(async (req, res) => {
   const data = await prisma.$transaction(async (tx) => {
     if (req.body.isActive) await tx.upiPaymentSetting.updateMany({ data: { isActive: false } });
-    return tx.upiPaymentSetting.update({ where: { id: req.params.id }, data: req.body });
+    return tx.upiPaymentSetting.update({ where: { id: req.params.id as string }, data: req.body });
   });
   ok(res, data, "UPI setting updated");
 }));
-adminCatalogRouter.delete("/upi/:id", validate(idParam), asyncHandler(async (req, res) => ok(res, await prisma.upiPaymentSetting.update({ where: { id: req.params.id }, data: { isActive: false } }), "UPI setting disabled")));
+adminCatalogRouter.delete("/upi/:id", validate(idParam), asyncHandler(async (req, res) => ok(res, await prisma.upiPaymentSetting.delete({ where: { id: req.params.id as string } }), "UPI setting deleted")));

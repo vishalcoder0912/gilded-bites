@@ -1,14 +1,13 @@
-// @ts-nocheck
 import { Router, type Request } from "express";
 import multer from "multer";
 import path from "node:path";
 import { promises as fs } from "node:fs";
 import { randomUUID } from "node:crypto";
-import { OrderStatus, PaymentMethod, PaymentStatus, Role, StockMovementType } from "@prisma/client";
+import { CouponType, OrderStatus, PaymentMethod, PaymentStatus, Prisma, Role, StockMovementType } from "@prisma/client";
 import { prisma } from "../lib/prisma";
 import { requireAuth, requireRole } from "../middleware/auth";
 import { validate } from "../middleware/validate";
-import { addressCreateSchema, addressUpdateSchema, assignDeliveryPartnerSchema, cartItemCreateSchema, cartItemUpdateSchema, etaSchema, orderCreateSchema, paymentStatusUpdateSchema, paymentSubmitSchema, statusUpdateSchema, trackingCreateSchema } from "../schemas/commerce";
+import { addressCreateSchema, addressUpdateSchema, assignDeliveryPartnerSchema, cartItemCreateSchema, cartItemUpdateSchema, couponValidateSchema, etaSchema, orderCreateSchema, paymentStatusUpdateSchema, paymentSubmitSchema, statusUpdateSchema, trackingCreateSchema } from "../schemas/commerce";
 import { idParam } from "../schemas/common";
 import { createOrderNumber, createTransactionId } from "../utils/ids";
 import { ok, paginated, safeUserSelect, toPagination } from "../utils/api";
@@ -20,6 +19,66 @@ import QRCode from "qrcode";
 export const commerceRouter = Router();
 export const adminCommerceRouter = Router();
 export const deliveryRouter = Router();
+
+const FREE_DELIVERY_THRESHOLD_PAISE = 250000; // INR 2500
+const DELIVERY_CHARGE_PAISE = 15000; // INR 150
+
+const calculateDeliveryCharge = (subtotal: number) =>
+  subtotal >= FREE_DELIVERY_THRESHOLD_PAISE ? 0 : DELIVERY_CHARGE_PAISE;
+
+const normalizeCouponCode = (value?: string) =>
+  value?.trim().toUpperCase() || undefined;
+
+const calculateCouponDiscount = async (
+  tx: Prisma.TransactionClient,
+  couponCode: string | undefined,
+  subtotal: number,
+) => {
+  const code = normalizeCouponCode(couponCode);
+
+  if (!code) {
+    return {
+      coupon: null,
+      couponCodeSnapshot: null,
+      discountAmount: 0,
+    };
+  }
+
+  const coupon = await tx.coupon.findUnique({
+    where: { code },
+  });
+
+  if (!coupon) throw new AppError("Invalid coupon code", 400);
+
+  const now = new Date();
+
+  if (!coupon.isActive) throw new AppError("This coupon is not active", 400);
+  if (coupon.startsAt && coupon.startsAt > now) throw new AppError("This coupon is not active yet", 400);
+  if (coupon.expiresAt && coupon.expiresAt < now) throw new AppError("This coupon has expired", 400);
+  if (coupon.usageLimit !== null && coupon.usageCount >= coupon.usageLimit) {
+    throw new AppError("This coupon usage limit has been reached", 400);
+  }
+  if (subtotal < coupon.minSubtotal) {
+    throw new AppError(`Minimum order value for this coupon is ₹${Math.round(coupon.minSubtotal / 100)}`, 400);
+  }
+
+  let discountAmount =
+    coupon.type === CouponType.PERCENTAGE
+      ? Math.floor((subtotal * coupon.value) / 100)
+      : coupon.value;
+
+  if (coupon.maxDiscount !== null) {
+    discountAmount = Math.min(discountAmount, coupon.maxDiscount);
+  }
+
+  discountAmount = Math.min(discountAmount, subtotal);
+
+  return {
+    coupon,
+    couponCodeSnapshot: coupon.code,
+    discountAmount,
+  };
+};
 
 const paymentProofUpload = multer({
   storage: multer.memoryStorage(),
@@ -89,6 +148,41 @@ commerceRouter.get("/cart/items", asyncHandler(async (req, res) => {
 }));
 
 commerceRouter.post(
+  "/coupons/validate",
+  requireAuth,
+  validate(couponValidateSchema),
+  asyncHandler(async (req, res) => {
+    const cart = await prisma.cart.findUnique({
+      where: { userId: req.user!.id },
+      include: { items: true },
+    });
+
+    if (!cart || cart.items.length === 0) {
+      throw new AppError("Cart is empty", 400);
+    }
+
+    const subtotal = cart.items.reduce((sum, item) => sum + item.priceSnapshot * item.quantity, 0);
+    const result = await prisma.$transaction((tx) => calculateCouponDiscount(tx, req.body.couponCode, subtotal));
+    const deliveryCharge = calculateDeliveryCharge(subtotal);
+    const totalAmount = subtotal + deliveryCharge - result.discountAmount;
+
+    ok(
+      res,
+      {
+        code: result.couponCodeSnapshot,
+        type: result.coupon?.type,
+        value: result.coupon?.value,
+        subtotal,
+        deliveryCharge,
+        discountAmount: result.discountAmount,
+        totalAmount,
+      },
+      "Coupon applied",
+    );
+  }),
+);
+
+commerceRouter.post(
   "/cart/items",
   validate(cartItemCreateSchema),
   asyncHandler(async (req, res) => {
@@ -113,7 +207,7 @@ commerceRouter.patch(
   "/cart/items/:id",
   validate(idParam.merge(cartItemUpdateSchema)),
   asyncHandler(async (req, res) => {
-    const item = await prisma.cartItem.findFirst({ where: { id: req.params.id, cart: { userId: req.user!.id } }, include: { product: { include: { stock: true } } } });
+    const item = await prisma.cartItem.findFirst({ where: { id: req.params.id as string, cart: { userId: req.user!.id } }, include: { product: { include: { stock: true } } } });
     if (!item) throw new AppError("Cart item not found", 404);
     if (!item.product.stock || item.product.stock.quantity < req.body.quantity) throw new AppError("Insufficient stock", 400);
     ok(res, await prisma.cartItem.update({ where: { id: item.id }, data: { quantity: req.body.quantity }, include: { product: true } }), "Cart item updated");
@@ -121,7 +215,7 @@ commerceRouter.patch(
 );
 
 commerceRouter.delete("/cart/items/:id", validate(idParam), asyncHandler(async (req, res) => {
-  const item = await prisma.cartItem.findFirst({ where: { id: req.params.id, cart: { userId: req.user!.id } } });
+  const item = await prisma.cartItem.findFirst({ where: { id: req.params.id as string, cart: { userId: req.user!.id } } });
   if (!item) throw new AppError("Cart item not found", 404);
   await prisma.cartItem.delete({ where: { id: item.id } });
   ok(res, null, "Cart item removed");
@@ -142,18 +236,18 @@ commerceRouter.post("/addresses", validate(addressCreateSchema), asyncHandler(as
 }));
 commerceRouter.get("/addresses", asyncHandler(async (req, res) => ok(res, await prisma.address.findMany({ where: { userId: req.user!.id }, orderBy: [{ isDefault: "desc" }, { createdAt: "desc" }] }))));
 commerceRouter.patch("/addresses/:id", validate(idParam.merge(addressUpdateSchema)), asyncHandler(async (req, res) => {
-  const address = await prisma.address.findFirst({ where: { id: req.params.id, userId: req.user!.id } });
+  const address = await prisma.address.findFirst({ where: { id: req.params.id as string, userId: req.user!.id } });
   if (!address) throw new AppError("Address not found", 404);
   ok(res, await prisma.address.update({ where: { id: address.id }, data: req.body }), "Address updated");
 }));
 commerceRouter.delete("/addresses/:id", validate(idParam), asyncHandler(async (req, res) => {
-  const address = await prisma.address.findFirst({ where: { id: req.params.id, userId: req.user!.id } });
+  const address = await prisma.address.findFirst({ where: { id: req.params.id as string, userId: req.user!.id } });
   if (!address) throw new AppError("Address not found", 404);
   await prisma.address.delete({ where: { id: address.id } });
   ok(res, null, "Address deleted");
 }));
 commerceRouter.patch("/addresses/:id/default", validate(idParam), asyncHandler(async (req, res) => {
-  const address = await prisma.address.findFirst({ where: { id: req.params.id, userId: req.user!.id } });
+  const address = await prisma.address.findFirst({ where: { id: req.params.id as string, userId: req.user!.id } });
   if (!address) throw new AppError("Address not found", 404);
   await prisma.address.updateMany({ where: { userId: req.user!.id }, data: { isDefault: false } });
   ok(res, await prisma.address.update({ where: { id: address.id }, data: { isDefault: true } }), "Default address set");
@@ -177,16 +271,22 @@ commerceRouter.post(
       }
 
       const subtotal = cart.items.reduce((sum, item) => sum + item.priceSnapshot * item.quantity, 0);
-      const deliveryCharge = req.body.deliveryCharge ?? 0;
-      const discountAmount = req.body.discountAmount ?? 0;
+      const deliveryCharge = calculateDeliveryCharge(subtotal);
+      const { coupon, couponCodeSnapshot, discountAmount } = await calculateCouponDiscount(tx, req.body.couponCode, subtotal);
       const totalAmount = subtotal + deliveryCharge - discountAmount;
       const activeUpi = req.body.paymentMethod === PaymentMethod.UPI ? await tx.upiPaymentSetting.findFirst({ where: { isActive: true }, orderBy: { updatedAt: "desc" } }) : null;
+      if (req.body.paymentMethod === PaymentMethod.UPI && !activeUpi) {
+        throw new AppError("No active UPI ID configured by admin", 400);
+      }
+      const requiresOnlinePayment =
+        req.body.paymentMethod === PaymentMethod.UPI ||
+        req.body.paymentMethod === PaymentMethod.STRIPE;
       const created = await tx.order.create({
         data: {
           orderNumber: createOrderNumber(),
           transactionId: createTransactionId(),
           userId: req.user!.id,
-          status: req.body.paymentMethod === PaymentMethod.UPI ? OrderStatus.PAYMENT_PENDING : OrderStatus.PLACED,
+          status: requiresOnlinePayment ? OrderStatus.PAYMENT_PENDING : OrderStatus.PLACED,
           paymentStatus: PaymentStatus.PENDING,
           paymentMethod: req.body.paymentMethod,
           upiId: activeUpi?.upiId,
@@ -194,6 +294,8 @@ commerceRouter.post(
           subtotal,
           deliveryCharge,
           discountAmount,
+          couponId: coupon?.id,
+          couponCodeSnapshot,
           totalAmount,
           customerName: address.fullName,
           customerPhone: address.phone,
@@ -216,6 +318,13 @@ commerceRouter.post(
         include: includeOrder,
       });
 
+      if (coupon) {
+        await tx.coupon.update({
+          where: { id: coupon.id },
+          data: { usageCount: { increment: 1 } },
+        });
+      }
+
       for (const item of cart.items) {
         await tx.stock.update({ where: { productId: item.productId }, data: { quantity: { decrement: item.quantity } } });
         await tx.stockMovement.create({ data: { productId: item.productId, type: StockMovementType.ORDER_RESERVED, quantity: item.quantity, referenceId: created.id, createdById: req.user!.id, reason: "Order placed" } });
@@ -229,12 +338,12 @@ commerceRouter.post(
 
 commerceRouter.get("/orders", asyncHandler(async (req, res) => ok(res, await prisma.order.findMany({ where: { userId: req.user!.id }, include: includeOrder, orderBy: { createdAt: "desc" } }))));
 commerceRouter.get("/orders/:id", validate(idParam), asyncHandler(async (req, res) => {
-  const order = await prisma.order.findFirst({ where: { id: req.params.id, userId: req.user!.id }, include: includeOrder });
+  const order = await prisma.order.findFirst({ where: { id: req.params.id as string, userId: req.user!.id }, include: includeOrder });
   if (!order) throw new AppError("Order not found", 404);
   ok(res, order);
 }));
 commerceRouter.post("/orders/:id/payment-submit", validate(idParam.merge(paymentSubmitSchema)), asyncHandler(async (req, res) => {
-  const order = await prisma.order.findFirst({ where: { id: req.params.id, userId: req.user!.id } });
+  const order = await prisma.order.findFirst({ where: { id: req.params.id as string, userId: req.user!.id } });
   if (!order) throw new AppError("Order not found", 404);
   const updated = await prisma.order.update({
     where: { id: order.id },
@@ -249,7 +358,7 @@ commerceRouter.post(
   asyncHandler(async (req, res) => {
     const order = await prisma.order.findFirst({
       where: {
-        id: req.params.id,
+        id: req.params.id as string,
         userId: req.user!.id,
       },
       include: {
@@ -316,7 +425,7 @@ commerceRouter.post(
   asyncHandler(async (req, res) => {
     const order = await prisma.order.findFirst({
       where: {
-        id: req.params.id,
+        id: req.params.id as string,
         userId: req.user!.id,
       },
     });
@@ -342,13 +451,12 @@ commerceRouter.post(
     const upiUri =
       `upi://pay?pa=${encodeURIComponent(activeUpi.upiId)}` +
       `&pn=${encodeURIComponent(activeUpi.displayName || "Noir Sane")}` +
-      `&am=${amountRupees}` +
+      `&am=${encodeURIComponent(amountRupees)}` +
       `&cu=INR` +
-      `&tr=${encodeURIComponent(transactionRef)}` +
-      `&tn=${encodeURIComponent(`Noir Sane Order ${order.orderNumber}`)}`;
+      `&tn=${encodeURIComponent(transactionRef)}`;
 
     const qrDataUrl = await QRCode.toDataURL(upiUri, {
-      width: 260,
+      width: 300,
       margin: 1,
     });
 
@@ -386,7 +494,7 @@ commerceRouter.post(
 
     const session = await prisma.upiPaymentSession.findFirst({
       where: {
-        id: req.params.id,
+        id: req.params.id as string,
       },
       include: { order: true },
     });
@@ -473,9 +581,9 @@ commerceRouter.post(
 );
 
 commerceRouter.post("/orders/:id/cancel", validate(idParam), asyncHandler(async (req, res) => {
-  const order = await prisma.order.findFirst({ where: { id: req.params.id, userId: req.user!.id }, include: { items: true } });
+  const order = await prisma.order.findFirst({ where: { id: req.params.id as string, userId: req.user!.id }, include: { items: true } });
   if (!order) throw new AppError("Order not found", 404);
-  if ([OrderStatus.OUT_FOR_DELIVERY, OrderStatus.NEARBY, OrderStatus.DELIVERED].includes(order.status)) throw new AppError("Order can no longer be cancelled", 400);
+  if (([OrderStatus.OUT_FOR_DELIVERY, OrderStatus.NEARBY, OrderStatus.DELIVERED] as OrderStatus[]).includes(order.status)) throw new AppError("Order can no longer be cancelled", 400);
   const updated = await prisma.$transaction(async (tx) => {
     for (const item of order.items) {
       await tx.stock.update({ where: { productId: item.productId }, data: { quantity: { increment: item.quantity } } });
@@ -486,7 +594,7 @@ commerceRouter.post("/orders/:id/cancel", validate(idParam), asyncHandler(async 
   ok(res, updated, "Order cancelled");
 }));
 commerceRouter.get("/orders/:id/tracking", validate(idParam), asyncHandler(async (req, res) => {
-  const order = await prisma.order.findFirst({ where: { id: req.params.id, userId: req.user!.id }, include: includeOrder });
+  const order = await prisma.order.findFirst({ where: { id: req.params.id as string, userId: req.user!.id }, include: includeOrder });
   if (!order) throw new AppError("Order not found", 404);
   ok(res, {
     orderNumber: order.orderNumber,
@@ -521,17 +629,91 @@ adminCommerceRouter.get("/orders", asyncHandler(async (req, res) => {
   const [orders, total] = await Promise.all([prisma.order.findMany({ include: includeOrder, skip, take: limit, orderBy: { createdAt: "desc" } }), prisma.order.count()]);
   paginated(res, orders, { page, limit, total });
 }));
-adminCommerceRouter.get("/orders/:id", validate(idParam), asyncHandler(async (req, res) => ok(res, await prisma.order.findUniqueOrThrow({ where: { id: req.params.id }, include: includeOrder }))));
-adminCommerceRouter.patch("/orders/:id/status", validate(idParam.merge(statusUpdateSchema)), asyncHandler(async (req, res) => ok(res, await updateOrderStatus(req.params.id, req.body.status, req.user!.id, req.body.title, req.body.message, req.body.locationText), "Order status updated")));
-adminCommerceRouter.patch("/orders/:id/payment-status", validate(idParam.merge(paymentStatusUpdateSchema)), asyncHandler(async (req, res) => ok(res, await prisma.order.update({ where: { id: req.params.id }, data: { paymentStatus: req.body.paymentStatus }, include: includeOrder }), "Payment status updated")));
+adminCommerceRouter.get("/orders/:id", validate(idParam), asyncHandler(async (req, res) => ok(res, await prisma.order.findUniqueOrThrow({ where: { id: req.params.id as string }, include: includeOrder }))));
+adminCommerceRouter.patch("/orders/:id/status", validate(idParam.merge(statusUpdateSchema)), asyncHandler(async (req, res) => ok(res, await updateOrderStatus(req.params.id as string, req.body.status, req.user!.id, req.body.title, req.body.message, req.body.locationText), "Order status updated")));
+adminCommerceRouter.patch(
+  "/orders/:id/payment-status",
+  validate(idParam.merge(paymentStatusUpdateSchema)),
+  asyncHandler(async (req, res) => {
+    const paymentStatus = req.body.paymentStatus as PaymentStatus;
+
+    const updated = await prisma.$transaction(async (tx) => {
+      const order = await tx.order.findUnique({
+        where: { id: req.params.id as string },
+        include: {
+          payment: true,
+          upiSessions: {
+            orderBy: { createdAt: "desc" },
+            take: 1,
+          },
+        },
+      });
+
+      if (!order) throw new AppError("Order not found", 404);
+
+      const nextOrderStatus =
+        paymentStatus === PaymentStatus.VERIFIED
+          ? OrderStatus.CONFIRMED
+          : paymentStatus === PaymentStatus.REJECTED
+            ? OrderStatus.FAILED
+            : order.status;
+
+      if (order.payment) {
+        await tx.payment.update({
+          where: { orderId: order.id },
+          data: { status: paymentStatus },
+        });
+      }
+
+      const latestUpiSession = order.upiSessions[0];
+      if (latestUpiSession) {
+        await tx.upiPaymentSession.update({
+          where: { id: latestUpiSession.id },
+          data: { status: paymentStatus },
+        });
+      }
+
+      return tx.order.update({
+        where: { id: order.id },
+        data: {
+          paymentStatus,
+          status: nextOrderStatus,
+          tracking:
+            paymentStatus === PaymentStatus.VERIFIED
+              ? {
+                  create: {
+                    status: OrderStatus.CONFIRMED,
+                    title: "Order confirmed",
+                    message: "Payment verified by admin. Order is confirmed.",
+                    updatedById: req.user!.id,
+                  },
+                }
+              : paymentStatus === PaymentStatus.REJECTED
+                ? {
+                    create: {
+                      status: OrderStatus.FAILED,
+                      title: "Payment rejected",
+                      message: "Payment was rejected by admin. Please contact support.",
+                      updatedById: req.user!.id,
+                    },
+                  }
+                : undefined,
+        },
+        include: includeOrder,
+      });
+    });
+
+    ok(res, updated, "Payment status updated");
+  }),
+);
 adminCommerceRouter.patch("/orders/:id/assign-delivery-partner", validate(idParam.merge(assignDeliveryPartnerSchema)), asyncHandler(async (req, res) => {
   const partner = await prisma.user.findFirst({ where: { id: req.body.deliveryPartnerId, role: Role.DELIVERY_PARTNER, isActive: true } });
   if (!partner) throw new AppError("Delivery partner not found", 404);
-  ok(res, await prisma.order.update({ where: { id: req.params.id }, data: { deliveryPartnerId: partner.id }, include: includeOrder }), "Delivery partner assigned");
+  ok(res, await prisma.order.update({ where: { id: req.params.id as string }, data: { deliveryPartnerId: partner.id }, include: includeOrder }), "Delivery partner assigned");
 }));
-adminCommerceRouter.patch("/orders/:id/estimated-delivery-time", validate(idParam.merge(etaSchema)), asyncHandler(async (req, res) => ok(res, await prisma.order.update({ where: { id: req.params.id }, data: req.body, include: includeOrder }), "Estimated delivery updated")));
-adminCommerceRouter.post("/orders/:id/tracking", validate(idParam.merge(trackingCreateSchema)), asyncHandler(async (req, res) => ok(res, await prisma.deliveryTracking.create({ data: { ...req.body, orderId: req.params.id, updatedById: req.user!.id } }), "Tracking added", 201)));
-adminCommerceRouter.get("/orders/:id/tracking", validate(idParam), asyncHandler(async (req, res) => ok(res, await prisma.deliveryTracking.findMany({ where: { orderId: req.params.id }, orderBy: { createdAt: "asc" } }))));
+adminCommerceRouter.patch("/orders/:id/estimated-delivery-time", validate(idParam.merge(etaSchema)), asyncHandler(async (req, res) => ok(res, await prisma.order.update({ where: { id: req.params.id as string }, data: req.body, include: includeOrder }), "Estimated delivery updated")));
+adminCommerceRouter.post("/orders/:id/tracking", validate(idParam.merge(trackingCreateSchema)), asyncHandler(async (req, res) => ok(res, await prisma.deliveryTracking.create({ data: { ...req.body, orderId: req.params.id as string, updatedById: req.user!.id } }), "Tracking added", 201)));
+adminCommerceRouter.get("/orders/:id/tracking", validate(idParam), asyncHandler(async (req, res) => ok(res, await prisma.deliveryTracking.findMany({ where: { orderId: req.params.id as string }, orderBy: { createdAt: "asc" } }))));
 
 adminCommerceRouter.patch(
   "/upi-sessions/:id/status",
@@ -543,7 +725,7 @@ adminCommerceRouter.patch(
     }
 
     const session = await prisma.upiPaymentSession.update({
-      where: { id: req.params.id },
+      where: { id: req.params.id as string },
       data: { status },
     });
 
@@ -552,6 +734,14 @@ adminCommerceRouter.patch(
       data: {
         paymentStatus: status,
         status: status === "VERIFIED" ? OrderStatus.CONFIRMED : OrderStatus.PAYMENT_SUBMITTED,
+        tracking: status === "VERIFIED" ? {
+          create: {
+            status: OrderStatus.CONFIRMED,
+            title: "Order confirmed",
+            message: "Your payment has been verified and your order is confirmed.",
+            updatedById: req.user!.id,
+          }
+        } : undefined,
       },
     });
 
@@ -562,17 +752,17 @@ adminCommerceRouter.patch(
 deliveryRouter.use(requireAuth, requireRole(Role.DELIVERY_PARTNER));
 deliveryRouter.get("/orders", asyncHandler(async (req, res) => ok(res, await prisma.order.findMany({ where: { deliveryPartnerId: req.user!.id }, include: includeOrder, orderBy: { createdAt: "desc" } }))));
 deliveryRouter.get("/orders/:id", validate(idParam), asyncHandler(async (req, res) => {
-  const order = await prisma.order.findFirst({ where: { id: req.params.id, deliveryPartnerId: req.user!.id }, include: includeOrder });
+  const order = await prisma.order.findFirst({ where: { id: req.params.id as string, deliveryPartnerId: req.user!.id }, include: includeOrder });
   if (!order) throw new AppError("Order not found", 404);
   ok(res, order);
 }));
 deliveryRouter.patch("/orders/:id/status", validate(idParam.merge(statusUpdateSchema)), asyncHandler(async (req, res) => {
-  const order = await prisma.order.findFirst({ where: { id: req.params.id, deliveryPartnerId: req.user!.id } });
+  const order = await prisma.order.findFirst({ where: { id: req.params.id as string, deliveryPartnerId: req.user!.id } });
   if (!order) throw new AppError("Order not found", 404);
   ok(res, await updateOrderStatus(order.id, req.body.status, req.user!.id, req.body.title, req.body.message, req.body.locationText), "Delivery status updated");
 }));
 deliveryRouter.post("/orders/:id/location", validate(idParam.merge(trackingCreateSchema)), asyncHandler(async (req, res) => {
-  const order = await prisma.order.findFirst({ where: { id: req.params.id, deliveryPartnerId: req.user!.id } });
+  const order = await prisma.order.findFirst({ where: { id: req.params.id as string, deliveryPartnerId: req.user!.id } });
   if (!order) throw new AppError("Order not found", 404);
   ok(res, await prisma.deliveryTracking.create({ data: { ...req.body, orderId: order.id, updatedById: req.user!.id } }), "Location updated", 201);
 }));

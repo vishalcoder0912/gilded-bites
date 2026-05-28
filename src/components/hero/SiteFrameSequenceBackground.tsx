@@ -71,7 +71,7 @@ function nearestLoaded(target: number) {
   return 0;
 }
 
-function drawContain(
+function drawCoverAndCropBottom(
   ctx: CanvasRenderingContext2D,
   img: HTMLImageElement,
   width: number,
@@ -80,26 +80,44 @@ function drawContain(
 ) {
   if (!img.complete || !img.naturalWidth) return;
 
-  const imageRatio = img.naturalWidth / img.naturalHeight;
+  // Crop the bottom 9% of the source image to hide the watermark/logo (VEED/ezgif/veo)
+  const cropPercent = 0.91; 
+  const sourceWidth = img.naturalWidth;
+  const sourceHeight = img.naturalHeight * cropPercent;
+
+  const imageRatio = sourceWidth / sourceHeight;
   const canvasRatio = width / height;
 
   let drawWidth = width;
   let drawHeight = height;
+  let offsetX = 0;
+  let offsetY = 0;
 
   if (imageRatio > canvasRatio) {
-    drawWidth = width;
-    drawHeight = width / imageRatio;
-  } else {
+    // Image is wider than canvas -> scale to fill height
     drawHeight = height;
     drawWidth = height * imageRatio;
+    offsetX = (width - drawWidth) / 2;
+  } else {
+    // Image is taller than canvas -> scale to fill width
+    drawWidth = width;
+    drawHeight = width / imageRatio;
+    offsetY = (height - drawHeight) / 2;
   }
-
-  const x = (width - drawWidth) / 2;
-  const y = (height - drawHeight) / 2;
 
   ctx.save();
   ctx.globalAlpha = opacity;
-  ctx.drawImage(img, x, y, drawWidth, drawHeight);
+  ctx.drawImage(
+    img,
+    0,
+    0,
+    sourceWidth,
+    sourceHeight,
+    offsetX,
+    offsetY,
+    drawWidth,
+    drawHeight
+  );
   ctx.restore();
 }
 
@@ -197,10 +215,10 @@ export default function SiteFrameSequenceBackground() {
       ctx.fillStyle = "#050201";
       ctx.fillRect(0, 0, width, height);
 
-      drawContain(ctx, baseImg, width, height, 1);
+      drawCoverAndCropBottom(ctx, baseImg, width, height, 1);
 
       if (blend > 0.001) {
-        drawContain(ctx, nextImg, width, height, blend);
+        drawCoverAndCropBottom(ctx, nextImg, width, height, blend);
       }
 
       raf = requestAnimationFrame(render);
@@ -230,7 +248,7 @@ export default function SiteFrameSequenceBackground() {
       aria-hidden="true"
       className="pointer-events-none fixed inset-0 z-0 overflow-hidden bg-[#050201]"
     >
-      <div ref={wrapRef} className="absolute inset-0 will-change-transform" style={{ clipPath: "polygon(0 0, 100% 0, 100% 91.5%, 0 91.5%)", height: "109.3%" }}>
+      <div ref={wrapRef} className="absolute inset-0 will-change-transform">
         <canvas
           ref={canvasRef}
           className="absolute inset-0 h-full w-full opacity-90"

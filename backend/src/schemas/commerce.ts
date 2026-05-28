@@ -18,16 +18,34 @@ export const addressCreateSchema = z.object({
 
 export const addressUpdateSchema = addressCreateSchema.partial();
 
-export const orderCreateSchema = z.object({
-  paymentMethod: z.nativeEnum(PaymentMethod),
-  addressId: z.string().uuid().optional(),
-  address: z.object(addressFields).optional(),
-  deliveryCharge: z.coerce.number().int().min(0).default(0),
-  discountAmount: z.coerce.number().int().min(0).default(0),
-}).refine((body) => body.addressId || body.address, "addressId or address is required");
+export const orderCreateSchema = z
+  .object({
+    paymentMethod: z.nativeEnum(PaymentMethod),
+    addressId: z.string().uuid().optional(),
+    address: z.object(addressFields).optional(),
+    couponCode: z
+      .string()
+      .trim()
+      .min(2, "Coupon code is too short")
+      .max(40, "Coupon code is too long")
+      .optional(),
+  })
+  .refine((body) => body.addressId || body.address, {
+    message: "addressId or address is required",
+  });
+
+export const couponValidateSchema = z.object({
+  couponCode: z
+    .string()
+    .trim()
+    .min(2, "Coupon code is too short")
+    .max(40, "Coupon code is too long"),
+});
 
 export const paymentSubmitSchema = z.object({
-  paymentReferenceNumber: z.string().min(6).max(64),
+  paymentReferenceNumber: z
+    .string()
+    .regex(/^\d{12}$/, "UTR must be 12 digits"),
   upiId: z.string().optional(),
 });
 

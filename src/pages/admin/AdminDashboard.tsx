@@ -316,21 +316,24 @@ function normalizeOrder(order: unknown): OrderRow {
 
 function normalizeProduct(product: unknown): ProductRow {
   const record = asRecord(product);
-  const stockRecord = asRecord(record.stock);
-  const images = readArray(record, "images") || [];
+  const hasProductRelation = isRecord(record.product);
+  const prod = hasProductRelation ? asRecord(record.product) : record;
+  const stockRecord = hasProductRelation ? record : asRecord(record.stock);
+
+  const images = readArray(prod, "imageUrls") || readArray(prod, "images") || [];
   const firstImage = asRecord(images[0]);
 
   const stock =
     stockRecord.quantity ??
-    record.stockQuantity ??
-    record.quantity ??
-    record.inventory ??
-    record.stock ??
+    prod.stockQuantity ??
+    prod.quantity ??
+    prod.inventory ??
+    prod.stock ??
     0;
 
   const imageUrl =
-    stringValue(record.imageUrl) ||
-    stringValue(record.thumbnail) ||
+    stringValue(prod.imageUrl) ||
+    stringValue(prod.thumbnail) ||
     stringValue(firstImage.url) ||
     (typeof images[0] === "string" ? images[0] : "") ||
     "/placeholder.svg";
@@ -338,18 +341,18 @@ function normalizeProduct(product: unknown): ProductRow {
   const status =
     Number(stock) <= 0
       ? "Out of Stock"
-      : Number(stock) <= asNumber(record.lowStockThreshold, 20)
+      : Number(stock) <= asNumber(stockRecord.lowStockThreshold || prod.lowStockThreshold, 20)
       ? "Low Stock"
       : "In Stock";
 
   return {
-    id: String(record.id || record._id || crypto.randomUUID()),
-    name: String(record.name || record.title || "Chocolate Product"),
-    sku: String(record.sku || record.slug || "NS-CH"),
+    id: String(prod.id || record.id || crypto.randomUUID()),
+    name: String(prod.name || prod.title || "Chocolate Product"),
+    sku: String(prod.sku || prod.slug || "NS-CH"),
     imageUrl,
     stock: asNumber(stock),
     status,
-    sold: asNumber(record.sold || record.totalSold || record.salesCount || 0),
+    sold: asNumber(prod.sold || prod.totalSold || prod.salesCount || 0),
   };
 }
 

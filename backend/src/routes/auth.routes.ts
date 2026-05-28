@@ -1,8 +1,7 @@
-// @ts-nocheck
 import { Router } from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { createHash } from "crypto";
+import { createHash, randomUUID } from "crypto";
 import { env } from "../config/env";
 import { prisma } from "../lib/prisma";
 import { requireAuth } from "../middleware/auth";
@@ -16,10 +15,10 @@ export const authRouter = Router();
 const hashToken = (token: string) => createHash("sha256").update(token).digest("hex");
 
 const signAccessToken = (user: { id: string; role: string; email: string }) =>
-  jwt.sign({ sub: user.id, role: user.role, email: user.email }, env.JWT_ACCESS_SECRET, { expiresIn: env.JWT_ACCESS_EXPIRES_IN });
+  jwt.sign({ sub: user.id, role: user.role, email: user.email }, env.JWT_ACCESS_SECRET, { expiresIn: env.JWT_ACCESS_EXPIRES_IN as jwt.SignOptions["expiresIn"] });
 
 const signRefreshToken = (user: { id: string; role: string; email: string }) =>
-  jwt.sign({ sub: user.id, role: user.role, email: user.email }, env.JWT_REFRESH_SECRET, { expiresIn: env.JWT_REFRESH_EXPIRES_IN });
+  jwt.sign({ sub: user.id, role: user.role, email: user.email, jti: randomUUID() }, env.JWT_REFRESH_SECRET, { expiresIn: env.JWT_REFRESH_EXPIRES_IN as jwt.SignOptions["expiresIn"] });
 
 const tokenExpiry = () => new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
 

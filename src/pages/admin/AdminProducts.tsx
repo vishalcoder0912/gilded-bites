@@ -33,7 +33,7 @@ const AdminProducts = () => {
     imageUrls: "", isActive: true, isFeatured: false,
   });
 
-  const { data: productsData, isLoading } = useQuery({
+  const { data: productsData, isLoading, error } = useQuery({
     queryKey: ["admin-products", page, q],
     queryFn: () => adminApi.getProducts({ page, limit: 20, q: q || undefined }),
   });
@@ -61,6 +61,7 @@ const AdminProducts = () => {
       queryClient.invalidateQueries({ queryKey: ["admin-products"] });
       toast.success("Product updated");
       setEditingId(null);
+      setShowForm(false);
       resetForm();
     },
     onError: (error) => toast.error(error instanceof Error ? error.message : "Failed to update product"),
@@ -215,6 +216,12 @@ const AdminProducts = () => {
         </motion.div>
       )}
 
+      {error && (
+        <div className="rounded-md border border-destructive/50 bg-destructive/10 p-4 text-sm text-destructive max-w-md">
+          Failed to load products: {error instanceof Error ? error.message : String(error)}
+        </div>
+      )}
+
       {isLoading ? (
         <div className="flex items-center justify-center py-20"><Loader2 className="w-5 h-5 animate-spin" /></div>
       ) : (
@@ -246,7 +253,8 @@ const AdminProducts = () => {
                     <span className={`text-[10px] uppercase tracking-[0.2em] px-2 py-0.5 rounded-full ${p.isActive ? "bg-emerald-900/30 text-emerald-400" : "bg-destructive/20 text-destructive"}`}>
                       {p.isActive ? "Active" : "Inactive"}
                     </span>
-                    {p.isFeatured && <span className="ml-1 text-[10px] uppercase tracking-[0.2em] px-2 py-0.5 rounded-full bg-primary/20 text-primary">Featured</span>}
+                    {" "}
+                    {p.isFeatured && <span className="text-[10px] uppercase tracking-[0.2em] px-2 py-0.5 rounded-full bg-primary/20 text-primary">Featured</span>}
                   </td>
                   <td className="px-5 py-4">
                     <div className="flex gap-2 justify-end">
