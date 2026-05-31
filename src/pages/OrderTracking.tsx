@@ -2,7 +2,8 @@ import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { CheckCircle2, MapPin, Truck } from "lucide-react";
 import { orderApi } from "@/lib/api";
-import { EmptyState, LoadingState, PageShell, formatINR } from "@/components/luxury/LuxuryPrimitives";
+import { EmptyState, LoadingState, PageShell } from "@/components/luxury/LuxuryPrimitives";
+import { formatINR } from "@/lib/currency";
 
 const timeline = ["Order Confirmed", "Payment Verified", "Processing", "Shipped", "Out for Delivery", "Delivered"];
 
@@ -73,7 +74,7 @@ export default function OrderTracking() {
               <div><span className="block text-xs uppercase tracking-[0.2em] text-[#f0c27a]">Partner</span>{tracking.deliveryPartnerName || "Chocolate Express"}</div>
               <div><span className="block text-xs uppercase tracking-[0.2em] text-[#f0c27a]">Tracking ID</span>{order.transactionId}</div>
               <div><span className="block text-xs uppercase tracking-[0.2em] text-[#f0c27a]">Estimated Delivery</span>{tracking.estimatedDeliveryTime || "Preparing ETA"}</div>
-              <button className="btn-ghost-gold w-full px-4 py-3 text-xs"><MapPin className="h-4 w-4" /> View On Map</button>
+              <button type="button" className="btn-ghost-gold w-full px-4 py-3 text-xs"><MapPin className="h-4 w-4" /> View On Map</button>
             </div>
           </aside>
         </div>

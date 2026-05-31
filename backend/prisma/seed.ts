@@ -146,7 +146,7 @@ async function main() {
       shortDescription: "Dark ganache with edible gold dust",
       description: "A deep cocoa truffle finished with a satin shell and a trace of edible gold.",
       quantity: 28,
-      imageUrls: ["https://images.unsplash.com/photo-1549007994-cb92caebd54b?w=800&q=80"],
+      imageUrls: ["/products/pomegranate-box.png", "/products/pomegranate-2.png", "/products/pomegranate-3.png"],
     },
     {
       name: "Piedmont Hazelnut Bar",
@@ -157,7 +157,7 @@ async function main() {
       shortDescription: "Roasted hazelnut and milk chocolate",
       description: "Creamy milk chocolate folded with roasted Piedmont hazelnuts for a clean, nutty finish.",
       quantity: 35,
-      imageUrls: ["https://images.unsplash.com/photo-1606312619070-d48b4c652a52?w=800&q=80"],
+      imageUrls: ["/products/orange-box.png", "/products/orange-1.png", "/products/orange-3.png"],
     },
     {
       name: "Maison Praline Coffret",
@@ -168,7 +168,7 @@ async function main() {
       shortDescription: "Assorted pralines in a gift box",
       description: "A curated praline box with almond, hazelnut, pistachio, and salted caramel centres.",
       quantity: 22,
-      imageUrls: ["https://images.unsplash.com/photo-1481391319762-47d5d2e1dd53?w=800&q=80"],
+      imageUrls: ["/products/fusion-box.png", "/products/fusion-1.png", "/products/fusion-3.png"],
     },
     {
       name: "Madagascar Vanilla Bonbon",
@@ -179,7 +179,7 @@ async function main() {
       shortDescription: "Vanilla cream in a dark chocolate shell",
       description: "Single-origin dark chocolate filled with Madagascar vanilla cream and a soft cocoa finish.",
       quantity: 40,
-      imageUrls: ["https://images.unsplash.com/photo-1551529834-525807d6b4f3?w=800&q=80"],
+      imageUrls: ["/products/apple-box.png", "/products/apple-2.png", "/products/apple-3.png"],
     },
     {
       name: "Ecuador 72 Percent Tablet",
@@ -190,7 +190,7 @@ async function main() {
       shortDescription: "Single-origin Ecuador dark chocolate",
       description: "A balanced 72 percent tablet with notes of red fruit, roasted almond, and warm spice.",
       quantity: 30,
-      imageUrls: ["https://images.unsplash.com/photo-1614332287897-cdc485fa562d?w=800&q=80"],
+      imageUrls: ["/products/mango-box.png", "/products/mango-1.png", "/products/mango-3.png"],
     },
     {
       name: "Himalayan Salt Caramel Truffle",
@@ -201,7 +201,7 @@ async function main() {
       shortDescription: "Salted caramel ganache truffle",
       description: "Slow-cooked caramel, Himalayan pink salt, and dark couverture in a polished truffle.",
       quantity: 26,
-      imageUrls: ["https://images.unsplash.com/photo-1549497538-303791108f95?w=800&q=80"],
+      imageUrls: ["/products/pomegranate-box.png", "/products/pomegranate-4.png", "/products/fusion-1.png"],
     },
     {
       name: "Ruby Raspberry Bonbon",
@@ -212,7 +212,7 @@ async function main() {
       shortDescription: "Raspberry pate de fruit and ruby chocolate",
       description: "A bright bonbon layered with raspberry pate de fruit and naturally fruity ruby chocolate.",
       quantity: 32,
-      imageUrls: ["https://images.unsplash.com/photo-1571506165871-ee72a35bc9d4?w=800&q=80"],
+      imageUrls: ["/products/pomegranate-box.png", "/products/pomegranate-1.png", "/products/pomegranate-3.png"],
     },
     {
       name: "Almond Gianduja Praline",
@@ -223,7 +223,7 @@ async function main() {
       shortDescription: "Almond praline with crisp feuilletine",
       description: "Roasted almond gianduja paired with crisp feuilletine for a delicate layered bite.",
       quantity: 34,
-      imageUrls: ["https://images.unsplash.com/photo-1575377427642-087cf684f29d?w=800&q=80"],
+      imageUrls: ["/products/fusion-box.png", "/products/fusion-2.png", "/products/fusion-4.png"],
     },
     {
       name: "Ivory Coast 80 Percent Bar",
@@ -234,7 +234,7 @@ async function main() {
       shortDescription: "Intense dark chocolate with toasted notes",
       description: "An assertive 80 percent bar with toasted cocoa, espresso, and a long dry finish.",
       quantity: 24,
-      imageUrls: ["https://images.unsplash.com/photo-1606318313643-1c5d86d28cd6?w=800&q=80"],
+      imageUrls: ["/products/mango-box.png", "/products/mango-2.png", "/products/mango-4.png"],
     },
     {
       name: "Orange Peel Dark Bar",
@@ -245,7 +245,7 @@ async function main() {
       shortDescription: "Dark chocolate with candied orange peel",
       description: "Bittersweet chocolate scattered with candied orange peel and a clean citrus lift.",
       quantity: 38,
-      imageUrls: ["https://images.unsplash.com/photo-1511381939415-e44015466834?w=800&q=80"],
+      imageUrls: ["/products/orange-box.png", "/products/orange-2.png", "/products/orange-4.png"],
     },
     {
       name: "Pistachio Rose Bonbon",
@@ -256,7 +256,7 @@ async function main() {
       shortDescription: "Pistachio praline with rose aroma",
       description: "Silky pistachio praline scented with rose and sealed in a fine milk chocolate shell.",
       quantity: 27,
-      imageUrls: ["https://images.unsplash.com/photo-1582716401301-b2407dc7563d?w=800&q=80"],
+      imageUrls: ["/products/apple-box.png", "/products/apple-1.png", "/products/apple-4.png"],
     },
     {
       name: "Sea Salt Brownie Truffle",
@@ -267,7 +267,7 @@ async function main() {
       shortDescription: "Brownie ganache with sea salt",
       description: "Fudgy brownie ganache dipped in dark chocolate and finished with flakes of sea salt.",
       quantity: 31,
-      imageUrls: ["https://images.unsplash.com/photo-1481391243133-f96216dcb5d2?w=800&q=80"],
+      imageUrls: ["/products/pomegranate-box.png", "/products/pomegranate-2.png", "/products/fusion-3.png"],
     },
   ];
 

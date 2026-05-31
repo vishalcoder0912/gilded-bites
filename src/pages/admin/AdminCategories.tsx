@@ -72,7 +72,7 @@ const AdminCategories = () => {
           <h1 className="font-serif text-4xl">Categories</h1>
           <p className="text-sm text-muted-foreground mt-1">Organize your chocolate collection.</p>
         </div>
-        <button onClick={() => { setShowForm(true); setEditingId(null); setForm({ name: "", slug: "", description: "", isActive: true }); }} className="btn-gold">
+        <button type="button" onClick={() => { setShowForm(true); setEditingId(null); setForm({ name: "", slug: "", description: "", isActive: true }); }} className="btn-gold">
           <Plus className="w-4 h-4 mr-2" /> Add Category
         </button>
       </div>
@@ -142,8 +142,8 @@ const AdminCategories = () => {
                   </td>
                   <td className="px-5 py-4">
                     <div className="flex gap-2 justify-end">
-                      <button onClick={() => startEdit(cat)} className="p-1.5 text-muted-foreground hover:text-primary transition-colors"><Pencil className="w-3.5 h-3.5" /></button>
-                      <button
+                      <button type="button" onClick={() => startEdit(cat)} className="p-1.5 text-muted-foreground hover:text-primary transition-colors"><Pencil className="w-3.5 h-3.5" /></button>
+                      <button type="button"
                         onClick={() => updateCategory.mutate({ id: cat.id, data: { isActive: !cat.isActive } })}
                         disabled={updateCategory.isPending}
                         className="p-1.5 text-muted-foreground hover:text-primary transition-colors"
@@ -151,7 +151,7 @@ const AdminCategories = () => {
                       >
                         {cat.isActive ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
                       </button>
-                      <button onClick={() => deleteCategory.mutate(cat.id)} disabled={deleteCategory.isPending || !cat.isActive} className="p-1.5 text-muted-foreground hover:text-destructive transition-colors disabled:opacity-40"><Trash2 className="w-3.5 h-3.5" /></button>
+                      <button type="button" onClick={() => deleteCategory.mutate(cat.id)} disabled={deleteCategory.isPending || !cat.isActive} className="p-1.5 text-muted-foreground hover:text-destructive transition-colors disabled:opacity-40"><Trash2 className="w-3.5 h-3.5" /></button>
                     </div>
                   </td>
                 </tr>

@@ -12,7 +12,7 @@ export const ProofPreview = ({ src, orderId }: ProofPreviewProps) => {
 
   return (
     <>
-      <button
+      <button type="button"
         onClick={() => setOpen(true)}
         className="group relative w-12 h-12 rounded-md overflow-hidden border border-border hover:border-primary transition-colors"
         aria-label="View payment proof"
@@ -46,7 +46,7 @@ export const ProofPreview = ({ src, orderId }: ProofPreviewProps) => {
                     <div className="eyebrow">Payment proof</div>
                     <div className="font-mono text-sm mt-1">{orderId}</div>
                   </div>
-                  <button
+                  <button type="button"
                     onClick={() => setOpen(false)}
                     className="p-2 text-muted-foreground hover:text-foreground"
                     aria-label="Close"

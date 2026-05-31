@@ -126,7 +126,7 @@ const AdminOrders = () => {
           </div>
           <div className="flex flex-wrap gap-2">
             {["all", "PLACED", "CONFIRMED", "OUT_FOR_DELIVERY", "DELIVERED", "CANCELLED"].map((f) => (
-              <button
+              <button type="button"
                 key={f}
                 onClick={() => setFilter(f)}
                 className={`px-3 py-1.5 rounded-full text-[11px] uppercase tracking-[0.2em] border transition-colors ${
@@ -209,14 +209,14 @@ const AdminOrders = () => {
                     <div className="flex items-center gap-2 justify-end flex-wrap">
                       {o.paymentStatus !== "VERIFIED" && o.paymentStatus !== "REJECTED" && (
                         <>
-                          <button
+                          <button type="button"
                             onClick={() => handlePaymentStatus(o.id, "VERIFIED")}
                             disabled={updatePaymentStatus.isPending}
                             className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/20 transition-colors text-xs uppercase tracking-[0.15em] disabled:opacity-40 disabled:cursor-not-allowed"
                           >
                             <Check className="w-3.5 h-3.5" /> Verify
                           </button>
-                          <button
+                          <button type="button"
                             onClick={() => handlePaymentStatus(o.id, "REJECTED")}
                             disabled={updatePaymentStatus.isPending}
                             className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-destructive/10 text-destructive border border-destructive/30 hover:bg-destructive/20 transition-colors text-xs uppercase tracking-[0.15em] disabled:opacity-40 disabled:cursor-not-allowed"

@@ -4,14 +4,14 @@ import { useNavigate } from "react-router-dom";
 import { useCartStore } from "@/store/cartStore";
 import { useAuth } from "@/store/auth";
 import { useEffect } from "react";
-import { getProductImage } from "@/lib/api";
+import ProductImage from "@/components/ProductImage";
 
 const formatINR = (n: number) =>
-  new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 0 }).format(n);
+  new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 0 }).format(n / 100);
 
 const CartDrawer = () => {
   const { isOpen, close, items, isLoading, updateQuantity, removeFromCart, getSubtotal, fetchCart } = useCartStore();
-  const { isAuthenticated, loadUser } = useAuth();
+  const { isAuthenticated, isLoading: authLoading } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -22,10 +22,10 @@ const CartDrawer = () => {
   }, [isOpen]);
 
   useEffect(() => {
-    if (isOpen && isAuthenticated) {
+    if (isOpen && isAuthenticated && !authLoading) {
       fetchCart();
     }
-  }, [isOpen, isAuthenticated, fetchCart]);
+  }, [isOpen, isAuthenticated, authLoading, fetchCart]);
 
   const handleCheckout = () => {
     close();
@@ -60,7 +60,7 @@ const CartDrawer = () => {
                 <div className="eyebrow">Your selection</div>
                 <h2 className="font-serif text-2xl text-cream">Coffret</h2>
               </div>
-              <button onClick={close} className="p-2 text-muted-foreground hover:text-primary transition-colors" aria-label="Close cart">
+              <button type="button" onClick={close} className="p-2 text-muted-foreground hover:text-primary transition-colors" aria-label="Close cart">
                 <X className="w-5 h-5" />
               </button>
             </div>
@@ -74,7 +74,7 @@ const CartDrawer = () => {
                 <div className="text-center py-20">
                   <div className="font-serif text-2xl mb-3 text-cream">Your coffret awaits.</div>
                   <p className="text-sm text-muted-foreground mb-8">Begin curating from our collection.</p>
-                  <button onClick={() => { close(); navigate("/shop"); }} className="btn-ghost-gold text-xs">
+                  <button type="button" onClick={() => { close(); navigate("/shop"); }} className="btn-ghost-gold text-xs">
                     Browse chocolate
                   </button>
                 </div>
@@ -86,18 +86,18 @@ const CartDrawer = () => {
                   exit={{ opacity: 0, x: 20 }}
                   className="grid grid-cols-[80px_minmax(0,1fr)] gap-4 border-b border-gold/10 pb-5 sm:flex"
                 >
-                  <img
-                    src={getProductImage(item.product)}
+                  <ProductImage
+                    product={item.product}
                     alt={item.product.name}
                     loading="lazy"
                     className="w-20 h-20 object-cover rounded-sm"
                   />
                   <div className="flex-1 min-w-0">
                     <div className="font-serif text-lg text-cream leading-tight truncate">{item.product?.name}</div>
-                    <div className="text-xs text-muted-foreground mb-3">₹{item.priceSnapshot}</div>
+                    <div className="text-xs text-muted-foreground mb-3">{formatINR(item.priceSnapshot)}</div>
                     <div className="flex items-center gap-3">
                       <div className="flex items-center border border-gold/20 rounded-sm">
-                        <button
+                        <button type="button"
                           onClick={() => updateQuantity(item.id, item.quantity - 1)}
                           className="p-1.5 text-muted-foreground hover:text-primary transition-colors"
                           aria-label="Decrease quantity"
@@ -105,7 +105,7 @@ const CartDrawer = () => {
                           <Minus className="w-3 h-3" />
                         </button>
                         <span className="w-8 text-center text-sm">{item.quantity}</span>
-                        <button
+                        <button type="button"
                           onClick={() => updateQuantity(item.id, item.quantity + 1)}
                           className="p-1.5 text-muted-foreground hover:text-primary transition-colors"
                           aria-label="Increase quantity"
@@ -113,7 +113,7 @@ const CartDrawer = () => {
                           <Plus className="w-3 h-3" />
                         </button>
                       </div>
-                      <button
+                      <button type="button"
                         onClick={() => removeFromCart(item.id)}
                         className="text-muted-foreground hover:text-destructive transition-colors"
                         aria-label="Remove item"
@@ -138,7 +138,7 @@ const CartDrawer = () => {
                   <span className="font-serif text-2xl gold-text">{formatINR(getSubtotal())}</span>
                 </div>
                 <p className="text-xs text-muted-foreground">Shipping & taxes calculated at checkout.</p>
-                <button onClick={handleCheckout} className="btn-gold w-full">
+                <button type="button" onClick={handleCheckout} className="btn-gold w-full">
                   Proceed to Checkout
                 </button>
               </div>

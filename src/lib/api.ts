@@ -15,6 +15,15 @@ export class ApiError extends Error {
 const getToken = () => localStorage.getItem("accessToken");
 const getRefreshToken = () => localStorage.getItem("refreshToken");
 
+const clearAuthSession = () => {
+  localStorage.removeItem("accessToken");
+  localStorage.removeItem("refreshToken");
+  localStorage.removeItem("user");
+  if (typeof window !== "undefined") {
+    window.dispatchEvent(new Event("noir-sane-session-expired"));
+  }
+};
+
 async function parseResponse(response: Response) {
   const text = await response.text();
 
@@ -80,9 +89,7 @@ async function request<T>(
       }
     }
 
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("refreshToken");
-    localStorage.removeItem("user");
+    clearAuthSession();
 
     throw new ApiError(401, "Session expired");
   }
@@ -100,9 +107,7 @@ async function request<T>(
     if (message === "User is inactive" || message === "Insufficient permissions") {
       // Only clear on "User is inactive" (deleted user), not on role-based access denial
       if (message === "User is inactive") {
-        localStorage.removeItem("accessToken");
-        localStorage.removeItem("refreshToken");
-        localStorage.removeItem("user");
+        clearAuthSession();
       }
     }
     throw new ApiError(403, message, json403);
@@ -302,25 +307,14 @@ export const orderApi = {
   },
 
   async createUpiSession(orderId: string) {
-    return api.post<{
-      id: string;
-      orderId: string;
-      upiIdSnapshot: string;
-      payeeName: string;
-      amount: number;
-      currency: string;
-      transactionRef: string;
-      upiUri: string;
-      qrDataUrl: string;
-      status: string;
-    }>(`/orders/${orderId}/upi-session`);
+    return api.post<UpiSession>(`/orders/${orderId}/upi-session`);
   },
 
   async submitUpiSession(
     sessionId: string,
     data: { utr: string; proofImageUrl: string }
   ) {
-    return api.post(`/upi-sessions/${sessionId}/submit`, data);
+    return api.post<Order>(`/upi-sessions/${sessionId}/submit`, data);
   },
 
   async cancelOrder(orderId: string) {
@@ -497,9 +491,36 @@ export interface Product {
   createdAt: string;
 }
 
+const localImageBySlug = (product: Product): string => {
+  const slug = `${product.slug || ""} ${product.category?.slug || ""} ${product.category?.name || ""}`.toLowerCase();
+
+  if (slug.includes("apple")) return "/products/apple-box.png";
+  if (slug.includes("orange")) return "/products/orange-box.png";
+  if (slug.includes("mango")) return "/products/mango-box.png";
+  if (slug.includes("grape")) return "/products/grape-box.png";
+  if (slug.includes("pineapple")) return "/products/pineapple-box.png";
+  if (slug.includes("pomegranate") || slug.includes("ruby")) return "/products/pomegranate-box.png";
+  if (slug.includes("fusion") || slug.includes("praline") || slug.includes("coffret") || slug.includes("maison")) return "/products/fusion-box.png";
+  if (slug.includes("bar") || slug.includes("hazelnut") || slug.includes("caramel")) return "/products/orange-box.png";
+  if (slug.includes("truffle")) return "/products/pomegranate-box.png";
+  if (slug.includes("bonbon")) return "/products/apple-box.png";
+  if (slug.includes("single") || slug.includes("origin") || slug.includes("ecuador") || slug.includes("ivory")) return "/products/mango-box.png";
+
+  return "/products/fusion-box.png";
+};
+
+export const getProductImageCandidates = (product: Product): string[] => {
+  const localFallback = localImageBySlug(product);
+  const stableUrls = (product.imageUrls || []).filter((url) => {
+    if (!url) return false;
+    return !url.includes("images.unsplash.com");
+  });
+
+  return Array.from(new Set([...stableUrls, localFallback, "/placeholder.svg"]));
+};
+
 export const getProductImage = (product: Product): string => {
-  if (product.imageUrls && product.imageUrls.length > 0) return product.imageUrls[0];
-  return "/placeholder.svg";
+  return getProductImageCandidates(product)[0];
 };
 
 export interface Category {
@@ -658,6 +679,24 @@ export interface UpiSetting {
   isActive: boolean;
   updatedAt?: string;
   createdAt?: string;
+}
+
+export interface UpiSession {
+  id: string;
+  orderId: string;
+  upiSettingId: string;
+  upiIdSnapshot: string;
+  payeeName: string;
+  amount: number;
+  currency: string;
+  transactionRef: string;
+  upiUri: string;
+  qrDataUrl: string;
+  status: "PENDING" | "SUBMITTED" | "VERIFIED" | "REJECTED" | "PAID" | "FAILED" | "CANCELLED" | "REFUNDED" | "EXPIRED";
+  utr?: string;
+  proofImageUrl?: string;
+  expiresAt: string;
+  secondsLeft?: number;
 }
 
 

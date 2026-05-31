@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Navigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/store/auth";
 import { Loader2 } from "lucide-react";
@@ -10,12 +10,24 @@ interface RequireUserProps {
 const RequireUser = ({ children }: RequireUserProps) => {
   const location = useLocation();
   const { isAuthenticated, isLoading, loadUser } = useAuth();
+  const [initializing, setInitializing] = useState(true);
 
   useEffect(() => {
-    loadUser();
+    let mounted = true;
+
+    const init = async () => {
+      await loadUser();
+      if (mounted) setInitializing(false);
+    };
+
+    init();
+
+    return () => {
+      mounted = false;
+    };
   }, [loadUser]);
 
-  if (isLoading) {
+  if (initializing || isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <Loader2 className="w-6 h-6 animate-spin text-primary" />

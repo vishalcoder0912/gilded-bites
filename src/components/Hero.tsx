@@ -52,10 +52,10 @@ const Hero = () => {
           transition={{ duration: 0.9, delay: 0.95 }}
           className="mt-6 md:mt-10 flex flex-wrap gap-3 md:gap-4 pointer-events-auto"
         >
-          <button onClick={() => navigate("/shop")} className="btn-gold text-sm md:text-base px-5 py-2.5 md:px-7 md:py-3">
+          <button type="button" onClick={() => navigate("/shop")} className="btn-gold text-sm md:text-base px-5 py-2.5 md:px-7 md:py-3">
             Explore the Collection
           </button>
-          <button onClick={() => navigate("/shop")} className="btn-ghost-gold text-sm md:text-base px-5 py-2.5 md:px-7 md:py-3">
+          <button type="button" onClick={() => navigate("/shop")} className="btn-ghost-gold text-sm md:text-base px-5 py-2.5 md:px-7 md:py-3">
             Explore Our Story
           </button>
         </motion.div>

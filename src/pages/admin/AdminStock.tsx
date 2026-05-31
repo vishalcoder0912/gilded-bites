@@ -118,14 +118,14 @@ const AdminStock = () => {
                               onChange={(e) => setAdjustReason(e.target.value)}
                               className="w-28 bg-input border border-border px-2 py-1 rounded-sm text-xs"
                             />
-                            <button
+                            <button type="button"
                               onClick={() => handleAdjust(s.productId)}
                               disabled={adjustStock.isPending}
                               className="px-2 py-1 bg-primary text-abyss text-xs rounded-sm hover:bg-gold-bright disabled:opacity-40"
                             >
                               {adjustStock.isPending ? <Loader2 className="w-3 h-3 animate-spin" /> : "Save"}
                             </button>
-                            <button onClick={() => { setAdjustingId(null); setAdjustQty(""); setAdjustReason(""); }} className="px-2 py-1 text-xs text-muted-foreground hover:text-foreground">✕</button>
+                            <button type="button" onClick={() => { setAdjustingId(null); setAdjustQty(""); setAdjustReason(""); }} className="px-2 py-1 text-xs text-muted-foreground hover:text-foreground">✕</button>
                           </div>
                         )}
                       </div>

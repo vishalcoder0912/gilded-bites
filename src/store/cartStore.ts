@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { cartApi, Product } from "@/lib/api";
+import { ApiError, cartApi, Product } from "@/lib/api";
 import { toast } from "@/hooks/use-toast";
 
 interface CartItemState {
@@ -46,6 +46,11 @@ export const useCartStore = create<CartState>((set, get) => ({
       const cart = await cartApi.getCart();
       set({ items: cart.items as CartItemState[], isLoading: false });
     } catch (err: unknown) {
+      if (err instanceof ApiError && err.status === 401) {
+        set({ items: [], isLoading: false, error: null });
+        return;
+      }
+
       set({ isLoading: false, error: err instanceof Error ? err.message : "Failed to fetch cart" });
     }
   },

@@ -1,6 +1,6 @@
 # Project Codebase And Architecture
 
-Generated: 2026-05-27T05:40:46.141Z
+Generated: 2026-05-29T14:07:36.407Z
 
 This single-file export combines the project architecture and source code. It excludes common sensitive files and generated folders, then applies best-effort secret redaction to included text files. Review before sharing externally.
 
@@ -17,8 +17,8 @@ This single-file export combines the project architecture and source code. It ex
 - BACKEND.md (20734 bytes)
 - backend/check-db.ts (861 bytes)
 - backend/check-users.ts (498 bytes)
-- backend/prisma/schema.prisma (9437 bytes)
-- backend/prisma/seed.ts (12667 bytes)
+- backend/prisma/schema.prisma (10234 bytes)
+- backend/prisma/seed.ts (13749 bytes)
 - backend/README.md (2175 bytes)
 - backend/src/app.ts (4047 bytes)
 - backend/src/config/env.ts (1194 bytes)
@@ -30,20 +30,20 @@ This single-file export combines the project architecture and source code. It ex
 - backend/src/middleware/validate.ts (524 bytes)
 - backend/src/routes/auth.routes.ts (4107 bytes)
 - backend/src/routes/catalog.routes.ts (8382 bytes)
-- backend/src/routes/commerce.routes.ts (27570 bytes)
+- backend/src/routes/commerce.routes.ts (35081 bytes)
 - backend/src/routes/users.routes.ts (2148 bytes)
 - backend/src/schemas/auth.ts (388 bytes)
 - backend/src/schemas/catalog.ts (1804 bytes)
-- backend/src/schemas/commerce.ts (1881 bytes)
+- backend/src/schemas/commerce.ts (2158 bytes)
 - backend/src/schemas/common.ts (919 bytes)
 - backend/src/server.ts (634 bytes)
 - backend/src/utils/api.ts (1131 bytes)
 - backend/src/utils/errors.ts (1414 bytes)
 - backend/src/utils/ids.ts (466 bytes)
-- backend/test-fetch.ts (1092 bytes)
+- backend/test-fetch.ts (1359 bytes)
 - backend/tests/app.test.ts (715 bytes)
 - backend/tests/database.integration.test.ts (1333 bytes)
-- backend/tests/full-flow.integration.test.ts (14029 bytes)
+- backend/tests/full-flow.integration.test.ts (14008 bytes)
 - backend/tests/ids.test.ts (620 bytes)
 - backend/tests/validate.test.ts (953 bytes)
 - backend/tsconfig.json (369 bytes)
@@ -52,7 +52,7 @@ This single-file export combines the project architecture and source code. It ex
 - FIX_IMPLEMENTATION_REPORT.md (12299 bytes)
 - FULLSTACK_TESTING_REPORT.md (35373 bytes)
 - index.html (1025 bytes)
-- package.json (5048 bytes)
+- package.json (5018 bytes)
 - postcss.config.js (87 bytes)
 - prisma.config.ts (338 bytes)
 - QUICK_START.md (1720 bytes)
@@ -66,7 +66,7 @@ This single-file export combines the project architecture and source code. It ex
 - src/App.css (648 bytes)
 - src/App.tsx (8108 bytes)
 - src/components/AddressForm.tsx (5996 bytes)
-- src/components/admin/AdminLayout.tsx (4827 bytes)
+- src/components/admin/AdminLayout.tsx (4912 bytes)
 - src/components/admin/AdminSidebar.tsx (4379 bytes)
 - src/components/admin/LuxuryAdminLayout.tsx (9439 bytes)
 - src/components/admin/ProofPreview.tsx (2772 bytes)
@@ -104,13 +104,11 @@ This single-file export combines the project architecture and source code. It ex
 - src/components/luxury/RouteGsapEnhancer.tsx (2121 bytes)
 - src/components/luxury/ScrollNavbarWrapper.tsx (703 bytes)
 - src/components/luxury/ScrollReveal.tsx (4385 bytes)
-- src/components/Navbar.tsx (9381 bytes)
+- src/components/Navbar.tsx (9305 bytes)
 - src/components/NavLink.tsx (779 bytes)
 - src/components/PageTransition.tsx (409 bytes)
 - src/components/ProductCard.tsx (4404 bytes)
 - src/components/RequireUser.tsx (807 bytes)
-- src/components/ThemeSelector.tsx (1442 bytes)
-- src/components/ThemeToggle.tsx (1440 bytes)
 - src/components/ui/accordion.tsx (2028 bytes)
 - src/components/ui/alert-dialog.tsx (4417 bytes)
 - src/components/ui/alert.tsx (1589 bytes)
@@ -149,7 +147,7 @@ This single-file export combines the project architecture and source code. It ex
 - src/components/ui/sidebar.tsx (23474 bytes)
 - src/components/ui/skeleton.tsx (241 bytes)
 - src/components/ui/slider.tsx (1088 bytes)
-- src/components/ui/sonner.tsx (904 bytes)
+- src/components/ui/sonner.tsx (785 bytes)
 - src/components/ui/switch.tsx (1174 bytes)
 - src/components/ui/table.tsx (2766 bytes)
 - src/components/ui/tabs.tsx (1950 bytes)
@@ -163,11 +161,10 @@ This single-file export combines the project architecture and source code. It ex
 - src/hooks/use-mobile.tsx (595 bytes)
 - src/hooks/use-toast.ts (4121 bytes)
 - src/index.css (13599 bytes)
-- src/lib/api.ts (17710 bytes)
+- src/lib/api.ts (18560 bytes)
 - src/lib/pendingCart.ts (766 bytes)
-- src/lib/ThemeProvider.tsx (2440 bytes)
 - src/lib/utils.ts (175 bytes)
-- src/main.tsx (490 bytes)
+- src/main.tsx (399 bytes)
 - src/pages/About.tsx (3241 bytes)
 - src/pages/Addresses.tsx (9852 bytes)
 - src/pages/admin/AdminCategories.tsx (9195 bytes)
@@ -179,13 +176,13 @@ This single-file export combines the project architecture and source code. It ex
 - src/pages/admin/AdminStock.tsx (7268 bytes)
 - src/pages/Atelier.tsx (5655 bytes)
 - src/pages/Cart.tsx (5509 bytes)
-- src/pages/Checkout.tsx (22827 bytes)
+- src/pages/Checkout.tsx (44076 bytes)
 - src/pages/Contact.tsx (2364 bytes)
 - src/pages/delivery/DeliveryDashboard.tsx (2813 bytes)
 - src/pages/delivery/DeliveryLayout.tsx (2357 bytes)
 - src/pages/delivery/DeliveryLogin.tsx (5796 bytes)
 - src/pages/delivery/DeliveryOrders.tsx (4875 bytes)
-- src/pages/delivery/DeliveryRequire.tsx (746 bytes)
+- src/pages/delivery/DeliveryRequire.tsx (761 bytes)
 - src/pages/Home.tsx (8717 bytes)
 - src/pages/Index.tsx (145 bytes)
 - src/pages/Legal.tsx (2289 bytes)
@@ -906,12 +903,18 @@ enum PaymentStatus {
   FAILED
   CANCELLED
   REFUNDED
+  EXPIRED
 }
 
 enum PaymentMethod {
   UPI
   COD
   STRIPE
+}
+
+enum CouponType {
+  PERCENTAGE
+  FIXED
 }
 
 model User {
@@ -1045,6 +1048,26 @@ model UpiPaymentSetting {
   orders      Order[]
 }
 
+model Coupon {
+  id          String     @id @default(uuid())
+  code        String     @unique
+  type        CouponType
+  value       Int
+  maxDiscount Int?
+  minSubtotal Int        @default(0)
+  usageLimit  Int?
+  usageCount  Int        @default(0)
+  isActive    Boolean    @default(true)
+  startsAt    DateTime?
+  expiresAt   DateTime?
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  orders      Order[]
+
+  @@index([isActive])
+  @@index([expiresAt])
+}
+
 model Order {
   id                         String             @id @default(uuid())
   orderNumber                String             @unique
@@ -1060,6 +1083,8 @@ model Order {
   subtotal                   Int
   deliveryCharge             Int                @default(0)
   discountAmount             Int                @default(0)
+  couponId                   String?
+  couponCodeSnapshot         String?
   totalAmount                Int
   customerName               String
   customerPhone              String
@@ -1077,6 +1102,7 @@ model Order {
   user                       User               @relation("UserOrders", fields: [userId], references: [id])
   deliveryPartner            User?              @relation("DeliveryPartnerOrders", fields: [deliveryPartnerId], references: [id], onDelete: SetNull)
   upiSetting                 UpiPaymentSetting? @relation(fields: [upiSettingId], references: [id], onDelete: SetNull)
+  coupon                     Coupon?            @relation(fields: [couponId], references: [id], onDelete: SetNull)
   items                      OrderItem[]
   tracking                   DeliveryTracking[]
   payment                    Payment?
@@ -1086,6 +1112,7 @@ model Order {
   @@index([deliveryPartnerId, status])
   @@index([status, createdAt])
   @@index([paymentStatus])
+  @@index([couponId])
 }
 
 model OrderItem {
@@ -1148,11 +1175,13 @@ model UpiPaymentSession {
   utr            String?
   proofImageUrl  String?
 
+  expiresAt      DateTime
   createdAt      DateTime      @default(now())
   updatedAt      DateTime      @updatedAt
 
   @@index([orderId])
   @@index([transactionRef])
+  @@index([expiresAt])
 }
 
 model DeliveryTracking {
@@ -1512,14 +1541,61 @@ async function main() {
     });
   }
 
-  await prisma.upiPaymentSetting.upsert({
-    where: { upiId: "cocoanoir@upi" },
-    update: { isActive: true },
-    create: {
-      upiId: "cocoanoir@upi",
-      displayName: "Noir Sane",
-      isActive: true,
-    },
+  await prisma.$transaction(async (tx) => {
+    await tx.coupon.upsert({
+      where: { code: "NOIR10" },
+      update: {
+        isActive: true,
+        type: "PERCENTAGE",
+        value: 10,
+        maxDiscount: 50000,
+        minSubtotal: 100000,
+        usageLimit: 100,
+      },
+      create: {
+        code: "NOIR10",
+        type: "PERCENTAGE",
+        value: 10,
+        maxDiscount: 50000,
+        minSubtotal: 100000,
+        usageLimit: 100,
+        isActive: true,
+      },
+    });
+
+    await tx.coupon.upsert({
+      where: { code: "WELCOME150" },
+      update: {
+        isActive: true,
+        type: "FIXED",
+        value: 15000,
+        minSubtotal: 100000,
+        usageLimit: 200,
+      },
+      create: {
+        code: "WELCOME150",
+        type: "FIXED",
+        value: 15000,
+        minSubtotal: 100000,
+        usageLimit: 200,
+        isActive: true,
+      },
+    });
+
+    await tx.upiPaymentSetting.updateMany({
+      where: { NOT: { upiId: "9319758795@omni" } },
+      data: { isActive: false },
+    });
+
+    await tx.upiPaymentSetting.upsert({
+      where: { upiId: "9319758795@omni" },
+      update: { displayName: "Noir Sane", isActive: true },
+      create: {
+        upiId: "9319758795@omni",
+        displayName: "Noir Sane",
+        isActive: true,
+      },
+    });
   });
 }
 
@@ -2256,11 +2332,11 @@ import multer from "multer";
 import path from "node:path";
 import { promises as fs } from "node:fs";
 import { randomUUID } from "node:crypto";
-import { OrderStatus, PaymentMethod, PaymentStatus, Role, StockMovementType } from "@prisma/client";
+import { CouponType, OrderStatus, PaymentMethod, PaymentStatus, Prisma, Role, StockMovementType } from "@prisma/client";
 import { prisma } from "../lib/prisma";
 import { requireAuth, requireRole } from "../middleware/auth";
 import { validate } from "../middleware/validate";
-import { addressCreateSchema, addressUpdateSchema, assignDeliveryPartnerSchema, cartItemCreateSchema, cartItemUpdateSchema, etaSchema, orderCreateSchema, paymentStatusUpdateSchema, paymentSubmitSchema, statusUpdateSchema, trackingCreateSchema } from "../schemas/commerce";
+import { addressCreateSchema, addressUpdateSchema, assignDeliveryPartnerSchema, cartItemCreateSchema, cartItemUpdateSchema, couponValidateSchema, etaSchema, orderCreateSchema, paymentStatusUpdateSchema, paymentSubmitSchema, statusUpdateSchema, trackingCreateSchema } from "../schemas/commerce";
 import { idParam } from "../schemas/common";
 import { createOrderNumber, createTransactionId } from "../utils/ids";
 import { ok, paginated, safeUserSelect, toPagination } from "../utils/api";
@@ -2272,6 +2348,72 @@ import QRCode from "qrcode";
 export const commerceRouter = Router();
 export const adminCommerceRouter = Router();
 export const deliveryRouter = Router();
+
+const FREE_DELIVERY_THRESHOLD_PAISE = 250000; // INR 2500
+const DELIVERY_CHARGE_PAISE = 15000; // INR 150
+const UPI_QR_TTL_MS = 60 * 1000;
+
+const calculateDeliveryCharge = (subtotal: number) =>
+  subtotal >= FREE_DELIVERY_THRESHOLD_PAISE ? 0 : DELIVERY_CHARGE_PAISE;
+
+const isExpired = (expiresAt: Date) => expiresAt.getTime() <= Date.now();
+
+const generateTransactionRef = (orderNumber: string) =>
+  `NS-${orderNumber}-${Date.now().toString(36).toUpperCase()}`;
+
+const normalizeCouponCode = (value?: string) =>
+  value?.trim().toUpperCase() || undefined;
+
+const calculateCouponDiscount = async (
+  tx: Prisma.TransactionClient,
+  couponCode: string | undefined,
+  subtotal: number,
+) => {
+  const code = normalizeCouponCode(couponCode);
+
+  if (!code) {
+    return {
+      coupon: null,
+      couponCodeSnapshot: null,
+      discountAmount: 0,
+    };
+  }
+
+  const coupon = await tx.coupon.findUnique({
+    where: { code },
+  });
+
+  if (!coupon) throw new AppError("Invalid coupon code", 400);
+
+  const now = new Date();
+
+  if (!coupon.isActive) throw new AppError("This coupon is not active", 400);
+  if (coupon.startsAt && coupon.startsAt > now) throw new AppError("This coupon is not active yet", 400);
+  if (coupon.expiresAt && coupon.expiresAt < now) throw new AppError("This coupon has expired", 400);
+  if (coupon.usageLimit !== null && coupon.usageCount >= coupon.usageLimit) {
+    throw new AppError("This coupon usage limit has been reached", 400);
+  }
+  if (subtotal < coupon.minSubtotal) {
+    throw new AppError(`Minimum order value for this coupon is ₹${Math.round(coupon.minSubtotal / 100)}`, 400);
+  }
+
+  let discountAmount =
+    coupon.type === CouponType.PERCENTAGE
+      ? Math.floor((subtotal * coupon.value) / 100)
+      : coupon.value;
+
+  if (coupon.maxDiscount !== null) {
+    discountAmount = Math.min(discountAmount, coupon.maxDiscount);
+  }
+
+  discountAmount = Math.min(discountAmount, subtotal);
+
+  return {
+    coupon,
+    couponCodeSnapshot: coupon.code,
+    discountAmount,
+  };
+};
 
 const paymentProofUpload = multer({
   storage: multer.memoryStorage(),
@@ -2339,6 +2481,41 @@ commerceRouter.get("/cart/items", asyncHandler(async (req, res) => {
   const cart = await ensureCart(req.user!.id);
   ok(res, cart.items);
 }));
+
+commerceRouter.post(
+  "/coupons/validate",
+  requireAuth,
+  validate(couponValidateSchema),
+  asyncHandler(async (req, res) => {
+    const cart = await prisma.cart.findUnique({
+      where: { userId: req.user!.id },
+      include: { items: true },
+    });
+
+    if (!cart || cart.items.length === 0) {
+      throw new AppError("Cart is empty", 400);
+    }
+
+    const subtotal = cart.items.reduce((sum, item) => sum + item.priceSnapshot * item.quantity, 0);
+    const result = await prisma.$transaction((tx) => calculateCouponDiscount(tx, req.body.couponCode, subtotal));
+    const deliveryCharge = calculateDeliveryCharge(subtotal);
+    const totalAmount = subtotal + deliveryCharge - result.discountAmount;
+
+    ok(
+      res,
+      {
+        code: result.couponCodeSnapshot,
+        type: result.coupon?.type,
+        value: result.coupon?.value,
+        subtotal,
+        deliveryCharge,
+        discountAmount: result.discountAmount,
+        totalAmount,
+      },
+      "Coupon applied",
+    );
+  }),
+);
 
 commerceRouter.post(
   "/cart/items",
@@ -2429,16 +2606,22 @@ commerceRouter.post(
       }
 
       const subtotal = cart.items.reduce((sum, item) => sum + item.priceSnapshot * item.quantity, 0);
-      const deliveryCharge = req.body.deliveryCharge ?? 0;
-      const discountAmount = req.body.discountAmount ?? 0;
+      const deliveryCharge = calculateDeliveryCharge(subtotal);
+      const { coupon, couponCodeSnapshot, discountAmount } = await calculateCouponDiscount(tx, req.body.couponCode, subtotal);
       const totalAmount = subtotal + deliveryCharge - discountAmount;
       const activeUpi = req.body.paymentMethod === PaymentMethod.UPI ? await tx.upiPaymentSetting.findFirst({ where: { isActive: true }, orderBy: { updatedAt: "desc" } }) : null;
+      if (req.body.paymentMethod === PaymentMethod.UPI && !activeUpi) {
+        throw new AppError("No active UPI ID configured by admin", 400);
+      }
+      const requiresOnlinePayment =
+        req.body.paymentMethod === PaymentMethod.UPI ||
+        req.body.paymentMethod === PaymentMethod.STRIPE;
       const created = await tx.order.create({
         data: {
           orderNumber: createOrderNumber(),
           transactionId: createTransactionId(),
           userId: req.user!.id,
-          status: req.body.paymentMethod === PaymentMethod.UPI ? OrderStatus.PAYMENT_PENDING : OrderStatus.PLACED,
+          status: requiresOnlinePayment ? OrderStatus.PAYMENT_PENDING : OrderStatus.PLACED,
           paymentStatus: PaymentStatus.PENDING,
           paymentMethod: req.body.paymentMethod,
           upiId: activeUpi?.upiId,
@@ -2446,6 +2629,8 @@ commerceRouter.post(
           subtotal,
           deliveryCharge,
           discountAmount,
+          couponId: coupon?.id,
+          couponCodeSnapshot,
           totalAmount,
           customerName: address.fullName,
           customerPhone: address.phone,
@@ -2467,6 +2652,13 @@ commerceRouter.post(
         },
         include: includeOrder,
       });
+
+      if (coupon) {
+        await tx.coupon.update({
+          where: { id: coupon.id },
+          data: { usageCount: { increment: 1 } },
+        });
+      }
 
       for (const item of cart.items) {
         await tx.stock.update({ where: { productId: item.productId }, data: { quantity: { decrement: item.quantity } } });
@@ -2515,23 +2707,31 @@ commerceRouter.post(
 
     if (!order) throw new AppError("Order not found", 404);
 
+    if (order.totalAmount <= 0) {
+      throw new AppError("Order total must be greater than zero for Stripe checkout", 400);
+    }
+
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
       payment_method_types: ["card"],
       customer_email: req.user!.email,
-      line_items: order.items.map((item) => ({
-        quantity: item.quantity,
-        price_data: {
-          currency: "inr",
-          unit_amount: item.productPriceSnapshot,
-          product_data: {
-            name: item.productNameSnapshot || item.product?.name || "Noir Sane item",
+      line_items: [
+        {
+          quantity: 1,
+          price_data: {
+            currency: "inr",
+            unit_amount: order.totalAmount,
+            product_data: {
+              name: `Noir Sane order ${order.orderNumber}`,
+              description: `Subtotal ${order.subtotal}, delivery ${order.deliveryCharge}, discount ${order.discountAmount}`,
+            },
           },
         },
-      })),
+      ],
       metadata: {
         orderId: order.id,
         userId: req.user!.id,
+        totalAmount: String(order.totalAmount),
       },
       success_url: `${env.FRONTEND_URL}/order-confirmed?id=${order.id}&payment=stripe_success`,
       cancel_url: `${env.FRONTEND_URL}/checkout?payment=stripe_cancelled`,
@@ -2565,15 +2765,63 @@ commerceRouter.post(
 commerceRouter.post(
   "/orders/:id/upi-session",
   requireAuth,
+  validate(idParam),
   asyncHandler(async (req, res) => {
     const order = await prisma.order.findFirst({
       where: {
         id: req.params.id as string,
         userId: req.user!.id,
       },
+      include: {
+        upiSessions: {
+          where: {
+            status: PaymentStatus.PENDING,
+          },
+          orderBy: {
+            createdAt: "desc",
+          },
+          take: 1,
+        },
+      },
     });
 
     if (!order) throw new AppError("Order not found", 404);
+
+    if (order.paymentMethod !== PaymentMethod.UPI) {
+      throw new AppError("This order is not a UPI order", 400);
+    }
+
+    if (
+      order.paymentStatus === PaymentStatus.SUBMITTED ||
+      order.paymentStatus === PaymentStatus.VERIFIED ||
+      order.paymentStatus === PaymentStatus.PAID
+    ) {
+      throw new AppError("Payment already submitted for this order", 400);
+    }
+
+    const existingSession = order.upiSessions[0];
+
+    if (existingSession && !isExpired(existingSession.expiresAt)) {
+      ok(
+        res,
+        {
+          ...existingSession,
+          secondsLeft: Math.max(
+            0,
+            Math.floor((existingSession.expiresAt.getTime() - Date.now()) / 1000),
+          ),
+        },
+        "Active UPI QR already exists",
+      );
+      return;
+    }
+
+    if (existingSession && isExpired(existingSession.expiresAt)) {
+      await prisma.upiPaymentSession.update({
+        where: { id: existingSession.id },
+        data: { status: PaymentStatus.EXPIRED },
+      });
+    }
 
     const activeUpi = await prisma.upiPaymentSetting.findFirst({
       where: { isActive: true },
@@ -2584,23 +2832,19 @@ commerceRouter.post(
       throw new AppError("No active UPI ID configured by admin", 400);
     }
 
-    const transactionRef = `NS-${Date.now()}-${Math.random()
-      .toString(36)
-      .slice(2, 8)
-      .toUpperCase()}`;
-
+    const expiresAt = new Date(Date.now() + UPI_QR_TTL_MS);
+    const transactionRef = generateTransactionRef(order.orderNumber);
     const amountRupees = (order.totalAmount / 100).toFixed(2);
 
     const upiUri =
       `upi://pay?pa=${encodeURIComponent(activeUpi.upiId)}` +
       `&pn=${encodeURIComponent(activeUpi.displayName || "Noir Sane")}` +
-      `&am=${amountRupees}` +
+      `&am=${encodeURIComponent(amountRupees)}` +
       `&cu=INR` +
-      `&tr=${encodeURIComponent(transactionRef)}` +
-      `&tn=${encodeURIComponent(`Noir Sane Order ${order.orderNumber}`)}`;
+      `&tn=${encodeURIComponent(transactionRef)}`;
 
     const qrDataUrl = await QRCode.toDataURL(upiUri, {
-      width: 260,
+      width: 300,
       margin: 1,
     });
 
@@ -2615,112 +2859,119 @@ commerceRouter.post(
         transactionRef,
         upiUri,
         qrDataUrl,
+        status: PaymentStatus.PENDING,
+        expiresAt,
       },
     });
 
-    ok(res, session, "UPI payment session created");
+    ok(
+      res,
+      {
+        ...session,
+        secondsLeft: Math.floor(UPI_QR_TTL_MS / 1000),
+      },
+      "Secure UPI QR generated",
+    );
   })
 );
 
 commerceRouter.post(
-  "/upi-sessions/:id/submit",
+  "/upi-sessions/:sessionId/submit",
   requireAuth,
   asyncHandler(async (req, res) => {
+    const sessionId = String(req.params.sessionId);
     const { utr, proofImageUrl } = req.body;
+    const trimmedUtr = String(utr || "").trim();
 
-    if (!/^\d{12}$/.test(utr)) {
-      throw new AppError("Invalid UTR. It must be 12 digits.", 400);
+    if (!/^\d{12}$/.test(trimmedUtr)) {
+      throw new AppError("UTR must be exactly 12 digits", 400);
     }
 
     if (!proofImageUrl || typeof proofImageUrl !== "string") {
-      throw new AppError("Payment proof image required", 400);
+      throw new AppError("Payment proof image is required", 400);
     }
 
-    const session = await prisma.upiPaymentSession.findFirst({
-      where: {
-        id: req.params.id as string,
-      },
-      include: { order: true },
-    });
+    const updatedOrder = await prisma.$transaction(async (tx) => {
+      const session = (await tx.upiPaymentSession.findUnique({
+        where: { id: sessionId },
+        include: { order: true },
+      })) as Prisma.UpiPaymentSessionGetPayload<{ include: { order: true } }> | null;
 
-    if (!session) throw new AppError("UPI session not found", 404);
+      if (!session) throw new AppError("UPI session not found", 404);
 
-    const order = session.order;
+      if (session.order.userId !== req.user!.id) {
+        throw new AppError("You cannot submit payment for this order", 403);
+      }
 
-    if (order.userId !== req.user!.id) {
-      throw new AppError("Forbidden", 403);
-    }
+      if (session.status !== PaymentStatus.PENDING) {
+        throw new AppError("This UPI QR is no longer active", 400);
+      }
 
-    if (order.paymentStatus !== PaymentStatus.PENDING) {
-      throw new AppError("Payment already submitted or processed", 409);
-    }
+      if (isExpired(session.expiresAt)) {
+        await tx.upiPaymentSession.update({
+          where: { id: session.id },
+          data: { status: PaymentStatus.EXPIRED },
+        });
 
-    if (session.orderId !== order.id) {
-      throw new AppError("Invalid payment session", 400);
-    }
+        throw new AppError("This UPI QR has expired. Please generate a new QR.", 410);
+      }
 
-    if (session.amount !== order.totalAmount) {
-      throw new AppError("Payment amount mismatch", 400);
-    }
+      if (session.amount !== session.order.totalAmount) {
+        throw new AppError("Payment amount mismatch. Please generate a new QR.", 400);
+      }
 
-    if (session.status !== PaymentStatus.PENDING) {
-      throw new AppError("Payment session already submitted or processed", 409);
-    }
-
-    const updated = await prisma.$transaction(async (tx) => {
-      const upiSession = await tx.upiPaymentSession.update({
+      await tx.upiPaymentSession.update({
         where: { id: session.id },
         data: {
-          utr,
-          proofImageUrl,
           status: PaymentStatus.SUBMITTED,
+          utr: trimmedUtr,
+          proofImageUrl,
         },
       });
 
       await tx.payment.upsert({
-        where: { orderId: order.id },
+        where: { orderId: session.orderId },
         update: {
           method: PaymentMethod.UPI,
           provider: "manual_upi",
           status: PaymentStatus.SUBMITTED,
-          amount: order.totalAmount,
+          amount: session.amount,
           currency: "INR",
-          upiReferenceNumber: utr,
+          upiReferenceNumber: trimmedUtr,
           proofImageUrl,
         },
         create: {
-          orderId: order.id,
+          orderId: session.orderId,
           method: PaymentMethod.UPI,
           provider: "manual_upi",
           status: PaymentStatus.SUBMITTED,
-          amount: order.totalAmount,
+          amount: session.amount,
           currency: "INR",
-          upiReferenceNumber: utr,
+          upiReferenceNumber: trimmedUtr,
           proofImageUrl,
         },
       });
 
-      await tx.order.update({
-        where: { id: order.id },
+      return tx.order.update({
+        where: { id: session.orderId },
         data: {
           paymentStatus: PaymentStatus.SUBMITTED,
           status: OrderStatus.PAYMENT_SUBMITTED,
-          paymentReferenceNumber: utr,
+          paymentReferenceNumber: trimmedUtr,
           tracking: {
             create: {
               status: OrderStatus.PAYMENT_SUBMITTED,
               title: "Payment submitted",
-              message: "Your UPI payment proof has been submitted for admin verification.",
+              message: "Payment proof submitted. Awaiting admin verification.",
               updatedById: req.user!.id,
             },
           },
         },
+        include: includeOrder,
       });
-
-      return upiSession;
     });
 
-    ok(res, updated, "Payment submitted for admin verification");
+    ok(res, updatedOrder, "Payment submitted successfully");
   })
 );
 
@@ -2775,7 +3026,81 @@ adminCommerceRouter.get("/orders", asyncHandler(async (req, res) => {
 }));
 adminCommerceRouter.get("/orders/:id", validate(idParam), asyncHandler(async (req, res) => ok(res, await prisma.order.findUniqueOrThrow({ where: { id: req.params.id as string }, include: includeOrder }))));
 adminCommerceRouter.patch("/orders/:id/status", validate(idParam.merge(statusUpdateSchema)), asyncHandler(async (req, res) => ok(res, await updateOrderStatus(req.params.id as string, req.body.status, req.user!.id, req.body.title, req.body.message, req.body.locationText), "Order status updated")));
-adminCommerceRouter.patch("/orders/:id/payment-status", validate(idParam.merge(paymentStatusUpdateSchema)), asyncHandler(async (req, res) => ok(res, await prisma.order.update({ where: { id: req.params.id as string }, data: { paymentStatus: req.body.paymentStatus }, include: includeOrder }), "Payment status updated")));
+adminCommerceRouter.patch(
+  "/orders/:id/payment-status",
+  validate(idParam.merge(paymentStatusUpdateSchema)),
+  asyncHandler(async (req, res) => {
+    const paymentStatus = req.body.paymentStatus as PaymentStatus;
+
+    const updated = await prisma.$transaction(async (tx) => {
+      const order = await tx.order.findUnique({
+        where: { id: req.params.id as string },
+        include: {
+          payment: true,
+          upiSessions: {
+            orderBy: { createdAt: "desc" },
+            take: 1,
+          },
+        },
+      });
+
+      if (!order) throw new AppError("Order not found", 404);
+
+      const nextOrderStatus =
+        paymentStatus === PaymentStatus.VERIFIED
+          ? OrderStatus.CONFIRMED
+          : paymentStatus === PaymentStatus.REJECTED
+            ? OrderStatus.FAILED
+            : order.status;
+
+      if (order.payment) {
+        await tx.payment.update({
+          where: { orderId: order.id },
+          data: { status: paymentStatus },
+        });
+      }
+
+      const latestUpiSession = order.upiSessions[0];
+      if (latestUpiSession) {
+        await tx.upiPaymentSession.update({
+          where: { id: latestUpiSession.id },
+          data: { status: paymentStatus },
+        });
+      }
+
+      return tx.order.update({
+        where: { id: order.id },
+        data: {
+          paymentStatus,
+          status: nextOrderStatus,
+          tracking:
+            paymentStatus === PaymentStatus.VERIFIED
+              ? {
+                  create: {
+                    status: OrderStatus.CONFIRMED,
+                    title: "Order confirmed",
+                    message: "Payment verified by admin. Order is confirmed.",
+                    updatedById: req.user!.id,
+                  },
+                }
+              : paymentStatus === PaymentStatus.REJECTED
+                ? {
+                    create: {
+                      status: OrderStatus.FAILED,
+                      title: "Payment rejected",
+                      message: "Payment was rejected by admin. Please contact support.",
+                      updatedById: req.user!.id,
+                    },
+                  }
+                : undefined,
+        },
+        include: includeOrder,
+      });
+    });
+
+    ok(res, updated, "Payment status updated");
+  }),
+);
 adminCommerceRouter.patch("/orders/:id/assign-delivery-partner", validate(idParam.merge(assignDeliveryPartnerSchema)), asyncHandler(async (req, res) => {
   const partner = await prisma.user.findFirst({ where: { id: req.body.deliveryPartnerId, role: Role.DELIVERY_PARTNER, isActive: true } });
   if (!partner) throw new AppError("Delivery partner not found", 404);
@@ -3029,16 +3354,34 @@ export const addressCreateSchema = z.object({
 
 export const addressUpdateSchema = addressCreateSchema.partial();
 
-export const orderCreateSchema = z.object({
-  paymentMethod: z.nativeEnum(PaymentMethod),
-  addressId: z.string().uuid().optional(),
-  address: z.object(addressFields).optional(),
-  deliveryCharge: z.coerce.number().int().min(0).default(0),
-  discountAmount: z.coerce.number().int().min(0).default(0),
-}).refine((body) => body.addressId || body.address, "addressId or address is required");
+export const orderCreateSchema = z
+  .object({
+    paymentMethod: z.nativeEnum(PaymentMethod),
+    addressId: z.string().uuid().optional(),
+    address: z.object(addressFields).optional(),
+    couponCode: z
+      .string()
+      .trim()
+      .min(2, "Coupon code is too short")
+      .max(40, "Coupon code is too long")
+      .optional(),
+  })
+  .refine((body) => body.addressId || body.address, {
+    message: "addressId or address is required",
+  });
+
+export const couponValidateSchema = z.object({
+  couponCode: z
+    .string()
+    .trim()
+    .min(2, "Coupon code is too short")
+    .max(40, "Coupon code is too long"),
+});
 
 export const paymentSubmitSchema = z.object({
-  paymentReferenceNumber: z.string().min(6).max(64),
+  paymentReferenceNumber: z
+    .string()
+    .regex(/^\d{12}$/, "UTR must be 12 digits"),
   upiId: z.string().optional(),
 });
 
@@ -3070,6 +3413,7 @@ export const trackingCreateSchema = z.object({
   latitude: z.coerce.number().optional(),
   longitude: z.coerce.number().optional(),
 });
+
 ```
 
 ---
@@ -3256,6 +3600,16 @@ export const createTransactionId = () => `TXN-${today()}-${random()}`;
 ```ts
 import "dotenv/config";
 
+type ApiResponse = {
+  data?: {
+    accessToken?: string;
+    [key: string]: unknown;
+  };
+  accessToken?: string;
+  success?: boolean;
+  [key: string]: unknown;
+};
+
 async function main() {
   const loginRes = await fetch("http://localhost:4000/api/auth/login", {
     method: "POST",
@@ -3266,7 +3620,7 @@ async function main() {
     })
   });
 
-  const loginData = await loginRes.json() as any;
+  const loginData = await loginRes.json() as ApiResponse;
   const token = loginData.data?.accessToken || loginData.accessToken;
   console.log("Logged in, token present:", !!token);
 
@@ -3276,12 +3630,12 @@ async function main() {
     }
   });
 
-  const stockData = await stockRes.json() as any;
+  const stockData = await stockRes.json() as ApiResponse;
   console.log("Stock response status:", stockRes.status);
   console.log("Stock response keys:", Object.keys(stockData));
   console.log("Stock response success:", stockData.success);
-  console.log("Stock response data length:", stockData.data?.length);
-  console.log("Sample stock item:", JSON.stringify(stockData.data?.[0], null, 2));
+  console.log("Stock response data length:", Array.isArray(stockData.data) ? stockData.data.length : undefined);
+  console.log("Sample stock item:", JSON.stringify(Array.isArray(stockData.data) ? stockData.data[0] : undefined, null, 2));
 }
 
 main().catch(console.error);
@@ -3509,10 +3863,10 @@ maybeDescribe("Full E2E Ecommerce & Payment Flow", () => {
 
     // Ensure the expected active UPI setting is in the database for the test
     await prisma.upiPaymentSetting.upsert({
-      where: { upiId: "cocoanoir@upi" },
+      where: { upiId: "9319758795@omni" },
       update: { isActive: true },
       create: {
-        upiId: "cocoanoir@upi",
+        upiId: "9319758795@omni",
         displayName: "Noir Sane",
         isActive: true,
       },
@@ -3520,7 +3874,7 @@ maybeDescribe("Full E2E Ecommerce & Payment Flow", () => {
 
     // Deactivate any other UPI settings to ensure deterministic test results
     await prisma.upiPaymentSetting.updateMany({
-      where: { NOT: { upiId: "cocoanoir@upi" } },
+      where: { NOT: { upiId: "9319758795@omni" } },
       data: { isActive: false },
     });
   });
@@ -3633,7 +3987,6 @@ maybeDescribe("Full E2E Ecommerce & Payment Flow", () => {
       .send({
         addressId,
         paymentMethod: "UPI",
-        deliveryCharge: 500,
       })
       .expect(201);
 
@@ -3651,7 +4004,7 @@ maybeDescribe("Full E2E Ecommerce & Payment Flow", () => {
 
     upiSessionId = sessionRes.body.data.id;
     expect(upiSessionId).toBeTruthy();
-    expect(sessionRes.body.data.upiIdSnapshot).toBe("cocoanoir@upi");
+    expect(sessionRes.body.data.upiIdSnapshot).toBe("9319758795@omni");
     expect(sessionRes.body.data.qrDataUrl).toContain("data:image/png;base64");
   });
 
@@ -4825,7 +5178,6 @@ The project is **NOT production-ready** because:
     "lenis": "^1.3.23",
     "lucide-react": "^0.462.0",
     "multer": "^2.1.1",
-    "next-themes": "^0.3.0",
     "pg": "^8.20.0",
     "pino": "^10.3.1",
     "pino-http": "^11.0.0",
@@ -6207,9 +6559,8 @@ import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import {
   LayoutDashboard, ShoppingBag, Package, Tags, Boxes,
-  CreditCard, BarChart3, Settings, LogOut, Headphones, Plus
+  CreditCard, Settings, LogOut, Headphones
 } from "lucide-react";
-import { ThemeSelector } from "@/components/ThemeSelector";
 import { useAdminAuth } from "@/store/adminAuth";
 
 function cx(...classes: Array<string | false | undefined | null>) {
@@ -6224,6 +6575,7 @@ function AdminSidebar() {
     { label: "Dashboard", icon: LayoutDashboard, path: "/admin" },
     { label: "Orders", icon: ShoppingBag, path: "/admin/orders" },
     { label: "Products", icon: Package, path: "/admin/products" },
+    { label: "Categories", icon: Tags, path: "/admin/categories" },
     { label: "Inventory", icon: Boxes, path: "/admin/stock" },
     { label: "Payments", icon: CreditCard, path: "/admin/orders?paymentStatus=SUBMITTED" },
     { label: "Settings", icon: Settings, path: "/admin/settings" },
@@ -6254,7 +6606,10 @@ function AdminSidebar() {
         <nav className="mt-3 flex-1 space-y-1 px-2">
           {menu.map((item) => {
             const Icon = item.icon;
-            const isActive = location.pathname === item.path;
+            const isActive =
+              item.path === "/admin"
+                ? location.pathname === "/admin"
+                : location.pathname.startsWith(item.path.split("?")[0]);
 
             return (
               <button
@@ -6311,7 +6666,6 @@ export function AdminLayout({ children }: { children?: React.ReactNode }) {
               <h1 className="text-lg font-serif text-cream">Admin Panel</h1>
             </div>
             <div className="ml-auto flex items-center gap-4">
-              <ThemeSelector />
               <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-gold text-abyss font-medium">
                 NS
               </div>
@@ -14340,7 +14694,6 @@ import { motion, AnimatePresence, useMotionValue, useTransform } from "framer-mo
 import { useEffect, useState, useRef } from "react";
 import { useCartStore } from "@/store/cartStore";
 import { useAuth } from "@/store/auth";
-import { ThemeToggle } from "./ThemeToggle";
 
 const navLinks = [
   { label: "Home", href: "/" },
@@ -14491,8 +14844,6 @@ const Navbar = () => {
                   Account
                 </Link>
               )}
-
-              <ThemeToggle />
 
               <button
                 onClick={open}
@@ -14767,104 +15118,6 @@ const RequireUser = ({ children }: RequireUserProps) => {
 };
 
 export default RequireUser;
-```
-
----
-
-# FILE: src/components/ThemeSelector.tsx
-
-```tsx
-import { useTheme } from "@/lib/ThemeProvider";
-import { Moon, Sun } from "lucide-react";
-
-export function ThemeSelector() {
-  const { isDark, setTheme } = useTheme();
-
-  const handleToggle = () => {
-    setTheme(isDark ? "light" : "dark");
-  };
-
-  return (
-    <button
-      onClick={handleToggle}
-      aria-label={`Switch to ${isDark ? "light" : "dark"} mode`}
-      title={`Switch to ${isDark ? "light" : "dark"} mode`}
-      className="relative p-1 rounded-full border border-border bg-background/70 hover:border-primary transition-all duration-300"
-    >
-      <div className="relative w-12 h-6 bg-muted rounded-full overflow-hidden">
-        <div
-          className={`absolute inset-0 flex items-center transition-all duration-500 ease-out ${
-            isDark ? "bg-[#1a120b]" : "bg-gradient-to-r from-amber-100 to-amber-50"
-          }`}
-        >
-          <div
-            className={`absolute left-0.5 w-5 h-5 rounded-full shadow-lg transition-all duration-500 ease-out flex items-center justify-center ${
-              isDark
-                ? "translate-x-6 bg-[#d4a061]"
-                : "translate-x-0 bg-[#1a120b]"
-            }`}
-          >
-            {isDark ? (
-              <Moon className="w-3 h-3 text-[#1a0d07]" />
-            ) : (
-              <Sun className="w-3 h-3 text-amber-100" />
-            )}
-          </div>
-        </div>
-      </div>
-    </button>
-  );
-}
-
-```
-
----
-
-# FILE: src/components/ThemeToggle.tsx
-
-```tsx
-import { useTheme } from "@/lib/ThemeProvider";
-import { Moon, Sun } from "lucide-react";
-
-export function ThemeToggle() {
-  const { isDark, setTheme } = useTheme();
-
-  const handleToggle = () => {
-    setTheme(isDark ? "light" : "dark");
-  };
-
-  return (
-    <button
-      onClick={handleToggle}
-      aria-label={`Switch to ${isDark ? "light" : "dark"} mode`}
-      title={`Switch to ${isDark ? "light" : "dark"} mode`}
-      className="relative p-1 rounded-full border border-border bg-background/70 hover:border-primary transition-all duration-300"
-    >
-      <div className="relative w-12 h-6 bg-muted rounded-full overflow-hidden">
-        <div
-          className={`absolute inset-0 flex items-center transition-all duration-500 ease-out ${
-            isDark ? "bg-[#1a120b]" : "bg-gradient-to-r from-amber-100 to-amber-50"
-          }`}
-        >
-          <div
-            className={`absolute left-0.5 w-5 h-5 rounded-full shadow-lg transition-all duration-500 ease-out flex items-center justify-center ${
-              isDark
-                ? "translate-x-6 bg-[#d4a061]"
-                : "translate-x-0 bg-[#1a0d07]"
-            }`}
-          >
-            {isDark ? (
-              <Moon className="w-3 h-3 text-[#1a0d07]" />
-            ) : (
-              <Sun className="w-3 h-3 text-amber-100" />
-            )}
-          </div>
-        </div>
-      </div>
-    </button>
-  );
-}
-
 ```
 
 ---
@@ -18678,17 +18931,14 @@ export { Slider };
 # FILE: src/components/ui/sonner.tsx
 
 ```tsx
-import { useTheme } from "next-themes";
 import { Toaster as Sonner, toast } from "sonner";
 
 type ToasterProps = React.ComponentProps<typeof Sonner>;
 
 const Toaster = ({ ...props }: ToasterProps) => {
-  const { theme = "system" } = useTheme();
-
   return (
     <Sonner
-      theme={theme as ToasterProps["theme"]}
+      theme="dark"
       className="toaster group"
       toastOptions={{
         classNames: {
@@ -19971,9 +20221,13 @@ async function parseResponse(response: Response) {
   }
 }
 
+type RequestOptions = RequestInit & {
+  skipJsonHeader?: boolean;
+};
+
 async function request<T>(
   path: string,
-  options: RequestInit = {},
+  options: RequestOptions = {},
   retry = true,
 ): Promise<T> {
   const token = getToken();
@@ -19985,14 +20239,15 @@ async function request<T>(
     headers.Authorization = `Bearer ${token}`;
   }
 
-  const hasBody = options.body !== undefined && options.body !== null;
+  const { skipJsonHeader, ...fetchOptions } = options;
+  const hasBody = fetchOptions.body !== undefined && fetchOptions.body !== null;
 
-  if (hasBody && !(options.body instanceof FormData)) {
+  if (!skipJsonHeader && hasBody && !(fetchOptions.body instanceof FormData)) {
     headers["Content-Type"] = "application/json";
   }
 
   const response = await fetch(`${BASE_URL}${path}`, {
-    ...options,
+    ...fetchOptions,
     headers,
   });
 
@@ -20068,11 +20323,11 @@ async function request<T>(
 }
 
 export const api = {
-  get<T>(path: string, options?: RequestInit) {
+  get<T>(path: string, options?: RequestOptions) {
     return request<T>(path, { ...options, method: "GET" });
   },
 
-  post<T>(path: string, body?: unknown, options?: RequestInit) {
+  post<T>(path: string, body?: unknown, options?: RequestOptions) {
     return request<T>(path, {
       ...options,
       method: "POST",
@@ -20080,7 +20335,7 @@ export const api = {
     });
   },
 
-  patch<T>(path: string, body?: unknown, options?: RequestInit) {
+  patch<T>(path: string, body?: unknown, options?: RequestOptions) {
     return request<T>(path, {
       ...options,
       method: "PATCH",
@@ -20088,7 +20343,7 @@ export const api = {
     });
   },
 
-  put<T>(path: string, body?: unknown, options?: RequestInit) {
+  put<T>(path: string, body?: unknown, options?: RequestOptions) {
     return request<T>(path, {
       ...options,
       method: "PUT",
@@ -20096,7 +20351,7 @@ export const api = {
     });
   },
 
-  delete<T>(path: string, options?: RequestInit) {
+  delete<T>(path: string, options?: RequestOptions) {
     return request<T>(path, { ...options, method: "DELETE" });
   },
 
@@ -20113,6 +20368,7 @@ export const api = {
     return request<T>(path, {
       method: "POST",
       body: formData,
+      skipJsonHeader: true,
     });
   },
 };
@@ -20242,24 +20498,14 @@ export const orderApi = {
   },
 
   async createUpiSession(orderId: string) {
-    return api.post<{
-      id: string;
-      orderId: string;
-      upiIdSnapshot: string;
-      payeeName: string;
-      amount: number;
-      transactionRef: string;
-      upiUri: string;
-      qrDataUrl: string;
-      status: string;
-    }>(`/orders/${orderId}/upi-session`);
+    return api.post<UpiSession>(`/orders/${orderId}/upi-session`);
   },
 
   async submitUpiSession(
     sessionId: string,
-    data: { utr: string; proofImageUrl?: string }
+    data: { utr: string; proofImageUrl: string }
   ) {
-    return api.post(`/upi-sessions/${sessionId}/submit`, data);
+    return api.post<Order>(`/upi-sessions/${sessionId}/submit`, data);
   },
 
   async cancelOrder(orderId: string) {
@@ -20268,6 +20514,12 @@ export const orderApi = {
 
   async getTracking(orderId: string) {
     return api.get<TrackingResponse>(`/orders/${orderId}/tracking`);
+  },
+};
+
+export const couponApi = {
+  async validate(couponCode: string) {
+    return api.post<CouponValidation>("/coupons/validate", { couponCode });
   },
 };
 
@@ -20503,6 +20755,8 @@ export interface Order {
   subtotal: number;
   deliveryCharge: number;
   discountAmount: number;
+  couponId: string | null;
+  couponCodeSnapshot: string | null;
   totalAmount: number;
   customerName: string;
   customerPhone: string;
@@ -20542,11 +20796,20 @@ export interface DeliveryTracking {
 }
 
 export interface OrderData {
+  paymentMethod: "UPI" | "COD" | "STRIPE";
   addressId?: string;
   address?: AddressData;
-  paymentMethod: string;
-  deliveryCharge?: number;
-  discountAmount?: number;
+  couponCode?: string;
+}
+
+export interface CouponValidation {
+  code: string;
+  type: "PERCENTAGE" | "FIXED";
+  value: number;
+  subtotal: number;
+  deliveryCharge: number;
+  discountAmount: number;
+  totalAmount: number;
 }
 
 export interface TrackingResponse {
@@ -20580,6 +20843,24 @@ export interface UpiSetting {
   isActive: boolean;
   updatedAt?: string;
   createdAt?: string;
+}
+
+export interface UpiSession {
+  id: string;
+  orderId: string;
+  upiSettingId: string;
+  upiIdSnapshot: string;
+  payeeName: string;
+  amount: number;
+  currency: string;
+  transactionRef: string;
+  upiUri: string;
+  qrDataUrl: string;
+  status: "PENDING" | "SUBMITTED" | "VERIFIED" | "REJECTED" | "PAID" | "FAILED" | "CANCELLED" | "REFUNDED" | "EXPIRED";
+  utr?: string;
+  proofImageUrl?: string;
+  expiresAt: string;
+  secondsLeft?: number;
 }
 
 
@@ -20663,97 +20944,6 @@ export const takePendingCartItem = (): PendingCartItem | null => {
 
 ---
 
-# FILE: src/lib/ThemeProvider.tsx
-
-```tsx
-import { createContext, useContext, useEffect, useState } from "react";
-
-type Theme = "dark" | "light" | "system";
-
-interface ThemeContextType {
-  theme: Theme;
-  setTheme: (theme: Theme) => void;
-  isDark: boolean;
-}
-
-const ThemeContext = createContext<ThemeContextType>({
-  theme: "dark",
-  setTheme: () => {},
-  isDark: true,
-});
-
-export const useTheme = () => useContext(ThemeContext);
-
-const isTheme = (value: string | null): value is Theme =>
-  value === "dark" || value === "light" || value === "system";
-
-const getSystemTheme = (): "dark" | "light" => {
-  if (typeof window === "undefined") return "dark";
-  return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-};
-
-const resolveTheme = (theme: Theme): "dark" | "light" =>
-  theme === "system" ? getSystemTheme() : theme;
-
-export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setThemeState] = useState<Theme>(() => {
-    const stored = localStorage.getItem("theme");
-    return isTheme(stored) ? stored : "dark";
-  });
-
-  const [isDark, setIsDark] = useState(() => resolveTheme(theme) === "dark");
-
-  useEffect(() => {
-    const root = document.documentElement;
-
-    const applyTheme = (resolved: "dark" | "light") => {
-      setIsDark(resolved === "dark");
-      root.classList.remove("dark", "light");
-      root.classList.add(resolved);
-      root.style.colorScheme = resolved;
-    };
-
-    if (theme === "system") {
-      const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-      applyTheme(mediaQuery.matches ? "dark" : "light");
-
-      const handler = (e: MediaQueryListEvent) => {
-        applyTheme(e.matches ? "dark" : "light");
-      };
-      mediaQuery.addEventListener("change", handler);
-      return () => mediaQuery.removeEventListener("change", handler);
-    }
-
-    applyTheme(theme);
-  }, [theme]);
-
-  useEffect(() => {
-    const handleStorage = (event: StorageEvent) => {
-      if (event.key === "theme" && isTheme(event.newValue)) {
-        setThemeState(event.newValue);
-      }
-    };
-
-    window.addEventListener("storage", handleStorage);
-    return () => window.removeEventListener("storage", handleStorage);
-  }, []);
-
-  const setTheme = (newTheme: Theme) => {
-    localStorage.setItem("theme", newTheme);
-    setThemeState(newTheme);
-  };
-
-  return (
-    <ThemeContext.Provider value={{ theme, setTheme, isDark }}>
-      {children}
-    </ThemeContext.Provider>
-  );
-}
-
-```
-
----
-
 # FILE: src/lib/utils.ts
 
 ```ts
@@ -20776,7 +20966,6 @@ import { useEffect } from "react";
 import App from "./App.tsx";
 import "./index.css";
 import { useAuth } from "./store/auth";
-import { ThemeProvider } from "./lib/ThemeProvider";
 
 const AppWrapper = () => {
   const loadUser = useAuth((s) => s.loadUser);
@@ -20789,10 +20978,9 @@ const AppWrapper = () => {
 };
 
 createRoot(document.getElementById("root")!).render(
-  <ThemeProvider>
-    <AppWrapper />
-  </ThemeProvider>
+  <AppWrapper />
 );
+
 ```
 
 ---
@@ -23607,132 +23795,167 @@ export default Cart;
 # FILE: src/pages/Checkout.tsx
 
 ```tsx
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { motion } from "framer-motion";
-import { Check, Copy, CreditCard, QrCode, Loader2, PackageCheck, Truck } from "lucide-react";
-import QRCode from "qrcode";
+import { AnimatePresence, motion } from "framer-motion";
+import {
+  Check,
+  Clock,
+  Copy,
+  CreditCard,
+  FileText,
+  Loader2,
+  PackageCheck,
+  QrCode,
+  ShieldCheck,
+  Sparkles,
+  RefreshCw,
+  Truck,
+  X,
+} from "lucide-react";
 import { useCartStore } from "@/store/cartStore";
 import { useAuth } from "@/store/auth";
-import { api, addressApi, orderApi, Address } from "@/lib/api";
+import { api, addressApi, couponApi, orderApi, Address, CouponValidation, getProductImage } from "@/lib/api";
+import type { UpiSession } from "@/lib/api";
 import { useActiveUpi } from "@/store/catalog";
 import AddressForm from "@/components/AddressForm";
 import { toast } from "sonner";
-import { getProductImage } from "@/lib/api";
 import { PageShell } from "@/components/luxury/LuxuryPrimitives";
 
+const FREE_DELIVERY_THRESHOLD_PAISE = 250000; // INR 2500
+const DELIVERY_CHARGE_PAISE = 15000; // INR 150
+
 const formatINR = (n: number) =>
-  new Intl.NumberFormat("en-IN", { style: "currency", currency: "INR", maximumFractionDigits: 0 }).format(n / 100);
+  new Intl.NumberFormat("en-IN", {
+    style: "currency",
+    currency: "INR",
+    maximumFractionDigits: 0,
+  }).format(n / 100);
+
+type PaymentMethod = "UPI" | "STRIPE";
+
+interface SuccessState {
+  orderId: string;
+  amount: number;
+  transactionRef?: string;
+}
 
 const Checkout = () => {
   const { items, getSubtotal, clearCart, fetchCart } = useCartStore();
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
-  
+
   const { data: upiSettings } = useActiveUpi();
   const activeUpi = upiSettings?.[0];
   const upiId = activeUpi?.upiId || "";
 
   const [addresses, setAddresses] = useState<Address[]>([]);
-  const [selectedAddressId, setSelectedAddressId] = useState<string>("");
+  const [selectedAddressId, setSelectedAddressId] = useState("");
+  const [showAddressForm, setShowAddressForm] = useState(false);
+
   const [utr, setUtr] = useState("");
   const [proofFile, setProofFile] = useState<File | null>(null);
-  const [qrDataUrl, setQrDataUrl] = useState("");
-  const [qrError, setQrError] = useState("");
   const [copied, setCopied] = useState(false);
+
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
-  const [paymentMethod, setPaymentMethod] = useState<"UPI" | "STRIPE">("UPI");
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("UPI");
+  const autoQrStartedRef = useRef(false);
+  const [autoQrLoading, setAutoQrLoading] = useState(false);
+  const [couponCode, setCouponCode] = useState("");
+  const [appliedCoupon, setAppliedCoupon] = useState<CouponValidation | null>(null);
+  const [couponLoading, setCouponLoading] = useState(false);
+  const [couponError, setCouponError] = useState("");
+
   const [createdOrderId, setCreatedOrderId] = useState<string | null>(null);
-  const [upiSession, setUpiSession] = useState<{
-    id: string;
-    upiIdSnapshot: string;
-    transactionRef: string;
-    qrDataUrl: string;
-    amount: number;
-  } | null>(null);
+  const [upiSession, setUpiSession] = useState<UpiSession | null>(null);
+  const [secondsLeft, setSecondsLeft] = useState(0);
+  const [qrExpired, setQrExpired] = useState(false);
+  const [success, setSuccess] = useState<SuccessState | null>(null);
+  const [lockedSummaryItems, setLockedSummaryItems] = useState<typeof items>([]);
 
   const subtotal = getSubtotal();
-  const shipping = subtotal > 2500 ? 0 : 500;
-  const grand = subtotal + shipping;
+  const shipping = subtotal >= FREE_DELIVERY_THRESHOLD_PAISE ? 0 : DELIVERY_CHARGE_PAISE;
+  const discountAmount = appliedCoupon?.discountAmount ?? 0;
+  const estimatedGrand = Math.max(0, subtotal + shipping - discountAmount);
+  const payableAmount = upiSession?.amount ?? estimatedGrand;
+
+  const summaryItems = submitted && lockedSummaryItems.length ? lockedSummaryItems : items;
+
+  const canSubmitPayment =
+    paymentMethod === "UPI" &&
+    Boolean(upiSession) &&
+    !qrExpired &&
+    secondsLeft > 0 &&
+    /^\d{12}$/.test(utr.trim()) &&
+    Boolean(proofFile);
 
   useEffect(() => {
-    let cancelled = false;
+    if (items.length > 0 && !submitted) {
+      setLockedSummaryItems(items);
+    }
+  }, [items, submitted]);
 
-    const generateQr = async () => {
-      if (paymentMethod !== "UPI") {
-        setQrDataUrl("");
-        setQrError("");
-        return;
-      }
+  useEffect(() => {
+    if (!upiSession?.expiresAt) {
+      setSecondsLeft(0);
+      setQrExpired(false);
+      return;
+    }
 
-      if (activeUpi?.qrCodeUrl) {
-        setQrDataUrl(activeUpi.qrCodeUrl);
-        setQrError("");
-        return;
-      }
+    const tick = () => {
+      const remaining = Math.max(
+        0,
+        Math.floor((new Date(upiSession.expiresAt).getTime() - Date.now()) / 1000),
+      );
 
-      if (!upiId) {
-        setQrDataUrl("");
-        setQrError("No active UPI ID is configured.");
-        return;
-      }
+      setSecondsLeft(remaining);
 
-      try {
-        const upiUri =
-          `upi://pay?pa=${encodeURIComponent(upiId)}` +
-          `&pn=${encodeURIComponent(activeUpi?.displayName || "Noir Sane")}` +
-          `&cu=INR` +
-          `&tn=${encodeURIComponent("Noir Sane Checkout")}`;
-
-        const dataUrl = await QRCode.toDataURL(upiUri, {
-          width: 260,
-          margin: 1,
-        });
-
-        if (!cancelled) {
-          setQrDataUrl(dataUrl);
-          setQrError("");
-        }
-      } catch (err) {
-        console.error("Failed to generate UPI QR:", err);
-        if (!cancelled) {
-          setQrDataUrl("");
-          setQrError("Unable to generate UPI QR. Please use the UPI ID manually.");
-        }
+      if (remaining <= 0) {
+        setQrExpired(true);
       }
     };
 
-    generateQr();
+    tick();
 
-    return () => {
-      cancelled = true;
-    };
-  }, [activeUpi?.displayName, activeUpi?.qrCodeUrl, paymentMethod, upiId]);
+    const timer = window.setInterval(tick, 1000);
+
+    return () => window.clearInterval(timer);
+  }, [upiSession?.expiresAt]);
 
   useEffect(() => {
     if (!isAuthenticated) {
       navigate("/login");
       return;
     }
+
     fetchCart();
   }, [isAuthenticated, navigate, fetchCart]);
 
+  const loadAddresses = async (preferredId?: string) => {
+    try {
+      const data = await addressApi.getAddresses();
+      setAddresses(data);
+
+      const preferred = preferredId ? data.find((item) => item.id === preferredId) : null;
+      const current = selectedAddressId ? data.find((item) => item.id === selectedAddressId) : null;
+      const fallback = data.find((item) => item.isDefault) || data[0];
+
+      setSelectedAddressId((preferred || current || fallback)?.id || "");
+    } catch (err) {
+      console.error("Failed to load addresses:", err);
+      toast.error("Unable to load saved addresses.");
+    }
+  };
+
   useEffect(() => {
-    const loadAddresses = async () => {
-      try {
-        const data = await addressApi.getAddresses();
-        setAddresses(data);
-        const defaultAddr = data.find((a) => a.isDefault);
-        if (defaultAddr) setSelectedAddressId(defaultAddr.id);
-      } catch (err) {
-        console.error("Failed to load addresses:", err);
-      }
-    };
     if (isAuthenticated) {
       loadAddresses();
     }
+
+    // selectedAddressId intentionally excluded; this should run once after auth.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isAuthenticated]);
 
   useEffect(() => {
@@ -23744,9 +23967,234 @@ const Checkout = () => {
   const copyUpi = async () => {
     const value = upiSession?.upiIdSnapshot || upiId;
     if (!value) return;
+
     await navigator.clipboard.writeText(value);
     setCopied(true);
     setTimeout(() => setCopied(false), 1800);
+  };
+
+  const copyOrderId = async () => {
+    if (!success?.orderId) return;
+
+    await navigator.clipboard.writeText(success.orderId);
+    toast.success("Order ID copied");
+  };
+
+  const ensureSecureUpiQr = useCallback(
+    async ({ silent = false, forceRenew = false }: { silent?: boolean; forceRenew?: boolean } = {}) => {
+      if (paymentMethod !== "UPI") return;
+      if (submitted) return;
+      if (upiSession && !qrExpired && !forceRenew) return;
+
+      if (!selectedAddressId) {
+        if (!silent) {
+          throw new Error("Please select or save a shipping address before generating QR.");
+        }
+        return;
+      }
+
+      if (!upiId) {
+        if (!silent) {
+          throw new Error("No active UPI ID is configured by admin.");
+        }
+        return;
+      }
+
+      if (items.length === 0) {
+        if (!silent) {
+          throw new Error("Your cart is empty.");
+        }
+        return;
+      }
+
+      if (couponLoading) return;
+
+      if (couponCode.trim() && !appliedCoupon) {
+        if (!silent) {
+          throw new Error("Apply or clear your coupon code before generating QR.");
+        }
+        return;
+      }
+
+      if (autoQrStartedRef.current && !forceRenew) return;
+
+      autoQrStartedRef.current = true;
+      setAutoQrLoading(true);
+      setError("");
+
+      try {
+        let orderId = createdOrderId;
+
+        if (!orderId) {
+          const order = await orderApi.createOrder({
+            addressId: selectedAddressId,
+            paymentMethod: "UPI",
+            couponCode: appliedCoupon?.code,
+          });
+
+          orderId = order.id;
+          setCreatedOrderId(order.id);
+        }
+
+        const session = await orderApi.createUpiSession(orderId);
+
+        setUpiSession(session);
+        setQrExpired(false);
+
+        if (session.secondsLeft) {
+          setSecondsLeft(session.secondsLeft);
+        }
+
+        if (forceRenew) {
+          setUtr("");
+          setProofFile(null);
+        }
+
+        if (!silent) {
+          toast.success("Secure UPI QR generated. It is valid for 1 minute.");
+        }
+      } catch (err) {
+        const message =
+          err instanceof Error
+            ? err.message
+            : "Unable to generate secure UPI QR.";
+
+        setError(message);
+
+        if (!silent) {
+          toast.error(message);
+        }
+      } finally {
+        setAutoQrLoading(false);
+        autoQrStartedRef.current = false;
+      }
+    },
+    [
+      paymentMethod,
+      submitted,
+      upiSession,
+      qrExpired,
+      selectedAddressId,
+      upiId,
+      items.length,
+      createdOrderId,
+      couponCode,
+      appliedCoupon,
+      couponLoading,
+    ],
+  );
+
+  useEffect(() => {
+    if (!isAuthenticated) return;
+    if (paymentMethod !== "UPI") return;
+    if (submitted) return;
+    if (upiSession) return;
+    if (!upiId) return;
+    if (!selectedAddressId) return;
+    if (items.length === 0) return;
+    if (couponLoading) return;
+    if (couponCode.trim() && !appliedCoupon) return;
+
+    ensureSecureUpiQr({ silent: true });
+  }, [
+    isAuthenticated,
+    paymentMethod,
+    submitted,
+    upiSession,
+    upiId,
+    selectedAddressId,
+    items.length,
+    couponCode,
+    appliedCoupon,
+    couponLoading,
+    ensureSecureUpiQr,
+  ]);
+
+  const submitUpiPayment = async () => {
+    if (!upiSession || !createdOrderId) {
+      throw new Error("Generate secure UPI QR before submitting payment.");
+    }
+
+    if (qrExpired || secondsLeft <= 0) {
+      throw new Error("This UPI QR has expired. Please generate a new QR.");
+    }
+
+    if (!/^\d{12}$/.test(utr.trim())) {
+      throw new Error("UTR must be exactly 12 digits.");
+    }
+
+    if (!proofFile) {
+      throw new Error("Please upload your payment screenshot.");
+    }
+
+    if (!["image/png", "image/jpeg", "image/webp"].includes(proofFile.type)) {
+      throw new Error("Payment screenshot must be PNG, JPG, or WebP.");
+    }
+
+    if (proofFile.size > 5 * 1024 * 1024) {
+      throw new Error("Payment screenshot must be 5MB or smaller.");
+    }
+
+    const upload = await api.upload<{ url: string }>("/uploads/payment-proof", proofFile);
+
+    await orderApi.submitUpiSession(upiSession.id, {
+      utr: utr.trim(),
+      proofImageUrl: upload.url,
+    });
+
+    setSuccess({
+      orderId: createdOrderId,
+      amount: upiSession.amount,
+      transactionRef: upiSession.transactionRef,
+    });
+
+    setSubmitted(true);
+    toast.success("Payment submitted successfully");
+
+    await clearCart();
+  };
+
+  const applyCoupon = async () => {
+    const code = couponCode.trim().toUpperCase();
+
+    if (!code) {
+      setCouponError("Enter a coupon code.");
+      return;
+    }
+
+    if (upiSession) {
+      setCouponError("Coupon cannot be changed after secure QR is generated.");
+      toast.error("Coupon is locked after QR generation.");
+      return;
+    }
+
+    setCouponLoading(true);
+    setCouponError("");
+
+    try {
+      const result = await couponApi.validate(code);
+      setAppliedCoupon(result);
+      setCouponCode(result.code);
+      toast.success(`Coupon ${result.code} applied`);
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Invalid coupon code.";
+      setAppliedCoupon(null);
+      setCouponError(message);
+      toast.error(message);
+    } finally {
+      setCouponLoading(false);
+    }
+  };
+
+  const removeCoupon = () => {
+    if (upiSession) {
+      toast.error("Coupon cannot be changed after secure QR is generated.");
+      return;
+    }
+
+    setCouponCode("");
+    setAppliedCoupon(null);
+    setCouponError("");
   };
 
   const handlePlaceOrder = async () => {
@@ -23759,61 +24207,28 @@ const Checkout = () => {
     setError("");
 
     try {
+      if (couponCode.trim() && !appliedCoupon) {
+        throw new Error("Apply or clear your coupon code before placing the order.");
+      }
+
       if (paymentMethod === "STRIPE") {
         const order = await orderApi.createOrder({
           addressId: selectedAddressId,
-          paymentMethod,
-          deliveryCharge: shipping || undefined,
+          paymentMethod: "STRIPE",
+          couponCode: appliedCoupon?.code,
         });
+
         const stripeSession = await orderApi.createStripeCheckout(order.id);
         window.location.href = stripeSession.url;
         return;
       }
 
-      if (paymentMethod === "UPI") {
-        if (!upiSession || !createdOrderId) {
-          const order = await orderApi.createOrder({
-            addressId: selectedAddressId,
-            paymentMethod,
-            deliveryCharge: shipping || undefined,
-          });
-          const session = await orderApi.createUpiSession(order.id);
-
-          setCreatedOrderId(order.id);
-          setUpiSession(session);
-          toast.success("Secure UPI QR generated. Pay the exact amount, then submit UTR and screenshot.");
-          return;
-        }
-
-        if (!utr.trim()) {
-          throw new Error("Please enter UTR / Transaction ID");
-        }
-
-        if (!/^\d{12}$/.test(utr.trim())) {
-          throw new Error("UTR must be 12 digits");
-        }
-
-        if (!proofFile) {
-          throw new Error("Please upload your payment screenshot");
-        }
-
-        if (proofFile.size > 5 * 1024 * 1024) {
-          throw new Error("Payment screenshot must be 5MB or smaller");
-        }
-
-        const upload = await api.upload<{ url: string }>("/uploads/payment-proof", proofFile);
-
-        await orderApi.submitUpiSession(upiSession.id, {
-          utr: utr.trim(),
-          proofImageUrl: upload.url,
-        });
-
-        toast.success("Payment submitted for verification");
-        await clearCart();
-        setSubmitted(true);
-        navigate(`/order-confirmed?id=${createdOrderId}`);
+      if (!upiSession || !createdOrderId) {
+        await ensureSecureUpiQr({ silent: false });
         return;
       }
+
+      await submitUpiPayment();
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : "Payment failed. Please try again.";
       setError(message);
@@ -23823,16 +24238,31 @@ const Checkout = () => {
     }
   };
 
+  const handleViewOrder = () => {
+    if (success?.orderId || createdOrderId) {
+      navigate(`/order-confirmed?id=${success?.orderId || createdOrderId}`);
+    }
+  };
+
+  const handleContinue = () => {
+    navigate("/orders");
+  };
+
+  const selectedAddress = useMemo(
+    () => addresses.find((address) => address.id === selectedAddressId),
+    [addresses, selectedAddressId],
+  );
+
   if (items.length === 0 && !submitted) return null;
 
   return (
     <PageShell>
       <div className="container max-w-6xl pt-28 pb-24 sm:pt-36">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-10"
+          transition={{ duration: 0.55 }}
+          className="mb-10 text-center"
         >
           <p className="eyebrow mb-3">Checkout</p>
           <h1 className="font-serif text-5xl text-[#f8eadc] md:text-6xl">Checkout</h1>
@@ -23840,42 +24270,54 @@ const Checkout = () => {
 
         <div className="mb-10 grid gap-3 sm:grid-cols-3">
           {["Address", "Delivery", "Review"].map((step, index) => (
-            <div key={step} className="rounded-sm border border-[#d9a35b]/18 bg-[#140904]/70 p-4">
+            <div
+              key={step}
+              className="rounded-sm border border-[#d9a35b]/18 bg-[#140904]/70 p-4"
+            >
               <div className="flex items-center gap-3">
-                <span className="grid h-8 w-8 place-items-center rounded-full bg-[#d9a35b] text-sm font-semibold text-[#090403]">{index + 1}</span>
-                <span className="text-xs uppercase tracking-[0.22em] text-[#f0c27a]">{step}</span>
+                <span className="grid h-8 w-8 place-items-center rounded-full bg-[#d9a35b] text-sm font-semibold text-[#090403]">
+                  {index + 1}
+                </span>
+                <span className="text-xs uppercase tracking-[0.22em] text-[#f0c27a]">
+                  {step}
+                </span>
               </div>
             </div>
           ))}
         </div>
 
-        <div className="grid lg:grid-cols-[1.1fr_0.9fr] gap-10">
+        <div className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr]">
           <div className="space-y-8">
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
+            <motion.section
+              initial={{ opacity: 0, x: -18 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.1 }}
+              transition={{ duration: 0.55, delay: 0.08 }}
               className="rounded-sm border border-[#d9a35b]/18 bg-[#140904]/78 p-6 md:p-8"
             >
               <div className="mb-8">
                 <div className="eyebrow mb-3">Shipping</div>
-                <h2 className="font-serif text-3xl text-[#f8eadc] mb-2">Select address</h2>
+                <h2 className="mb-2 font-serif text-3xl text-[#f8eadc]">
+                  Select address
+                </h2>
               </div>
 
-              {addresses.length === 0 ? (
-                <AddressForm onAddressCreated={(id) => {
-                  setSelectedAddressId(id);
-                  setAddresses(prev => [...prev, { id, isDefault: true }]);
-                }} />
+              {addresses.length === 0 || showAddressForm ? (
+                <AddressForm
+                  onAddressCreated={async (id) => {
+                    setShowAddressForm(false);
+                    await loadAddresses(id);
+                    toast.success("Address saved");
+                  }}
+                />
               ) : (
                 <div className="space-y-3">
                   {addresses.map((addr) => (
                     <label
                       key={addr.id}
-                      className={`block p-4 border rounded-sm cursor-pointer transition-colors ${
+                      className={`block cursor-pointer rounded-sm border p-4 transition-colors ${
                         selectedAddressId === addr.id
-                          ? "border-primary bg-primary/10"
-                          : "border-border hover:border-primary/60"
+                          ? "border-[#d9a35b]/60 bg-[#d9a35b]/10"
+                          : "border-[#d9a35b]/18 bg-[#180c06]/40 hover:border-[#d9a35b]/45"
                       }`}
                     >
                       <input
@@ -23883,263 +24325,653 @@ const Checkout = () => {
                         name="address"
                         value={addr.id}
                         checked={selectedAddressId === addr.id}
-                        onChange={(e) => setSelectedAddressId(e.target.value)}
+                        disabled={Boolean(upiSession) || submitted}
+                        onChange={(event) => setSelectedAddressId(event.target.value)}
                         className="sr-only"
                       />
-                      <div className="font-medium">{addr.fullName}</div>
-                      <div className="text-sm text-muted-foreground">
-                        {addr.addressLine1}{addr.addressLine2 ? `, ${addr.addressLine2}` : ""}
+
+                      <div className="flex items-start justify-between gap-4">
+                        <div>
+                          <div className="font-serif text-lg text-[#f8eadc]">
+                            {addr.fullName}
+                          </div>
+
+                          <div className="mt-1 text-sm leading-6 text-[#c8b5a4]">
+                            {addr.addressLine1}
+                            {addr.addressLine2 ? `, ${addr.addressLine2}` : ""}
+                            <br />
+                            {addr.city}, {addr.state} - {addr.pincode}
+                          </div>
+
+                          <div className="mt-1 text-sm text-[#c8b5a4]">
+                            {addr.phone}
+                          </div>
+                        </div>
+
+                        {selectedAddressId === addr.id && (
+                          <Check className="mt-1 h-5 w-5 text-[#d9a35b]" />
+                        )}
                       </div>
-                      <div className="text-sm text-muted-foreground">
-                        {addr.city}, {addr.state} - {addr.pincode}
-                      </div>
-                      <div className="text-sm text-muted-foreground">{addr.phone}</div>
                     </label>
                   ))}
+
                   <button
                     type="button"
-                    onClick={() => {
-                      setSelectedAddressId("");
-                    }}
-                    className="text-sm text-primary hover:text-gold-bright"
+                    onClick={() => setShowAddressForm(true)}
+                    disabled={Boolean(upiSession) || submitted}
+                    className="text-sm uppercase tracking-[0.18em] text-[#f0c27a] hover:text-[#f8eadc] disabled:cursor-not-allowed disabled:opacity-50"
                   >
                     + Add new address
                   </button>
                 </div>
               )}
-            </motion.div>
+            </motion.section>
 
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
+            <motion.section
+              initial={{ opacity: 0, x: -18 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.1 }}
+              transition={{ duration: 0.55, delay: 0.12 }}
               className="rounded-sm border border-[#d9a35b]/18 bg-[#140904]/78 p-6 md:p-8"
             >
               <div className="mb-8">
                 <div className="eyebrow mb-3">Delivery</div>
-                <h2 className="font-serif text-3xl text-[#f8eadc] mb-2">Delivery method</h2>
+                <h2 className="mb-2 font-serif text-3xl text-[#f8eadc]">
+                  Delivery method
+                </h2>
               </div>
+
               <div className="grid gap-3 sm:grid-cols-2">
-                <div className="rounded-sm border border-[#d9a35b]/30 bg-[#d9a35b]/10 p-4">
+                <div className="rounded-sm border border-[#d9a35b]/35 bg-[#d9a35b]/10 p-4">
                   <Truck className="mb-3 h-5 w-5 text-[#d9a35b]" />
-                  <div className="font-serif text-xl text-[#f8eadc]">Standard Delivery</div>
-                  <div className="mt-1 text-xs text-[#c8b5a4]">3-5 business days</div>
-                  <div className="mt-3 text-sm text-[#f0c27a]">{shipping ? formatINR(shipping) : "Complimentary"}</div>
+
+                  <div className="font-serif text-xl text-[#f8eadc]">
+                    Standard Delivery
+                  </div>
+
+                  <div className="mt-1 text-xs text-[#c8b5a4]">
+                    3-5 business days
+                  </div>
+
+                  <div className="mt-3 text-sm text-[#f0c27a]">
+                    {shipping ? formatINR(shipping) : "Complimentary"}
+                  </div>
                 </div>
+
                 <div className="rounded-sm border border-[#d9a35b]/18 bg-[#180c06]/45 p-4 opacity-75">
                   <PackageCheck className="mb-3 h-5 w-5 text-[#9d6a36]" />
-                  <div className="font-serif text-xl text-[#f8eadc]">Express Delivery</div>
-                  <div className="mt-1 text-xs text-[#c8b5a4]">1-2 business days</div>
-                  <div className="mt-3 text-sm text-[#c8b5a4]">Available soon</div>
+
+                  <div className="font-serif text-xl text-[#f8eadc]">
+                    Express Delivery
+                  </div>
+
+                  <div className="mt-1 text-xs text-[#c8b5a4]">
+                    1-2 business days
+                  </div>
+
+                  <div className="mt-3 text-sm text-[#c8b5a4]">
+                    Available soon
+                  </div>
                 </div>
               </div>
-            </motion.div>
+            </motion.section>
 
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
+            <motion.section
+              initial={{ opacity: 0, x: -18 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.1 }}
+              transition={{ duration: 0.55, delay: 0.16 }}
               className="rounded-sm border border-[#d9a35b]/18 bg-[#140904]/78 p-6 md:p-8"
             >
               <div className="mb-8">
                 <div className="eyebrow mb-3">Payment</div>
-                <h2 className="font-serif text-3xl text-[#f8eadc] mb-2">Choose payment</h2>
+                <h2 className="mb-2 font-serif text-3xl text-[#f8eadc]">
+                  Choose payment
+                </h2>
               </div>
 
               <div className="mb-8 grid gap-3 sm:grid-cols-2">
                 <button
                   type="button"
                   onClick={() => setPaymentMethod("UPI")}
-                  disabled={Boolean(upiSession)}
+                  disabled={Boolean(upiSession) || submitted}
                   className={`rounded-sm border p-4 text-left transition ${
                     paymentMethod === "UPI"
                       ? "border-[#d9a35b]/45 bg-[#d9a35b]/10"
-                      : "border-border bg-rich/35 hover:border-primary/60"
+                      : "border-[#d9a35b]/16 bg-[#180c06]/35 hover:border-[#d9a35b]/45"
                   } disabled:cursor-not-allowed disabled:opacity-70`}
                 >
                   <QrCode className="mb-3 h-5 w-5 text-[#d9a35b]" />
+
                   <div className="font-serif text-xl text-[#f8eadc]">UPI QR</div>
-                  <p className="mt-1 text-xs text-muted-foreground">Manual verification with UTR and screenshot.</p>
+
+                  <p className="mt-1 text-xs text-[#c8b5a4]">
+                    Manual verification with UTR and screenshot.
+                  </p>
                 </button>
 
                 <button
                   type="button"
                   onClick={() => setPaymentMethod("STRIPE")}
-                  disabled={Boolean(upiSession)}
+                  disabled={Boolean(upiSession) || submitted}
                   className={`rounded-sm border p-4 text-left transition ${
                     paymentMethod === "STRIPE"
                       ? "border-[#d9a35b]/45 bg-[#d9a35b]/10"
-                      : "border-border bg-rich/35 hover:border-primary/60"
+                      : "border-[#d9a35b]/16 bg-[#180c06]/35 hover:border-[#d9a35b]/45"
                   } disabled:cursor-not-allowed disabled:opacity-70`}
                 >
                   <CreditCard className="mb-3 h-5 w-5 text-[#d9a35b]" />
-                  <div className="font-serif text-xl text-[#f8eadc]">Card / Stripe</div>
-                  <p className="mt-1 text-xs text-muted-foreground">Redirects to secure Stripe checkout.</p>
+
+                  <div className="font-serif text-xl text-[#f8eadc]">
+                    Card / Stripe
+                  </div>
+
+                  <p className="mt-1 text-xs text-[#c8b5a4]">
+                    Redirects to secure Stripe checkout.
+                  </p>
                 </button>
               </div>
 
               {paymentMethod === "UPI" ? (
                 <>
-                  <div className="flex justify-center mb-6">
-                    <div className="relative p-4 bg-cream rounded-sm shadow-glow">
-                      {(qrDataUrl || upiSession?.qrDataUrl) ? (
-                        <img 
-                          src={upiSession?.qrDataUrl || qrDataUrl} 
-                          alt="UPI QR code" 
-                          width={220} 
-                          height={220} 
-                          className="w-[220px] h-[220px] object-cover" 
-                        />
-                      ) : (
-                        <div className="w-[220px] h-[220px] grid place-items-center px-4 text-center text-abyss text-sm">
-                          {qrError || "Generating QR..."}
-                        </div>
-                      )}
-                      <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-gradient-gold text-abyss text-[10px] uppercase tracking-[0.25em] rounded-full">
-                        Scan now
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="space-y-3 mb-8">
-                    <div className="rounded-sm border border-border bg-rich/40 p-4 text-center">
-                      <div className="text-xs uppercase tracking-[0.25em] text-muted-foreground">
-                        {upiSession ? "Pay exact backend amount using this QR code" : "Generate secure QR before paying"}
-                      </div>
-                      <p className="mt-2 text-xs leading-5 text-muted-foreground">
-                        {upiSession
-                          ? "Scan the QR in any UPI app, complete payment, then submit UTR and screenshot."
-                          : "Click Generate Secure UPI QR to create your order and lock the exact amount."}
-                      </p>
-                    </div>
-
-                    <div className="flex items-center justify-between p-4 bg-rich/40 rounded-sm border border-border">
+                  <div className="mb-8 rounded-sm border border-[#d9a35b]/18 bg-[#180c06]/40 p-4">
+                    <div className="mb-3 flex items-center justify-between gap-3">
                       <div>
-                        <div className="text-xs uppercase tracking-[0.25em] text-muted-foreground">UPI ID</div>
-                        <div className="font-mono text-base mt-1">{upiSession?.upiIdSnapshot || upiId}</div>
+                        <div className="text-xs uppercase tracking-[0.25em] text-[#c8b5a4]">
+                          Coupon
+                        </div>
+                        <div className="mt-1 font-serif text-xl text-[#f8eadc]">
+                          Apply discount
+                        </div>
                       </div>
+
+                      {appliedCoupon && (
+                        <button
+                          type="button"
+                          onClick={removeCoupon}
+                          disabled={Boolean(upiSession)}
+                          className="text-xs uppercase tracking-[0.2em] text-red-300 hover:text-red-200 disabled:opacity-50"
+                        >
+                          Remove
+                        </button>
+                      )}
+                    </div>
+
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        value={couponCode}
+                        disabled={Boolean(upiSession)}
+                        onChange={(event) => {
+                          setCouponCode(event.target.value.toUpperCase());
+                          setAppliedCoupon(null);
+                          setCouponError("");
+                        }}
+                        placeholder="NOIR10"
+                        className="min-w-0 flex-1 rounded-sm border border-[#d9a35b]/18 bg-[#120804] px-4 py-3 font-mono text-sm uppercase text-[#f8eadc] outline-none transition-colors placeholder:text-[#6d5a4a] focus:border-[#d9a35b]/60 disabled:opacity-60"
+                      />
+
                       <button
                         type="button"
-                        onClick={copyUpi}
-                        className="text-xs uppercase tracking-[0.25em] text-primary hover:text-gold-bright flex items-center gap-2"
+                        onClick={applyCoupon}
+                        disabled={couponLoading || Boolean(upiSession)}
+                        className="rounded-sm bg-[#d9a35b] px-4 py-3 text-xs font-semibold uppercase tracking-[0.18em] text-[#090403] transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-60"
                       >
-                        {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
-                        {copied ? "Copied" : "Copy"}
+                        {couponLoading ? "Checking..." : "Apply"}
                       </button>
                     </div>
 
-                    {upiSession?.transactionRef && (
-                      <div className="flex items-center justify-between p-4 bg-rich/40 rounded-sm border border-border">
-                        <div>
-                          <div className="text-xs uppercase tracking-[0.25em] text-muted-foreground">Transaction Ref</div>
-                          <div className="font-mono text-sm mt-1 text-primary">{upiSession.transactionRef}</div>
-                        </div>
+                    {appliedCoupon && (
+                      <div className="mt-3 rounded-sm border border-emerald-400/25 bg-emerald-500/10 p-3 text-sm text-emerald-200">
+                        Coupon {appliedCoupon.code} applied. You saved{" "}
+                        <span className="font-semibold">
+                          {formatINR(appliedCoupon.discountAmount)}
+                        </span>
+                        .
                       </div>
+                    )}
+
+                    {couponError && (
+                      <p className="mt-3 text-sm text-red-300">{couponError}</p>
+                    )}
+
+                    {upiSession && (
+                      <p className="mt-3 text-xs text-[#c8b5a4]">
+                        Coupon is locked because secure payment QR has already been generated.
+                      </p>
                     )}
                   </div>
 
-                  <div className="hairline mb-8" />
+                  <div className="mb-6 flex justify-center">
+                    <div className="relative rounded-sm bg-[#f8eadc] p-4 shadow-[0_0_45px_rgba(217,163,91,0.18)]">
+                      {autoQrLoading ? (
+                        <div className="grid h-[220px] w-[220px] place-items-center text-center text-sm text-[#120804]">
+                          Loading secure QR...
+                        </div>
+                      ) : upiSession?.qrDataUrl && !qrExpired ? (
+                        <img
+                          src={upiSession.qrDataUrl}
+                          alt="Secure UPI QR code"
+                          width={220}
+                          height={220}
+                          className="h-[220px] w-[220px] object-cover"
+                        />
+                      ) : (
+                        <div className="grid h-[220px] w-[220px] place-items-center px-4 text-center text-sm text-[#120804]">
+                          {upiSession && qrExpired
+                            ? "QR expired. Generate a new secure QR."
+                            : "Generating secure QR..."}
+                        </div>
+                      )}
 
-                  <div className={`space-y-5 ${upiSession ? "" : "pointer-events-none opacity-50"}`}>
+                      <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-gradient-to-r from-[#a66a2e] via-[#f0c27a] to-[#d9a35b] px-3 py-1 text-[10px] uppercase tracking-[0.25em] text-[#090403]">
+                        {qrExpired ? "Expired" : "Scan now"}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="mb-6 rounded-sm border border-[#d9a35b]/18 bg-[#180c06]/40 p-4 text-center">
+                    <div className="flex items-center justify-center gap-2 text-xs uppercase tracking-[0.25em] text-[#c8b5a4]">
+                      <Clock className="h-4 w-4 text-[#d9a35b]" />
+                      Secure QR timer
+                    </div>
+
+                    {upiSession && !qrExpired ? (
+                      <div className="mt-2 font-serif text-3xl text-[#f0c27a]">
+                        00:{String(secondsLeft).padStart(2, "0")}
+                      </div>
+                    ) : (
+                      <div className="mt-2 text-sm text-red-300">
+                        {upiSession
+                          ? "QR expired. Payment submission is disabled."
+                          : "Waiting for secure QR."}
+                      </div>
+                    )}
+
+                    <p className="mt-2 text-xs leading-5 text-[#c8b5a4]">
+                      This QR is valid for 1 minute only. After expiry, generate a new QR before paying.
+                    </p>
+                  </div>
+
+                  {submitted ? (
+                    <div className="mb-8 rounded-sm border border-emerald-400/35 bg-emerald-500/10 p-4 text-sm text-emerald-200">
+                      <div className="flex items-center gap-2">
+                        <Check className="h-4 w-4" />
+                        Payment completed successfully. Your order is awaiting admin
+                        verification.
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="mb-8 space-y-3">
+                      <div className="rounded-sm border border-[#d9a35b]/18 bg-[#180c06]/40 p-4 text-center">
+                        <div className="text-xs uppercase tracking-[0.25em] text-[#c8b5a4]">
+                          {upiSession && !qrExpired
+                            ? "Pay exact backend amount using this QR code"
+                            : qrExpired
+                              ? "Generate a fresh secure QR before paying"
+                            : "Generate secure QR before paying"}
+                        </div>
+
+                        <p className="mt-2 text-xs leading-5 text-[#c8b5a4]">
+                          {upiSession && !qrExpired
+                            ? "Scan the QR in any UPI app, complete payment, then submit UTR and screenshot."
+                            : qrExpired
+                              ? "This QR can no longer be submitted for verification."
+                            : "Click Generate Secure UPI QR to create your order and lock the exact amount."}
+                        </p>
+                      </div>
+
+                      <div className="flex items-center justify-between rounded-sm border border-[#d9a35b]/18 bg-[#180c06]/40 p-4">
+                        <div>
+                          <div className="text-xs uppercase tracking-[0.25em] text-[#c8b5a4]">
+                            UPI ID
+                          </div>
+
+                          <div className="mt-1 font-mono text-base text-[#f8eadc]">
+                            {upiSession?.upiIdSnapshot || upiId || "No active UPI"}
+                          </div>
+                        </div>
+
+                        <button
+                          type="button"
+                          onClick={copyUpi}
+                          className="flex items-center gap-2 text-xs uppercase tracking-[0.25em] text-[#f0c27a] hover:text-[#f8eadc]"
+                        >
+                          {copied ? (
+                            <Check className="h-4 w-4" />
+                          ) : (
+                            <Copy className="h-4 w-4" />
+                          )}
+                          {copied ? "Copied" : "Copy"}
+                        </button>
+                      </div>
+
+                      {upiSession?.transactionRef && (
+                        <div className="rounded-sm border border-[#d9a35b]/18 bg-[#180c06]/40 p-4">
+                          <div className="text-xs uppercase tracking-[0.25em] text-[#c8b5a4]">
+                            Transaction Ref
+                          </div>
+
+                          <div className="mt-1 font-mono text-sm text-[#f0c27a]">
+                            {upiSession.transactionRef}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  <div className="mb-8 h-px bg-[#d9a35b]/16" />
+
+                  <div
+                    className={`space-y-5 ${
+                      upiSession && !submitted && !qrExpired ? "" : "pointer-events-none opacity-50"
+                    }`}
+                  >
                     <div>
-                      <label htmlFor="utr" className="block text-xs uppercase tracking-[0.25em] text-muted-foreground mb-2">
+                      <label
+                        htmlFor="utr"
+                        className="mb-2 block text-xs uppercase tracking-[0.25em] text-[#c8b5a4]"
+                      >
                         UTR / Transaction ID *
                       </label>
+
                       <input
                         id="utr"
                         type="text"
+                        inputMode="numeric"
+                        maxLength={12}
                         value={utr}
-                        onChange={(event) => setUtr(event.target.value)}
+                        onChange={(event) =>
+                          setUtr(event.target.value.replace(/\D/g, "").slice(0, 12))
+                        }
                         placeholder="e.g. 412345678901"
-                        className="w-full bg-rich/40 border border-border px-4 py-3 rounded-sm focus:border-primary focus:outline-none transition-colors font-mono"
+                        className="w-full rounded-sm border border-[#d9a35b]/18 bg-[#180c06]/45 px-4 py-3 font-mono text-[#f8eadc] outline-none transition-colors focus:border-[#d9a35b]/60"
                       />
                     </div>
 
                     <div>
-                      <label htmlFor="payment-proof" className="block text-xs uppercase tracking-[0.25em] text-muted-foreground mb-2">
+                      <label
+                        htmlFor="payment-proof"
+                        className="mb-2 block text-xs uppercase tracking-[0.25em] text-[#c8b5a4]"
+                      >
                         Payment screenshot *
                       </label>
+
                       <input
                         id="payment-proof"
                         type="file"
                         accept="image/png,image/jpeg,image/webp"
                         onChange={(event) => setProofFile(event.target.files?.[0] ?? null)}
-                        className="w-full rounded-sm border border-border bg-rich/40 px-4 py-3 text-sm text-[#f8eadc] file:mr-4 file:rounded-sm file:border-0 file:bg-[#d9a35b] file:px-4 file:py-2 file:text-xs file:font-semibold file:uppercase file:tracking-[0.18em] file:text-[#090403]"
+                        className="w-full rounded-sm border border-[#d9a35b]/18 bg-[#180c06]/45 px-4 py-3 text-sm text-[#f8eadc] file:mr-4 file:rounded-sm file:border-0 file:bg-[#d9a35b] file:px-4 file:py-2 file:text-xs file:font-semibold file:uppercase file:tracking-[0.18em] file:text-[#090403]"
                       />
-                      <p className="mt-2 text-xs text-muted-foreground">
+
+                      <p className="mt-2 text-xs text-[#c8b5a4]">
                         Upload payment proof. Max 5MB. PNG, JPG, or WebP only.
                       </p>
                     </div>
                   </div>
                 </>
               ) : (
-                <div className="rounded-sm border border-border bg-rich/40 p-5">
+                <div className="rounded-sm border border-[#d9a35b]/18 bg-[#180c06]/40 p-5">
                   <div className="flex items-start gap-4">
                     <CreditCard className="mt-1 h-5 w-5 text-[#d9a35b]" />
+
                     <div>
-                      <h3 className="font-serif text-2xl text-[#f8eadc]">Secure Stripe checkout</h3>
-                      <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                        We will create your order with the backend total and redirect you to Stripe to complete payment securely.
+                      <h3 className="font-serif text-2xl text-[#f8eadc]">
+                        Secure Stripe checkout
+                      </h3>
+
+                      <p className="mt-2 text-sm leading-6 text-[#c8b5a4]">
+                        We will create your order with the backend total and redirect
+                        you to Stripe to complete payment securely.
                       </p>
                     </div>
                   </div>
                 </div>
               )}
 
-              {error && <p className="text-sm text-destructive mt-4">{error}</p>}
+              {error && <p className="mt-4 text-sm text-red-300">{error}</p>}
 
-              <button 
-                onClick={handlePlaceOrder} 
-                disabled={!selectedAddressId || (paymentMethod === "UPI" && Boolean(upiSession) && (!utr.trim() || !proofFile)) || submitting}
-                className="btn-gold w-full mt-6 disabled:opacity-60 disabled:cursor-not-allowed"
+              <button
+                type="button"
+                onClick={async () => {
+                  if (qrExpired) {
+                    await ensureSecureUpiQr({ silent: false, forceRenew: true });
+                    return;
+                  }
+
+                  await handlePlaceOrder();
+                }}
+                disabled={
+                  submitted ||
+                  autoQrLoading ||
+                  !selectedAddressId ||
+                  (paymentMethod === "UPI" && Boolean(upiSession) && !qrExpired && !canSubmitPayment) ||
+                  submitting
+                }
+                className="mt-6 flex w-full items-center justify-center gap-2 rounded-sm bg-gradient-to-r from-[#a66a2e] via-[#f0c27a] to-[#d9a35b] px-5 py-3 text-sm font-semibold uppercase tracking-[0.22em] text-[#090403] transition hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-60"
               >
-                {submitting ? (
-                  <><Loader2 className="w-4 h-4 animate-spin" /> Processing...</>
+                {submitting || autoQrLoading ? (
+                  <>
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    {autoQrLoading ? "Loading secure UPI QR..." : "Processing..."}
+                  </>
+                ) : qrExpired ? (
+                  <>
+                    <RefreshCw className="h-4 w-4" />
+                    Regenerate Secure UPI QR
+                  </>
                 ) : paymentMethod === "UPI" && !upiSession ? (
                   "Generate Secure UPI QR"
                 ) : paymentMethod === "UPI" ? (
-                  "Submit Payment for Verification"
+                  "Submit Payment"
                 ) : (
                   "Place Order"
                 )}
               </button>
-            </motion.div>
+            </motion.section>
           </div>
 
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
+          <motion.aside
+            initial={{ opacity: 0, x: 18 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
+            transition={{ duration: 0.55, delay: 0.2 }}
             className="h-fit rounded-sm border border-[#d9a35b]/22 bg-[#140904]/82 p-6 lg:sticky lg:top-28"
           >
-            <h3 className="font-serif text-3xl text-[#f8eadc] mb-6">Order summary</h3>
-            <div className="space-y-4 mb-6">
-              {items.map((item) => (
-                <div key={item.id} className="flex gap-3 items-center">
-                  <img src={getProductImage(item.product)} alt={item.product.name} className="w-14 h-14 object-cover rounded-sm" />
-                  <div className="flex-1 min-w-0">
-                    <div className="text-sm font-medium truncate">{item.product?.name}</div>
-                    <div className="text-xs text-muted-foreground">x {item.quantity}</div>
+            <div className="mb-6 flex items-center justify-between gap-4">
+              <h3 className="font-serif text-3xl text-[#f8eadc]">
+                Order summary
+              </h3>
+
+              {selectedAddress && (
+                <span className="hidden text-xs uppercase tracking-[0.18em] text-[#d9a35b]/80 sm:inline">
+                  {selectedAddress.city}
+                </span>
+              )}
+            </div>
+
+            <div className="mb-6 space-y-4">
+              {summaryItems.map((item) => (
+                <div key={item.id} className="flex items-center gap-3">
+                  <img
+                    src={getProductImage(item.product)}
+                    alt={item.product.name}
+                    className="h-14 w-14 rounded-sm object-cover"
+                  />
+
+                  <div className="min-w-0 flex-1">
+                    <div className="truncate text-sm font-medium text-[#f8eadc]">
+                      {item.product?.name}
+                    </div>
+
+                    <div className="text-xs text-[#c8b5a4]">
+                      x {item.quantity}
+                    </div>
                   </div>
-                  <div className="text-sm gold-text font-serif">{formatINR(item.priceSnapshot * item.quantity)}</div>
+
+                  <div className="font-serif text-sm text-[#f0c27a]">
+                    {formatINR(item.priceSnapshot * item.quantity)}
+                  </div>
                 </div>
               ))}
             </div>
-            <div className="hairline mb-5" />
+
+            <div className="mb-5 h-px bg-[#d9a35b]/16" />
+
             <div className="space-y-2 text-sm">
-              <div className="flex justify-between text-muted-foreground">
-                <span>Subtotal</span><span>{formatINR(subtotal)}</span>
+              <div className="flex justify-between text-[#c8b5a4]">
+                <span>Subtotal</span>
+                <span>{formatINR(subtotal)}</span>
               </div>
-              <div className="flex justify-between text-muted-foreground">
-                <span>Shipping</span><span>{shipping === 0 ? "Complimentary" : formatINR(shipping)}</span>
+
+              {discountAmount > 0 && (
+                <div className="flex justify-between text-emerald-300">
+                  <span>Coupon discount</span>
+                  <span>-{formatINR(discountAmount)}</span>
+                </div>
+              )}
+
+              <div className="flex justify-between text-[#c8b5a4]">
+                <span>Shipping</span>
+                <span>{shipping === 0 ? "Complimentary" : formatINR(shipping)}</span>
               </div>
-              <div className="flex justify-between font-serif text-2xl pt-3 border-t border-border mt-3">
-                <span>Total</span><span className="gold-text">{formatINR(grand)}</span>
+
+              <div className="mt-3 flex justify-between border-t border-[#d9a35b]/16 pt-3 font-serif text-2xl">
+                <span className="text-[#f8eadc]">
+                  {upiSession ? "Payable" : "Estimated total"}
+                </span>
+
+                <span className="text-[#f0c27a]">{formatINR(payableAmount)}</span>
               </div>
             </div>
-          </motion.div>
+
+            <div className="mt-8 space-y-4 rounded-sm border border-[#d9a35b]/14 bg-[#180c06]/38 p-4">
+              {[
+                {
+                  icon: Sparkles,
+                  title: "Premium ingredients",
+                  text: "Finest cocoa, pure & wholesome",
+                },
+                {
+                  icon: ShieldCheck,
+                  title: "Secure payments",
+                  text: "Encrypted & trusted checkout",
+                },
+                {
+                  icon: PackageCheck,
+                  title: "Satisfaction guaranteed",
+                  text: "Crafted with care, delivered with love",
+                },
+              ].map((item) => (
+                <div key={item.title} className="flex gap-3">
+                  <item.icon className="mt-1 h-5 w-5 text-[#d9a35b]" />
+
+                  <div>
+                    <div className="text-sm font-medium text-[#f8eadc]">
+                      {item.title}
+                    </div>
+
+                    <div className="text-xs text-[#c8b5a4]">{item.text}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </motion.aside>
         </div>
       </div>
+
+      <AnimatePresence>
+        {success && (
+          <motion.div
+            className="fixed inset-0 z-50 grid place-items-center bg-[#090403]/75 px-4 backdrop-blur-sm"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.94, y: 18 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.96, y: 12 }}
+              transition={{ duration: 0.28 }}
+              className="relative w-full max-w-xl overflow-hidden rounded-md border border-[#d9a35b]/35 bg-[radial-gradient(circle_at_50%_0%,rgba(217,163,91,0.18),transparent_42%),linear-gradient(145deg,#1b0e07,#0b0503_80%)] p-8 text-center shadow-[0_28px_90px_rgba(0,0,0,0.65)] md:p-10"
+            >
+              <button
+                type="button"
+                onClick={() => setSuccess(null)}
+                className="absolute right-5 top-5 text-[#c8b5a4] transition hover:text-[#f8eadc]"
+                aria-label="Close payment success popup"
+              >
+                <X className="h-5 w-5" />
+              </button>
+
+              <div className="pointer-events-none absolute inset-0 opacity-70">
+                <span className="absolute left-[18%] top-[22%] h-1 w-1 rounded-full bg-[#f0c27a]" />
+                <span className="absolute right-[18%] top-[28%] h-1.5 w-1.5 rounded-full bg-[#d9a35b]" />
+                <span className="absolute left-[26%] bottom-[32%] h-1 w-1 rounded-full bg-[#d9a35b]" />
+                <span className="absolute right-[24%] bottom-[38%] h-1 w-1 rounded-full bg-[#f8eadc]" />
+              </div>
+
+              <div className="mx-auto mb-6 grid h-24 w-24 place-items-center rounded-full border border-[#f0c27a]/70 bg-[#d9a35b]/10 shadow-[0_0_38px_rgba(217,163,91,0.35)]">
+                <Check className="h-11 w-11 text-[#f0c27a]" />
+              </div>
+
+              <h2 className="font-serif text-4xl text-[#f8eadc] md:text-5xl">
+                Payment Successful
+              </h2>
+
+              <p className="mx-auto mt-4 max-w-md text-sm leading-6 text-[#f8eadc]/90">
+                Your payment of{" "}
+                <span className="text-[#f0c27a]">
+                  {formatINR(success.amount)}
+                </span>{" "}
+                has been received successfully.
+              </p>
+
+              <p className="mx-auto mt-4 max-w-sm text-sm leading-6 text-[#c8b5a4]">
+                Thank you for your purchase. Your order is now awaiting verification.
+              </p>
+
+              <div className="mx-auto my-6 h-px max-w-sm bg-[#d9a35b]/18" />
+
+              <button
+                type="button"
+                onClick={copyOrderId}
+                className="mx-auto flex items-center justify-center gap-3 rounded-sm border border-[#d9a35b]/18 bg-[#180c06]/60 px-5 py-4 text-left"
+              >
+                <FileText className="h-5 w-5 text-[#d9a35b]" />
+
+                <div>
+                  <div className="text-xs uppercase tracking-[0.22em] text-[#c8b5a4]">
+                    Order ID
+                  </div>
+
+                  <div className="font-mono text-sm text-[#f8eadc]">
+                    {success.orderId}
+                  </div>
+                </div>
+
+                <Copy className="h-4 w-4 text-[#d9a35b]" />
+              </button>
+
+              <div className="mt-8 grid gap-3 sm:grid-cols-2">
+                <button
+                  type="button"
+                  onClick={handleViewOrder}
+                  className="rounded-sm border border-[#d9a35b]/40 px-5 py-3 text-sm font-semibold text-[#f8eadc] transition hover:border-[#f0c27a] hover:bg-[#d9a35b]/10"
+                >
+                  View Order
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleContinue}
+                  className="rounded-sm bg-gradient-to-r from-[#a66a2e] via-[#f0c27a] to-[#d9a35b] px-5 py-3 text-sm font-semibold text-[#090403] transition hover:brightness-110"
+                >
+                  Continue
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </PageShell>
   );
 };
@@ -24655,7 +25487,7 @@ export default DeliveryOrders;
 
 ```tsx
 import { useEffect } from "react";
-import { Navigate, useLocation } from "react-router-dom";
+import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { useDeliveryAuth } from "@/store/deliveryAuth";
 import { Loader2 } from "lucide-react";
 
@@ -24679,10 +25511,11 @@ const DeliveryRequire = () => {
     return <Navigate to="/delivery/login" state={{ from: location.pathname }} replace />;
   }
 
-  return null;
+  return <Outlet />;
 };
 
 export default DeliveryRequire;
+
 ```
 
 ---

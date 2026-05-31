@@ -121,13 +121,15 @@ const Footer = () => {
             <p className="mb-4 text-sm text-muted-foreground">
               Receive exclusive offers and new collection announcements.
             </p>
-            <form className="flex gap-2" onSubmit={(e) => e.preventDefault()}>
+            <form className="grid gap-2 sm:grid-cols-[1fr_auto]" onSubmit={(e) => e.preventDefault()}>
               <input
                 type="email"
+                aria-label="Newsletter email"
                 placeholder="Your email"
-                className="luxury-input flex-1 rounded-sm px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/60"
+                className="luxury-input min-w-0 rounded-sm px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground/60"
               />
               <motion.button
+                type="submit"
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 className="btn-gold px-5 py-3 text-xs"
@@ -147,7 +149,7 @@ const Footer = () => {
             <span className="text-xs uppercase tracking-[0.2em] text-muted-foreground/80">Est. 2024</span>
           </div>
           <div className="flex flex-col gap-1 text-center sm:text-right">
-            <span className="text-xs text-muted-foreground/80">© {year} Noir Sane. All rights reserved.</span>
+            <span className="text-xs text-muted-foreground/80">Copyright {year} Noir Sane. All rights reserved.</span>
             <span className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground/60">Crafted for gifting and mindful indulgence</span>
           </div>
         </div>

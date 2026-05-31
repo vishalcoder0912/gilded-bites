@@ -22,9 +22,15 @@ export const deliveryRouter = Router();
 
 const FREE_DELIVERY_THRESHOLD_PAISE = 250000; // INR 2500
 const DELIVERY_CHARGE_PAISE = 15000; // INR 150
+const UPI_QR_TTL_MS = 120 * 1000; // 2 minutes
 
 const calculateDeliveryCharge = (subtotal: number) =>
   subtotal >= FREE_DELIVERY_THRESHOLD_PAISE ? 0 : DELIVERY_CHARGE_PAISE;
+
+const isExpired = (expiresAt: Date) => expiresAt.getTime() <= Date.now();
+
+const generateTransactionRef = (orderNumber: string) =>
+  `NS-${orderNumber}-${Date.now().toString(36).toUpperCase()}`;
 
 const normalizeCouponCode = (value?: string) =>
   value?.trim().toUpperCase() || undefined;
@@ -372,23 +378,31 @@ commerceRouter.post(
 
     if (!order) throw new AppError("Order not found", 404);
 
+    if (order.totalAmount <= 0) {
+      throw new AppError("Order total must be greater than zero for Stripe checkout", 400);
+    }
+
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
       payment_method_types: ["card"],
       customer_email: req.user!.email,
-      line_items: order.items.map((item) => ({
-        quantity: item.quantity,
-        price_data: {
-          currency: "inr",
-          unit_amount: item.productPriceSnapshot,
-          product_data: {
-            name: item.productNameSnapshot || item.product?.name || "Noir Sane item",
+      line_items: [
+        {
+          quantity: 1,
+          price_data: {
+            currency: "inr",
+            unit_amount: order.totalAmount,
+            product_data: {
+              name: `Noir Sane order ${order.orderNumber}`,
+              description: `Subtotal ${order.subtotal}, delivery ${order.deliveryCharge}, discount ${order.discountAmount}`,
+            },
           },
         },
-      })),
+      ],
       metadata: {
         orderId: order.id,
         userId: req.user!.id,
+        totalAmount: String(order.totalAmount),
       },
       success_url: `${env.FRONTEND_URL}/order-confirmed?id=${order.id}&payment=stripe_success`,
       cancel_url: `${env.FRONTEND_URL}/checkout?payment=stripe_cancelled`,
@@ -422,15 +436,63 @@ commerceRouter.post(
 commerceRouter.post(
   "/orders/:id/upi-session",
   requireAuth,
+  validate(idParam),
   asyncHandler(async (req, res) => {
     const order = await prisma.order.findFirst({
       where: {
         id: req.params.id as string,
         userId: req.user!.id,
       },
+      include: {
+        upiSessions: {
+          where: {
+            status: PaymentStatus.PENDING,
+          },
+          orderBy: {
+            createdAt: "desc",
+          },
+          take: 1,
+        },
+      },
     });
 
     if (!order) throw new AppError("Order not found", 404);
+
+    if (order.paymentMethod !== PaymentMethod.UPI) {
+      throw new AppError("This order is not a UPI order", 400);
+    }
+
+    if (
+      order.paymentStatus === PaymentStatus.SUBMITTED ||
+      order.paymentStatus === PaymentStatus.VERIFIED ||
+      order.paymentStatus === PaymentStatus.PAID
+    ) {
+      throw new AppError("Payment already submitted for this order", 400);
+    }
+
+    const existingSession = order.upiSessions[0];
+
+    if (existingSession && !isExpired(existingSession.expiresAt)) {
+      ok(
+        res,
+        {
+          ...existingSession,
+          secondsLeft: Math.max(
+            0,
+            Math.floor((existingSession.expiresAt.getTime() - Date.now()) / 1000),
+          ),
+        },
+        "Active UPI QR already exists",
+      );
+      return;
+    }
+
+    if (existingSession && isExpired(existingSession.expiresAt)) {
+      await prisma.upiPaymentSession.update({
+        where: { id: existingSession.id },
+        data: { status: PaymentStatus.EXPIRED },
+      });
+    }
 
     const activeUpi = await prisma.upiPaymentSetting.findFirst({
       where: { isActive: true },
@@ -441,11 +503,8 @@ commerceRouter.post(
       throw new AppError("No active UPI ID configured by admin", 400);
     }
 
-    const transactionRef = `NS-${Date.now()}-${Math.random()
-      .toString(36)
-      .slice(2, 8)
-      .toUpperCase()}`;
-
+    const expiresAt = new Date(Date.now() + UPI_QR_TTL_MS);
+    const transactionRef = generateTransactionRef(order.orderNumber);
     const amountRupees = (order.totalAmount / 100).toFixed(2);
 
     const upiUri =
@@ -471,112 +530,119 @@ commerceRouter.post(
         transactionRef,
         upiUri,
         qrDataUrl,
+        status: PaymentStatus.PENDING,
+        expiresAt,
       },
     });
 
-    ok(res, session, "UPI payment session created");
+    ok(
+      res,
+      {
+        ...session,
+        secondsLeft: Math.floor(UPI_QR_TTL_MS / 1000),
+      },
+      "Secure UPI QR generated",
+    );
   })
 );
 
 commerceRouter.post(
-  "/upi-sessions/:id/submit",
+  "/upi-sessions/:sessionId/submit",
   requireAuth,
   asyncHandler(async (req, res) => {
+    const sessionId = String(req.params.sessionId);
     const { utr, proofImageUrl } = req.body;
+    const trimmedUtr = String(utr || "").trim();
 
-    if (!/^\d{12}$/.test(utr)) {
-      throw new AppError("Invalid UTR. It must be 12 digits.", 400);
+    if (!/^\d{12}$/.test(trimmedUtr)) {
+      throw new AppError("UTR must be exactly 12 digits", 400);
     }
 
     if (!proofImageUrl || typeof proofImageUrl !== "string") {
-      throw new AppError("Payment proof image required", 400);
+      throw new AppError("Payment proof image is required", 400);
     }
 
-    const session = await prisma.upiPaymentSession.findFirst({
-      where: {
-        id: req.params.id as string,
-      },
-      include: { order: true },
-    });
+    const updatedOrder = await prisma.$transaction(async (tx) => {
+      const session = (await tx.upiPaymentSession.findUnique({
+        where: { id: sessionId },
+        include: { order: true },
+      })) as Prisma.UpiPaymentSessionGetPayload<{ include: { order: true } }> | null;
 
-    if (!session) throw new AppError("UPI session not found", 404);
+      if (!session) throw new AppError("UPI session not found", 404);
 
-    const order = session.order;
+      if (session.order.userId !== req.user!.id) {
+        throw new AppError("You cannot submit payment for this order", 403);
+      }
 
-    if (order.userId !== req.user!.id) {
-      throw new AppError("Forbidden", 403);
-    }
+      if (session.status !== PaymentStatus.PENDING) {
+        throw new AppError("This UPI QR is no longer active", 400);
+      }
 
-    if (order.paymentStatus !== PaymentStatus.PENDING) {
-      throw new AppError("Payment already submitted or processed", 409);
-    }
+      if (isExpired(session.expiresAt)) {
+        await tx.upiPaymentSession.update({
+          where: { id: session.id },
+          data: { status: PaymentStatus.EXPIRED },
+        });
 
-    if (session.orderId !== order.id) {
-      throw new AppError("Invalid payment session", 400);
-    }
+        throw new AppError("This UPI QR has expired. Please generate a new QR.", 410);
+      }
 
-    if (session.amount !== order.totalAmount) {
-      throw new AppError("Payment amount mismatch", 400);
-    }
+      if (session.amount !== session.order.totalAmount) {
+        throw new AppError("Payment amount mismatch. Please generate a new QR.", 400);
+      }
 
-    if (session.status !== PaymentStatus.PENDING) {
-      throw new AppError("Payment session already submitted or processed", 409);
-    }
-
-    const updated = await prisma.$transaction(async (tx) => {
-      const upiSession = await tx.upiPaymentSession.update({
+      await tx.upiPaymentSession.update({
         where: { id: session.id },
         data: {
-          utr,
-          proofImageUrl,
           status: PaymentStatus.SUBMITTED,
+          utr: trimmedUtr,
+          proofImageUrl,
         },
       });
 
       await tx.payment.upsert({
-        where: { orderId: order.id },
+        where: { orderId: session.orderId },
         update: {
           method: PaymentMethod.UPI,
           provider: "manual_upi",
           status: PaymentStatus.SUBMITTED,
-          amount: order.totalAmount,
+          amount: session.amount,
           currency: "INR",
-          upiReferenceNumber: utr,
+          upiReferenceNumber: trimmedUtr,
           proofImageUrl,
         },
         create: {
-          orderId: order.id,
+          orderId: session.orderId,
           method: PaymentMethod.UPI,
           provider: "manual_upi",
           status: PaymentStatus.SUBMITTED,
-          amount: order.totalAmount,
+          amount: session.amount,
           currency: "INR",
-          upiReferenceNumber: utr,
+          upiReferenceNumber: trimmedUtr,
           proofImageUrl,
         },
       });
 
-      await tx.order.update({
-        where: { id: order.id },
+      return tx.order.update({
+        where: { id: session.orderId },
         data: {
           paymentStatus: PaymentStatus.SUBMITTED,
           status: OrderStatus.PAYMENT_SUBMITTED,
-          paymentReferenceNumber: utr,
+          paymentReferenceNumber: trimmedUtr,
           tracking: {
             create: {
               status: OrderStatus.PAYMENT_SUBMITTED,
               title: "Payment submitted",
-              message: "Your UPI payment proof has been submitted for admin verification.",
+              message: "Payment proof submitted. Awaiting admin verification.",
               updatedById: req.user!.id,
             },
           },
         },
+        include: includeOrder,
       });
-
-      return upiSession;
     });
 
-    ok(res, updated, "Payment submitted for admin verification");
+    ok(res, updatedOrder, "Payment submitted successfully");
   })
 );
 

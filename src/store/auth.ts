@@ -67,20 +67,22 @@ export const useAuth = create<AuthState>()(
       loadUser: async () => {
         const token = localStorage.getItem("accessToken");
         if (!token) {
-          set({ isAuthenticated: false, user: null });
+          set({ isAuthenticated: false, user: null, isLoading: false });
           return;
         }
-        
+
+        set({ isLoading: true });
+
         try {
           const user = await authApi.me();
           localStorage.setItem("user", JSON.stringify(user));
-          set({ user, isAuthenticated: true });
+          set({ user, isAuthenticated: true, isLoading: false });
         } catch {
-          // Token invalid (expired or user deleted from DB) — force logout
+          // Token invalid or user deleted from DB: force a clean logout.
           localStorage.removeItem("accessToken");
           localStorage.removeItem("refreshToken");
           localStorage.removeItem("user");
-          set({ user: null, isAuthenticated: false, error: null });
+          set({ user: null, isAuthenticated: false, isLoading: false, error: null });
         }
       },
 
@@ -93,6 +95,17 @@ export const useAuth = create<AuthState>()(
     }
   )
 );
+
+if (typeof window !== "undefined") {
+  window.addEventListener("noir-sane-session-expired", () => {
+    useAuth.setState({
+      user: null,
+      isAuthenticated: false,
+      isLoading: false,
+      error: null,
+    });
+  });
+}
 
 export const isAdmin = () => useAuth.getState().user?.role === "ADMIN";
 export const isDeliveryPartner = () => useAuth.getState().user?.role === "DELIVERY_PARTNER";

@@ -624,13 +624,13 @@ export default function AdminDashboard() {
               className="w-64 rounded-sm border border-gold/20 bg-rich/50 py-2 pl-10 pr-4 text-sm outline-none focus:border-primary text-cream placeholder:text-muted-foreground"
             />
           </div>
-          <button
+          <button type="button"
             onClick={() => loadDashboard(true)}
             className="rounded-sm border border-gold/30 p-2 text-muted-foreground hover:text-primary hover:border-gold/50 transition-colors"
           >
             <RefreshCw size={18} className={refreshing ? "animate-spin" : ""} />
           </button>
-          <button
+          <button type="button"
             onClick={() => navigate("/admin/products?action=create")}
             className="inline-flex items-center gap-2 rounded-sm bg-gradient-gold px-5 py-2.5 text-sm font-semibold text-abyss shadow-gold hover:shadow-glow transition-shadow"
           >
@@ -706,7 +706,7 @@ export default function AdminDashboard() {
             <Panel
               title="Recent Orders"
               action={
-                <button
+                <button type="button"
                   onClick={() => navigate("/admin/orders")}
                   className="text-sm text-[#d4a061] hover:text-[#c49050]"
                 >
@@ -720,7 +720,7 @@ export default function AdminDashboard() {
             <Panel
               title="Product Inventory"
               action={
-                <button
+                <button type="button"
                   onClick={() => navigate("/admin/products")}
                   className="text-sm text-[#d4a061] hover:text-[#c49050]"
                 >
@@ -755,7 +755,7 @@ function MetricCard({
   onClick?: () => void;
 }) {
   return (
-    <button
+    <button type="button"
       onClick={onClick}
       className={cx(
         "luxe-card p-5 text-left",

@@ -5,7 +5,7 @@ import { Eye, EyeOff, Loader2, Lock, Mail, User, Phone } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { useAuth } from "@/store/auth";
 import { useCartStore } from "@/store/cartStore";
-import { takePendingCartItem } from "@/lib/pendingCart";
+import { takePendingCartItems } from "@/lib/pendingCart";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -39,8 +39,8 @@ const Register = () => {
     setSubmitting(false);
     if (result.ok) {
       toast({ title: "Account created", description: "You can now complete your order." });
-      const pendingItem = takePendingCartItem();
-      if (pendingItem) {
+      const pendingItems = takePendingCartItems();
+      for (const pendingItem of pendingItems) {
         await addToCart(pendingItem.productId, pendingItem.quantity);
       }
       navigate(from === "/dashboard" ? "/" : from, { replace: true });

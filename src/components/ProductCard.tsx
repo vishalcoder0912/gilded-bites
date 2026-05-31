@@ -1,12 +1,13 @@
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Plus, ShoppingBag } from "lucide-react";
 import { useCartStore } from "@/store/cartStore";
 import { useAuth } from "@/store/auth";
 import type { Product } from "@/lib/api";
-import { getProductImage } from "@/lib/api";
-import { savePendingCartItem } from "@/lib/pendingCart";
-import { formatINRFromPaise } from "@/components/luxury/LuxuryPrimitives";
+import { addPendingCartItem } from "@/lib/pendingCart";
+import { toast } from "@/hooks/use-toast";
+import { formatINRFromPaise } from "@/lib/currency";
+import ProductImage from "@/components/ProductImage";
 
 interface Props {
   product: Product;
@@ -16,8 +17,6 @@ interface Props {
 const ProductCard = ({ product, index = 0 }: Props) => {
   const addToCart = useCartStore((s) => s.addToCart);
   const isAuthenticated = useAuth((s) => s.isAuthenticated);
-  const navigate = useNavigate();
-  const location = useLocation();
   const inStock = Boolean(product.stock && product.stock.quantity > 0);
 
   const handleAdd = (event: React.MouseEvent) => {
@@ -25,8 +24,8 @@ const ProductCard = ({ product, index = 0 }: Props) => {
     if (!inStock) return;
 
     if (!isAuthenticated) {
-      savePendingCartItem({ productId: product.id, quantity: 1 });
-      navigate("/login", { state: { from: location.pathname, openCart: true } });
+      addPendingCartItem({ productId: product.id, quantity: 1 });
+      toast({ title: "Added to cart" });
       return;
     }
 
@@ -46,8 +45,8 @@ const ProductCard = ({ product, index = 0 }: Props) => {
         className="flex h-full flex-col overflow-hidden rounded-sm border border-[#d9a35b]/20 bg-[#160a05]/80 shadow-[0_24px_80px_rgba(0,0,0,0.28)] transition duration-500 hover:-translate-y-1 hover:border-[#d9a35b]/55 hover:shadow-[0_28px_90px_rgba(217,163,91,0.12)]"
       >
         <div className="relative aspect-[4/4.35] overflow-hidden bg-[#0d0503]">
-          <img
-            src={getProductImage(product)}
+          <ProductImage
+            product={product}
             alt={product.name}
             loading="lazy"
             className="h-full w-full object-cover transition duration-700 group-hover:scale-105"
@@ -56,7 +55,7 @@ const ProductCard = ({ product, index = 0 }: Props) => {
           <div className="absolute left-4 top-4 rounded-full border border-[#d9a35b]/25 bg-[#090403]/65 px-3 py-1 text-[10px] uppercase tracking-[0.22em] text-[#f0c27a] backdrop-blur">
             {product.category?.name || "Chocolate"}
           </div>
-          <button
+          <button type="button"
             onClick={handleAdd}
             disabled={!inStock}
             aria-label={`Add ${product.name} to cart`}

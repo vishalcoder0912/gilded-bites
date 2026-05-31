@@ -6,9 +6,11 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 gsap.registerPlugin(ScrollTrigger);
 
 export default function RouteGsapEnhancer() {
-  const location = useLocation();
+  const { pathname } = useLocation();
 
   useLayoutEffect(() => {
+    const cleanupHoverListeners: Array<() => void> = [];
+
     const ctx = gsap.context(() => {
       gsap.fromTo(
         ".noir-page-reveal, main section, footer, .admin-panel-card, [data-noir-reveal]",
@@ -51,10 +53,10 @@ export default function RouteGsapEnhancer() {
         el.addEventListener("mouseenter", enter);
         el.addEventListener("mouseleave", leave);
 
-        return () => {
+        cleanupHoverListeners.push(() => {
           el.removeEventListener("mouseenter", enter);
           el.removeEventListener("mouseleave", leave);
-        };
+        });
       });
 
       const aurora = document.querySelector(".noir-cursor-aurora");
@@ -74,9 +76,10 @@ export default function RouteGsapEnhancer() {
 
     return () => {
       window.clearTimeout(timer);
+      cleanupHoverListeners.forEach((cleanup) => cleanup());
       ctx.revert();
     };
-  }, [location.pathname]);
+  }, [pathname]);
 
   return null;
 }

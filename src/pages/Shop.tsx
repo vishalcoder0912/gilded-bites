@@ -36,13 +36,13 @@ const Shop = () => {
           <p className="eyebrow mb-1">Categories</p>
           <h2 className="font-serif text-2xl text-[#f8eadc]">Collection</h2>
         </div>
-        <button className="lg:hidden" onClick={() => setShowMobileFilters(false)} aria-label="Close filters">
+        <button type="button" className="lg:hidden" onClick={() => setShowMobileFilters(false)} aria-label="Close filters">
           <X className="h-4 w-4 text-[#c8b5a4]" />
         </button>
       </div>
 
       <div className="space-y-2">
-        <button
+        <button type="button"
           onClick={() => {
             setCategoryFilter("");
             setPage(1);
@@ -52,7 +52,7 @@ const Shop = () => {
           All Collections
         </button>
         {categories?.map((cat) => (
-          <button
+          <button type="button"
             key={cat.id}
             onClick={() => {
               setCategoryFilter(cat.id);
@@ -81,7 +81,7 @@ const Shop = () => {
         <span>₹500</span>
         <span>Up to ₹{maxPrice}</span>
       </div>
-      <button onClick={clearFilters} className="btn-ghost-gold mt-6 w-full px-4 py-3 text-xs">
+      <button type="button" onClick={clearFilters} className="btn-ghost-gold mt-6 w-full px-4 py-3 text-xs">
         Reset Filters
       </button>
     </aside>
@@ -103,7 +103,7 @@ const Shop = () => {
 
       <section className="container pb-16 sm:pb-24">
         <div className="mb-6 grid gap-3 lg:grid-cols-[270px_1fr]">
-          <button
+          <button type="button"
             onClick={() => setShowMobileFilters(true)}
             className="inline-flex items-center justify-center gap-2 rounded-sm border border-[#d9a35b]/20 bg-[#140904]/80 px-4 py-3 text-sm uppercase tracking-[0.18em] text-[#f0c27a] lg:hidden"
           >
@@ -122,7 +122,7 @@ const Shop = () => {
                 placeholder="Search fruit chocolate, truffles, bars..."
                 className="w-full bg-transparent text-sm text-[#f8eadc] outline-none placeholder:text-[#c8b5a4]/55"
               />
-              {q && <button onClick={() => setQ("")}><X className="h-4 w-4 text-[#c8b5a4]" /></button>}
+              {q && <button type="button" onClick={() => setQ("")}><X className="h-4 w-4 text-[#c8b5a4]" /></button>}
             </div>
             <select
               value={categoryFilter}
@@ -164,7 +164,7 @@ const Shop = () => {
             {(q || categoryFilter || sort) && (
               <div className="mb-5 flex flex-wrap items-center gap-2 text-xs uppercase tracking-[0.2em] text-[#c8b5a4]">
                 Active filters
-                <button onClick={clearFilters} className="rounded-full border border-[#d9a35b]/25 px-3 py-1 text-[#f0c27a]">Clear all</button>
+                <button type="button" onClick={clearFilters} className="rounded-full border border-[#d9a35b]/25 px-3 py-1 text-[#f0c27a]">Clear all</button>
               </div>
             )}
 
@@ -185,7 +185,7 @@ const Shop = () => {
                 {productsData && productsData.totalPages > 1 && (
                   <div className="mt-12 flex flex-wrap justify-center gap-2">
                     {Array.from({ length: productsData.totalPages }, (_, index) => (
-                      <button
+                      <button type="button"
                         key={index}
                         onClick={() => setPage(index + 1)}
                         className={`grid h-10 w-10 place-items-center rounded-sm border text-sm transition ${page === index + 1 ? "border-[#d9a35b] bg-[#d9a35b] text-[#090403]" : "border-[#d9a35b]/22 text-[#c8b5a4] hover:border-[#d9a35b] hover:text-[#f8eadc]"}`}

@@ -84,7 +84,7 @@ const DeliveryOrders = () => {
                   <div className="text-xs uppercase tracking-[0.2em] text-muted-foreground mb-2">Update Status</div>
                   <div className="flex flex-wrap gap-2">
                     {statusOptions.map((opt) => (
-                      <button
+                      <button type="button"
                         key={opt.value}
                         onClick={() => handleStatusChange(order.id, opt.value)}
                         disabled={order.status === opt.value || updateStatus.isPending}

@@ -1,25 +1,38 @@
-const PENDING_CART_ITEM_KEY = "noir-sane-pending-cart-item";
+const PENDING_CART_KEY = "noir-sane-pending-cart";
 
 export interface PendingCartItem {
   productId: string;
   quantity: number;
 }
 
-export const savePendingCartItem = (item: PendingCartItem) => {
-  sessionStorage.setItem(PENDING_CART_ITEM_KEY, JSON.stringify(item));
+export const addPendingCartItem = (item: PendingCartItem) => {
+  const items = getPendingCartItems();
+  const existing = items.find((i) => i.productId === item.productId);
+  if (existing) {
+    existing.quantity += item.quantity;
+  } else {
+    items.push(item);
+  }
+  sessionStorage.setItem(PENDING_CART_KEY, JSON.stringify(items));
 };
 
-export const takePendingCartItem = (): PendingCartItem | null => {
-  const raw = sessionStorage.getItem(PENDING_CART_ITEM_KEY);
-  if (!raw) return null;
-
-  sessionStorage.removeItem(PENDING_CART_ITEM_KEY);
-
+export const getPendingCartItems = (): PendingCartItem[] => {
+  const raw = sessionStorage.getItem(PENDING_CART_KEY);
+  if (!raw) return [];
   try {
-    const item = JSON.parse(raw) as Partial<PendingCartItem>;
-    if (!item.productId || !Number.isFinite(item.quantity) || item.quantity < 1) return null;
-    return { productId: item.productId, quantity: Math.floor(item.quantity) };
+    const items = JSON.parse(raw) as PendingCartItem[];
+    return Array.isArray(items) ? items : [];
   } catch {
-    return null;
+    return [];
   }
+};
+
+export const getPendingCartCount = (): number => {
+  return getPendingCartItems().reduce((sum, item) => sum + item.quantity, 0);
+};
+
+export const takePendingCartItems = (): PendingCartItem[] => {
+  const items = getPendingCartItems();
+  sessionStorage.removeItem(PENDING_CART_KEY);
+  return items;
 };

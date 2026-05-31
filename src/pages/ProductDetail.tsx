@@ -4,10 +4,12 @@ import { ChevronDown, Loader2, Minus, Plus, ShoppingBag, Zap } from "lucide-reac
 import { useProductBySlug, useProducts } from "@/store/catalog";
 import { useCartStore } from "@/store/cartStore";
 import { useAuth } from "@/store/auth";
-import { getProductImage } from "@/lib/api";
-import { savePendingCartItem } from "@/lib/pendingCart";
+import { getProductImageCandidates } from "@/lib/api";
+import { addPendingCartItem } from "@/lib/pendingCart";
+import { toast } from "@/hooks/use-toast";
 import ProductCard from "@/components/ProductCard";
-import { EmptyState, PageShell, formatINRFromPaise } from "@/components/luxury/LuxuryPrimitives";
+import { EmptyState, PageShell } from "@/components/luxury/LuxuryPrimitives";
+import { formatINRFromPaise } from "@/lib/currency";
 
 const detailSections = [
   ["Ingredients", "Single-origin cacao, cocoa butter, cane sugar, and natural inclusions selected for each recipe."],
@@ -32,8 +34,8 @@ const ProductDetail = () => {
   const addCurrentProduct = async (redirectToCheckout = false) => {
     if (!product) return;
     if (!isAuthenticated) {
-      savePendingCartItem({ productId: product.id, quantity: qty });
-      navigate("/login", { state: { from: redirectToCheckout ? "/checkout" : `/product/${product.slug}`, openCart: !redirectToCheckout } });
+      addPendingCartItem({ productId: product.id, quantity: qty });
+      toast({ title: "Added to cart" });
       return;
     }
     await addToCart(product.id, qty);
@@ -60,7 +62,7 @@ const ProductDetail = () => {
     );
   }
 
-  const images = product.imageUrls?.length ? product.imageUrls : [getProductImage(product)];
+  const images = getProductImageCandidates(product);
   const inStock = Boolean(product.stock && product.stock.quantity > 0);
 
   return (
@@ -78,17 +80,32 @@ const ProductDetail = () => {
           <div className="grid gap-4 sm:grid-cols-[88px_1fr]">
             <div className="order-2 flex gap-3 overflow-x-auto sm:order-1 sm:flex-col sm:overflow-visible">
               {images.map((image, index) => (
-                <button
+                <button type="button"
                   key={`${image}-${index}`}
                   onClick={() => setActiveImage(index)}
                   className={`h-20 w-20 shrink-0 overflow-hidden rounded-sm border transition ${activeImage === index ? "border-[#d9a35b]" : "border-[#d9a35b]/20"}`}
                 >
-                  <img src={image} alt={`${product.name} thumbnail ${index + 1}`} className="h-full w-full object-cover" loading="lazy" />
+                  <img
+                    src={image}
+                    alt={`${product.name} thumbnail ${index + 1}`}
+                    className="h-full w-full object-cover"
+                    loading="lazy"
+                    onError={(event) => {
+                      event.currentTarget.src = "/placeholder.svg";
+                    }}
+                  />
                 </button>
               ))}
             </div>
             <div className="order-1 overflow-hidden rounded-sm border border-[#d9a35b]/22 bg-[#160a05] sm:order-2">
-              <img src={images[activeImage]} alt={product.name} className="aspect-square w-full object-cover" />
+              <img
+                src={images[activeImage] || "/placeholder.svg"}
+                alt={product.name}
+                className="aspect-square w-full object-cover"
+                onError={(event) => {
+                  event.currentTarget.src = "/placeholder.svg";
+                }}
+              />
             </div>
           </div>
 
@@ -111,21 +128,21 @@ const ProductDetail = () => {
                 {inStock ? `In Stock${product.stock?.quantity ? ` (${product.stock.quantity})` : ""}` : "Out of Stock"}
               </span>
               <div className="flex items-center rounded-sm border border-[#d9a35b]/22">
-                <button onClick={() => setQty(Math.max(1, qty - 1))} className="p-3 text-[#c8b5a4] hover:text-[#f0c27a]" aria-label="Decrease quantity">
+                <button type="button" onClick={() => setQty(Math.max(1, qty - 1))} className="p-3 text-[#c8b5a4] hover:text-[#f0c27a]" aria-label="Decrease quantity">
                   <Minus className="h-3.5 w-3.5" />
                 </button>
                 <span className="w-10 text-center text-sm">{qty}</span>
-                <button onClick={() => setQty(qty + 1)} className="p-3 text-[#c8b5a4] hover:text-[#f0c27a]" aria-label="Increase quantity">
+                <button type="button" onClick={() => setQty(qty + 1)} className="p-3 text-[#c8b5a4] hover:text-[#f0c27a]" aria-label="Increase quantity">
                   <Plus className="h-3.5 w-3.5" />
                 </button>
               </div>
             </div>
 
             <div className="mt-7 grid gap-3 sm:grid-cols-2">
-              <button disabled={!inStock} onClick={() => addCurrentProduct(false)} className="btn-gold disabled:cursor-not-allowed disabled:opacity-50">
+              <button type="button" disabled={!inStock} onClick={() => addCurrentProduct(false)} className="btn-gold disabled:cursor-not-allowed disabled:opacity-50">
                 <ShoppingBag className="h-4 w-4" /> Add to Cart
               </button>
-              <button disabled={!inStock} onClick={() => addCurrentProduct(true)} className="btn-ghost-gold disabled:cursor-not-allowed disabled:opacity-50">
+              <button type="button" disabled={!inStock} onClick={() => addCurrentProduct(true)} className="btn-ghost-gold disabled:cursor-not-allowed disabled:opacity-50">
                 <Zap className="h-4 w-4" /> Buy Now
               </button>
             </div>
@@ -133,7 +150,7 @@ const ProductDetail = () => {
             <div className="mt-8 divide-y divide-[#d9a35b]/14 border-y border-[#d9a35b]/14">
               {detailSections.map(([title, body]) => (
                 <div key={title}>
-                  <button onClick={() => setOpenSection(openSection === title ? "" : title)} className="flex w-full items-center justify-between py-4 text-left text-xs uppercase tracking-[0.24em] text-[#f0c27a]">
+                  <button type="button" onClick={() => setOpenSection(openSection === title ? "" : title)} className="flex w-full items-center justify-between py-4 text-left text-xs uppercase tracking-[0.24em] text-[#f0c27a]">
                     {title}
                     <ChevronDown className={`h-4 w-4 transition ${openSection === title ? "rotate-180" : ""}`} />
                   </button>

@@ -115,14 +115,14 @@ function ease(current: number, target: number, factor: number) {
 }
 
 export default function GlobalNoirBackdrop() {
-  const location = useLocation();
+  const { pathname } = useLocation();
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const stageRef = useRef<HTMLDivElement | null>(null);
   const ringRef = useRef<HTMLDivElement | null>(null);
   const glowRef = useRef<HTMLDivElement | null>(null);
 
-  const isAdmin = location.pathname.startsWith("/admin");
-  const isDelivery = location.pathname.startsWith("/delivery");
+  const isAdmin = pathname.startsWith("/admin");
+  const isDelivery = pathname.startsWith("/delivery");
   const shouldDrawSequence = !isAdmin && !isDelivery;
 
   useLayoutEffect(() => {
@@ -170,11 +170,11 @@ export default function GlobalNoirBackdrop() {
       const maxScroll = document.documentElement.scrollHeight - window.innerHeight || 1;
       scrollProgress = gsap.utils.clamp(0, 1, window.scrollY / maxScroll);
 
-      const routeOffset = location.pathname.startsWith("/checkout")
+      const routeOffset = pathname.startsWith("/checkout")
         ? 0.54
-        : location.pathname.startsWith("/login") || location.pathname.startsWith("/register")
+        : pathname.startsWith("/login") || pathname.startsWith("/register")
           ? 0.18
-          : location.pathname.startsWith("/shop")
+          : pathname.startsWith("/shop")
             ? 0.34
             : 0.24;
 
@@ -314,7 +314,7 @@ export default function GlobalNoirBackdrop() {
       window.removeEventListener("mousemove", handleMouseMove);
       ctxGsap.revert();
     };
-  }, [location.pathname, shouldDrawSequence]);
+  }, [pathname, shouldDrawSequence]);
 
   if (!shouldDrawSequence) {
     const opacity = isAdmin ? 0.45 : isDelivery ? 0.35 : 0.28;

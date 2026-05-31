@@ -444,7 +444,7 @@ const UserDashboard = () => {
                   View all orders
                 </Link>
 
-                <button
+                <button type="button"
                   onClick={logout}
                   className="inline-flex items-center gap-2 rounded-full border border-white/10 px-5 py-3 text-xs uppercase tracking-[0.2em] text-[#c8b5a4] transition hover:border-red-400/40 hover:text-red-200"
                 >

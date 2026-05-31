@@ -1,20 +1,6 @@
 import { Link } from "react-router-dom";
 import { Loader2, Sparkles } from "lucide-react";
 
-export const formatINRFromPaise = (value: number) =>
-  new Intl.NumberFormat("en-IN", {
-    style: "currency",
-    currency: "INR",
-    maximumFractionDigits: 0,
-  }).format(value / 100);
-
-export const formatINR = (value: number) =>
-  new Intl.NumberFormat("en-IN", {
-    style: "currency",
-    currency: "INR",
-    maximumFractionDigits: 0,
-  }).format(value);
-
 export function PageShell({
   children,
   className = "",

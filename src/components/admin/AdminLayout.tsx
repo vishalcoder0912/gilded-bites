@@ -2,9 +2,8 @@ import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import {
   LayoutDashboard, ShoppingBag, Package, Tags, Boxes,
-  CreditCard, BarChart3, Settings, LogOut, Headphones, Plus
+  CreditCard, Settings, LogOut, Headphones
 } from "lucide-react";
-import { ThemeSelector } from "@/components/ThemeSelector";
 import { useAdminAuth } from "@/store/adminAuth";
 
 function cx(...classes: Array<string | false | undefined | null>) {
@@ -56,7 +55,7 @@ function AdminSidebar() {
                 : location.pathname.startsWith(item.path.split("?")[0]);
 
             return (
-              <button
+              <button type="button"
                 key={item.label}
                 onClick={() => navigate(item.path)}
                 className={cx(
@@ -78,12 +77,12 @@ function AdminSidebar() {
             <Headphones className="text-primary" size={28} />
             <p className="mt-3 text-sm font-medium text-cream">Need Support?</p>
             <p className="mt-1 text-xs text-muted-foreground">Our team is here to help.</p>
-            <button className="mt-4 w-full rounded-md border border-gold/30 py-2 text-xs text-primary hover:bg-gold/10 transition-colors">
+            <button type="button" className="mt-4 w-full rounded-md border border-gold/30 py-2 text-xs text-primary hover:bg-gold/10 transition-colors">
               Contact Support
             </button>
           </div>
 
-          <button
+          <button type="button"
             onClick={handleLogout}
             className="mt-4 flex w-full items-center justify-center gap-2 rounded-md border border-gold/20 py-3 text-sm text-muted-foreground hover:border-gold/40 hover:text-cream transition-colors"
           >
@@ -110,7 +109,6 @@ export function AdminLayout({ children }: { children?: React.ReactNode }) {
               <h1 className="text-lg font-serif text-cream">Admin Panel</h1>
             </div>
             <div className="ml-auto flex items-center gap-4">
-              <ThemeSelector />
               <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-gold text-abyss font-medium">
                 NS
               </div>

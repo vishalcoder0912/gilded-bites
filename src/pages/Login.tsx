@@ -5,7 +5,7 @@ import { Eye, EyeOff, Loader2, Lock, Mail } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { useAuth } from "@/store/auth";
 import { useCartStore } from "@/store/cartStore";
-import { takePendingCartItem } from "@/lib/pendingCart";
+import { takePendingCartItems } from "@/lib/pendingCart";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -83,9 +83,9 @@ const Login = () => {
       description: "Your account is ready.",
     });
 
-    const pendingItem = takePendingCartItem();
+    const pendingItems = takePendingCartItems();
 
-    if (pendingItem) {
+    for (const pendingItem of pendingItems) {
       await addToCart(pendingItem.productId, pendingItem.quantity);
     }
 

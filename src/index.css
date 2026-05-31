@@ -23,7 +23,7 @@
     --secondary-foreground: 21 56% 90%;
 
     --muted: 25 30% 16%;
-    --muted-foreground: 28 20% 65%;
+    --muted-foreground: 28 22% 72%;
 
     --accent: 28 33% 49%;
     --accent-foreground: 28 36% 8%;
@@ -148,7 +148,7 @@
     --secondary: 25 64% 14%;
     --secondary-foreground: 21 56% 90%;
     --muted: 25 30% 16%;
-    --muted-foreground: 28 20% 65%;
+    --muted-foreground: 28 22% 72%;
     --accent: 28 33% 49%;
     --accent-foreground: 28 36% 8%;
     --destructive: 0 70% 45%;
@@ -273,11 +273,15 @@
 
   .input-luxury {
     @apply w-full bg-input border border-border rounded px-4 py-3 text-sm outline-none transition-colors;
-    border-color: hsl(var(--gold) / 0.2);
+    border-color: hsl(var(--gold) / 0.3);
+    color: hsl(var(--foreground));
+  }
+  .input-luxury::placeholder {
+    color: hsl(var(--gold) / 0.4);
   }
   .input-luxury:focus {
     border-color: hsl(var(--gold) / 0.6);
-    box-shadow: 0 0 0 3px hsl(var(--gold) / 0.1);
+    box-shadow: 0 0 0 3px hsl(var(--gold) / 0.15);
   }
 
   .glass-card {
@@ -346,7 +350,7 @@
 
 .eyebrow {
   color: hsl(var(--gold));
-  font-size: 0.72rem;
+  font-size: 0.75rem;
   font-weight: 600;
   letter-spacing: 0.32em;
   text-transform: uppercase;

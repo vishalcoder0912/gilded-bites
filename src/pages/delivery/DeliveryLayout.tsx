@@ -51,7 +51,7 @@ const DeliveryLayout = () => {
         </nav>
 
         <div className="p-4 border-t border-border">
-          <button
+          <button type="button"
             onClick={handleLogout}
             className="flex items-center gap-3 px-4 py-3 rounded-sm text-sm text-muted-foreground hover:text-destructive hover:bg-muted/50 transition-colors w-full"
           >

@@ -126,7 +126,7 @@ const Addresses = () => {
                 </div>
                 <div className="flex gap-2">
                   {!addr.isDefault && (
-                    <button
+                    <button type="button"
                       onClick={() => setDefault.mutate(addr.id)}
                       className="p-2 text-muted-foreground hover:text-primary transition-colors"
                       title="Set as default"
@@ -134,7 +134,7 @@ const Addresses = () => {
                       <Check className="w-4 h-4" />
                     </button>
                   )}
-                  <button
+                  <button type="button"
                     onClick={() => deleteAddress.mutate(addr.id)}
                     className="p-2 text-muted-foreground hover:text-destructive transition-colors"
                     title="Delete"
@@ -248,7 +248,7 @@ const Addresses = () => {
             </form>
           </motion.div>
         ) : (
-          <button onClick={() => setShowForm(true)} className="btn-gold">
+          <button type="button" onClick={() => setShowForm(true)} className="btn-gold">
             <Plus className="w-4 h-4 mr-2" /> Add Address
           </button>
         )}

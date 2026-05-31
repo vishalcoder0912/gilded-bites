@@ -42,6 +42,7 @@ enum PaymentStatus {
   FAILED
   CANCELLED
   REFUNDED
+  EXPIRED
 }
 
 enum PaymentMethod {
@@ -313,11 +314,13 @@ model UpiPaymentSession {
   utr            String?
   proofImageUrl  String?
 
+  expiresAt      DateTime
   createdAt      DateTime      @default(now())
   updatedAt      DateTime      @updatedAt
 
   @@index([orderId])
   @@index([transactionRef])
+  @@index([expiresAt])
 }
 
 model DeliveryTracking {

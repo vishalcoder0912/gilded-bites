@@ -155,14 +155,14 @@ const AdminSettings = () => {
                     </div>
 
                     <div className="flex items-center gap-3">
-                      <button
+                      <button type="button"
                         onClick={() => updateUpi.mutate({ id: s.id, data: { isActive: !s.isActive } })}
                         disabled={updateUpi.isPending}
                         className={`text-xs uppercase tracking-[0.15em] font-medium transition-colors ${s.isActive ? "text-muted-foreground hover:text-foreground" : "text-primary hover:text-gold-bright"}`}
                       >
                         {s.isActive ? "Deactivate" : "Activate"}
                       </button>
-                      <button
+                      <button type="button"
                         onClick={() => {
                           if (confirm(`Are you sure you want to delete UPI setting "${s.upiId}"?`)) {
                             deleteUpi.mutate(s.id);

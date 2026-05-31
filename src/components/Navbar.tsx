@@ -4,7 +4,7 @@ import { motion, AnimatePresence, useMotionValue, useTransform } from "framer-mo
 import { useEffect, useState, useRef } from "react";
 import { useCartStore } from "@/store/cartStore";
 import { useAuth } from "@/store/auth";
-import { ThemeToggle } from "./ThemeToggle";
+import { getPendingCartCount } from "@/lib/pendingCart";
 
 const navLinks = [
   { label: "Home", href: "/" },
@@ -59,10 +59,10 @@ function MagneticLink({ to, children, isActive }: { to: string; children: React.
 }
 
 const Navbar = () => {
-  const location = useLocation();
+  const { pathname } = useLocation();
   const { open, getCount, fetchCart } = useCartStore();
-  const { isAuthenticated, logout, loadUser } = useAuth();
-  const itemCount = getCount();
+  const { isAuthenticated, isLoading, logout, loadUser } = useAuth();
+  const itemCount = getCount() + (isAuthenticated ? 0 : getPendingCartCount());
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -71,10 +71,10 @@ const Navbar = () => {
   }, [loadUser]);
 
   useEffect(() => {
-    if (isAuthenticated) {
+    if (isAuthenticated && !isLoading) {
       fetchCart();
     }
-  }, [isAuthenticated, fetchCart]);
+  }, [isAuthenticated, isLoading, fetchCart]);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 30);
@@ -84,7 +84,7 @@ const Navbar = () => {
 
   useEffect(() => {
     setMobileOpen(false);
-  }, [location.pathname]);
+  }, [pathname]);
 
   return (
     <>
@@ -120,7 +120,7 @@ const Navbar = () => {
 
             <nav className="hidden items-center gap-10 text-sm lg:flex">
               {navLinks.map((link) => (
-                <MagneticLink key={link.href} to={link.href} isActive={location.pathname === link.href}>
+                <MagneticLink key={link.href} to={link.href} isActive={pathname === link.href}>
                   {link.label}
                 </MagneticLink>
               ))}
@@ -137,7 +137,7 @@ const Navbar = () => {
                     <User className="h-4 w-4" />
                     Account
                   </Link>
-                  <button
+                  <button type="button"
                     onClick={logout}
                     className="hidden h-10 w-10 items-center justify-center rounded-full border border-gold/25 text-foreground/80 transition-all duration-300 hover:border-gold hover:bg-gold/10 hover:text-foreground sm:flex"
                     title="Sign out"
@@ -156,9 +156,7 @@ const Navbar = () => {
                 </Link>
               )}
 
-              <ThemeToggle />
-
-              <button
+              <button type="button"
                 onClick={open}
                 aria-label="Open cart"
                 className="relative flex h-10 items-center gap-2 rounded-full border border-gold/25 px-3 text-xs uppercase tracking-[0.18em] text-foreground transition-all duration-300 hover:border-gold hover:bg-gold/10 hover:shadow-[0_0_20px_rgba(217,168,95,0.2)] sm:px-4"
@@ -172,7 +170,7 @@ const Navbar = () => {
                 )}
               </button>
 
-              <button
+              <button type="button"
                 onClick={() => setMobileOpen(!mobileOpen)}
                 aria-label="Toggle menu"
                 className="flex h-10 w-10 items-center justify-center rounded-full border border-gold/25 text-foreground transition-all duration-300 hover:border-gold hover:bg-gold/10 lg:hidden"
@@ -195,7 +193,7 @@ const Navbar = () => {
           >
             <nav className="grid gap-2">
               {navLinks.map((link) => {
-                const isActive = location.pathname === link.href;
+                const isActive = pathname === link.href;
                 return (
                   <Link
                     key={link.href}

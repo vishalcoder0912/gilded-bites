@@ -62,7 +62,7 @@ export function LuxuryAdminSidebar({ collapsed, onToggle }: SidebarProps) {
             </motion.div>
           )}
         </AnimatePresence>
-        <button
+        <button type="button"
           onClick={onToggle}
           className="flex h-8 w-8 items-center justify-center rounded-md border border-[#d7a85f]/20 text-[#d7a85f] transition hover:border-[#d7a85f]/40 hover:bg-[#d7a85f]/10"
         >
@@ -253,7 +253,7 @@ export function NotificationBell() {
   const [hasUnread, setHasUnread] = useState(true);
 
   return (
-    <button className="relative flex h-10 w-10 items-center justify-center rounded-md border border-[#d7a85f]/15 text-[#8b6d4a] transition hover:border-[#d7a85f]/30 hover:text-[#d7a85f]">
+    <button type="button" className="relative flex h-10 w-10 items-center justify-center rounded-md border border-[#d7a85f]/15 text-[#8b6d4a] transition hover:border-[#d7a85f]/30 hover:text-[#d7a85f]">
       <Bell size={18} />
       {hasUnread && (
         <motion.span
