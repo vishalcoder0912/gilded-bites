@@ -76,7 +76,7 @@ cp .env.example .env
 
 Key environment variables:
 ```env
-DATABASE_URL="postgresql://postgres:yourpassword@localhost:5432/noir_sane?schema=public"
+DATABASE_URL="postgresql:@localhost:5432/noir_sane?schema=public"
 JWT_ACCESS_SECRET="your-access-secret"
 JWT_REFRESH_SECRET="your-refresh-secret"
 PORT=4000
